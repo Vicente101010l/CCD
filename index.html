@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Criação de Constelações</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #000; font-family: 'Courier New', Courier, monospace; }
+        canvas { display: block; cursor: crosshair; }
+        #interface-myth {
+            position: absolute; bottom: 30px; left: 30px; 
+            background: rgba(0, 0, 0, 0.9); color: white; padding: 30px;
+            border-left: 4px solid #a8c4e0; display: none; max-width: 500px;
+            box-shadow: 0 0 20px rgba(168, 196, 224, 0.2);
+        }
+        #interface-myth.visible { display: block; }
+        #myth-title { color: #a8c4e0; text-transform: uppercase; letter-spacing: 2px; }
+        #forge-btn {
+            position: absolute; top: 30px; right: 30px; padding: 15px 30px;
+            background: #c9a84c; border: none; font-weight: bold; cursor: pointer;
+            transition: 0.3s;
+        }
+        #forge-btn:hover { background: #a8c4e0; transform: scale(1.05); }
+        #hud { position: absolute; top: 30px; left: 30px; color: #c9a84c; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <div id="hud">MODO: OBSERVAÇÃO/DESENHO<br>ESTRELAS SELECIONADAS: <span id="star-count">0</span></div>
+    <button id="forge-btn" onclick="onForgeConstellation()">GERAR MITO</button>
+    <div id="interface-myth">
+        <h2 id="myth-title"></h2>
+        <p id="myth-text"></p>
+    </div>
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap"> { "imports": { "three": "https://unpkg.com/three@0.154.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.154.0/examples/jsm/" } } </script>
+    <script type="module" src="static/js/constellation.js"></script>
+</body>
+</html>
