@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-from services.geometry import calculate_graph_properties, get_geometric_candidates
+from services.geometry import calculate_graph_properties, get_geometric_candidates, get_extended_candidates_and_pairs
 from services.llm_service import get_ai_completion, generate_myth
 import json
 import random
@@ -43,13 +43,50 @@ def complete():
             enriched_skeleton.append(s)
             
     props = calculate_graph_properties(enriched_skeleton, edges)
-    candidates = get_geometric_candidates(enriched_skeleton, ALL_STARS_DATABASE)
     
-    ai_raw = get_ai_completion(props, [s['name'] for s in enriched_skeleton], candidates)
+    # Obter conexões de candidatos vizinhos (geometria 3D) e pares sugeridos
+    candidate_stars_list, recommended_pairs = get_extended_candidates_and_pairs(enriched_skeleton, ALL_STARS_DATABASE, edges)
+    candidate_ids = {c['id'] for c in candidate_stars_list}
+    
+    # Número dinâmico de sugestões baseadas no tamanho do esqueleto
+    num_connections = max(4, min(8, len(enriched_skeleton) + 1))
+    
+    ai_raw = get_ai_completion(props, enriched_skeleton, candidate_stars_list, recommended_pairs, num_connections)
     ai_data = json.loads(ai_raw)
     
-    valid_targets = {c['target_id'] for c in candidates}
-    sanitized_edges = [e for e in ai_data['new_edges'] if e['to'] in valid_targets]
+    # Validar as novas ligações (podem ligar esqueleto-esqueleto, esqueleto-candidato ou candidato-candidato)
+    valid_ids = {s['id'] for s in enriched_skeleton} | candidate_ids
+    initial_ai_edges = []
+    for e in ai_data.get('new_edges', []):
+        u, v = e.get('from'), e.get('to')
+        if u in valid_ids and v in valid_ids:
+            if u != v:
+                initial_ai_edges.append(e)
+                
+    # Filtrar ligações flutuantes (garantir que estão ligadas ao esqueleto do utilizador)
+    skeleton_ids = {s['id'] for s in enriched_skeleton}
+    adj = {}
+    for e in initial_ai_edges:
+        u, v = e['from'], e['to']
+        if u not in adj: adj[u] = []
+        if v not in adj: adj[v] = []
+        adj[u].append(v)
+        adj[v].append(u)
+        
+    visited = set(skeleton_ids)
+    queue = list(skeleton_ids)
+    while queue:
+        curr = queue.pop(0)
+        for neighbor in adj.get(curr, []):
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+                
+    sanitized_edges = []
+    for e in initial_ai_edges:
+        u, v = e['from'], e['to']
+        if u in visited and v in visited:
+            sanitized_edges.append(e)
     
     return jsonify({
         "ai_edges": sanitized_edges,

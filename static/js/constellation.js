@@ -23,6 +23,9 @@ const starRadius = 50;
 let userSelectedStars = [];
 let userCreatedEdges = [];
 let tempLine = null;
+let activeStar = null;
+let targetCameraPosition = null;
+let isCentering = false;
 const starsGroup = new THREE.Group();
 scene.add(starsGroup);
 
@@ -63,19 +66,46 @@ const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
 window.addEventListener('click', (event) => {
+    // Apenas responde a cliques no canvas (ignora cliques nos botões/UI)
+    if (event.target !== renderer.domElement) {
+        return;
+    }
+
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     raycaster.setFromCamera(mouse, camera);
+    
+    // 1. Tentar interseção exata primeiro
     const intersects = raycaster.intersectObjects(starsGroup.children);
-
+    let clickedStar = null;
+    
     if (intersects.length > 0) {
-        const clickedStar = intersects[0].object;
+        clickedStar = intersects[0].object;
+    } else {
+        // 2. Procurar a estrela mais próxima do raio de clique dentro de um limiar
+        const threshold = 1.2; // Tolerância em unidades 3D
+        const thresholdSq = threshold * threshold;
+        let minDistanceSq = Infinity;
+        
+        starsGroup.children.forEach(star => {
+            const distSq = raycaster.ray.distanceSqToPoint(star.position);
+            if (distSq < thresholdSq && distSq < minDistanceSq) {
+                minDistanceSq = distSq;
+                clickedStar = star;
+            }
+        });
+    }
+
+    if (clickedStar) {
         onStarClick({
             id: clickedStar.userData.id,
             name: clickedStar.userData.name,
             coords: { x: clickedStar.position.x, y: clickedStar.position.y, z: clickedStar.position.z },
-            con: clickedStar.userData.con
+            con: clickedStar.userData.con,
+            mag: clickedStar.userData.mag
         });
+    } else {
+        deselectActiveStar();
     }
 });
 
@@ -83,6 +113,13 @@ window.addEventListener('click', (event) => {
 const tooltip = document.getElementById('tooltip');
 
 window.addEventListener('mousemove', (event) => {
+    // Esconder tooltip se passarmos o rato por cima da UI
+    if (event.target !== renderer.domElement) {
+        tooltip.style.display = 'none';
+        document.body.style.cursor = 'default';
+        return;
+    }
+
     // Atualizar coordenadas do rato para o raycaster
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -90,9 +127,26 @@ window.addEventListener('mousemove', (event) => {
     // RAYCASTING PARA HOVER DE ESTRELAS
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(starsGroup.children);
+    let hoveredStar = null;
 
     if (intersects.length > 0) {
-        const hoveredStar = intersects[0].object;
+        hoveredStar = intersects[0].object;
+    } else {
+        // Procurar a estrela mais próxima dentro do limiar para mostrar o tooltip
+        const threshold = 1.2;
+        const thresholdSq = threshold * threshold;
+        let minDistanceSq = Infinity;
+        
+        starsGroup.children.forEach(star => {
+            const distSq = raycaster.ray.distanceSqToPoint(star.position);
+            if (distSq < thresholdSq && distSq < minDistanceSq) {
+                minDistanceSq = distSq;
+                hoveredStar = star;
+            }
+        });
+    }
+
+    if (hoveredStar) {
         // Exibir o tooltip premium
         tooltip.innerText = `${hoveredStar.userData.name} (Mag: ${hoveredStar.userData.mag}, ${hoveredStar.userData.con})`;
         tooltip.style.left = `${event.clientX}px`;
@@ -105,17 +159,15 @@ window.addEventListener('mousemove', (event) => {
     }
 
     // LINHA ELÁSTICA (RUBBER-BANDING)
-    if (userSelectedStars.length === 0) return;
+    if (!activeStar) return;
 
     const vector = new THREE.Vector3(mouse.x, mouse.y, 0.5).unproject(camera);
     const dir = vector.sub(camera.position).normalize();
     const pos = camera.position.clone().add(dir.multiplyScalar(starRadius));
 
-    const lastStar = userSelectedStars[userSelectedStars.length - 1];
-
     if (tempLine) scene.remove(tempLine);
     const geometry = new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(lastStar.coords.x, lastStar.coords.y, lastStar.coords.z),
+        new THREE.Vector3(activeStar.coords.x, activeStar.coords.y, activeStar.coords.z),
         pos
     ]);
     tempLine = new THREE.Line(geometry, new THREE.LineDashedMaterial({ color: 0xc9a84c, dashSize: 1, gapSize: 0.5 }));
@@ -124,18 +176,58 @@ window.addEventListener('mousemove', (event) => {
 });
 
 // --- LÓGICA DE NEGÓCIO ---
-function onStarClick(starData) {
-    const alreadySelected = userSelectedStars.find(s => s.id === starData.id);
-    if (!alreadySelected) {
-        if (userSelectedStars.length > 0) {
-            const lastStar = userSelectedStars[userSelectedStars.length - 1];
-            userCreatedEdges.push({ from: lastStar.id, to: starData.id });
-            drawVisualLine(lastStar.coords, starData.coords, 0xc9a84c);
+function deselectActiveStar() {
+    if (activeStar) {
+        const starObj = starsGroup.children.find(s => s.userData.id === activeStar.id);
+        if (starObj) {
+            starObj.material.color.setHex(0xc9a84c); // Devolve à cor dourada da constelação
         }
-        userSelectedStars.push(starData);
-        const starObj = starsGroup.children.find(s => s.userData.id === starData.id);
-        if (starObj) starObj.material.color.setHex(0xc9a84c);
-        document.getElementById('star-count').innerText = userSelectedStars.length;
+        activeStar = null;
+        if (tempLine) {
+            scene.remove(tempLine);
+            tempLine = null;
+        }
+    }
+}
+
+function onStarClick(starData) {
+    const starObj = starsGroup.children.find(s => s.userData.id === starData.id);
+    if (!starObj) return;
+
+    const alreadySelected = userSelectedStars.find(s => s.id === starData.id);
+
+    if (activeStar) {
+        if (activeStar.id === starData.id) {
+            // Clicar na estrela ativa cancela a seleção
+            deselectActiveStar();
+        } else {
+            // Criar ligação
+            userCreatedEdges.push({ from: activeStar.id, to: starData.id });
+            drawVisualLine(activeStar.coords, starData.coords, 0xc9a84c);
+
+            if (!alreadySelected) {
+                userSelectedStars.push(starData);
+                document.getElementById('star-count').innerText = userSelectedStars.length;
+            }
+
+            // Repor a cor da estrela ativa anterior para dourado
+            const prevActiveStarObj = starsGroup.children.find(s => s.userData.id === activeStar.id);
+            if (prevActiveStarObj) {
+                prevActiveStarObj.material.color.setHex(0xc9a84c);
+            }
+
+            // Definir a nova estrela ativa e pintá-la a ciano
+            activeStar = starData;
+            starObj.material.color.setHex(0x00ffff);
+        }
+    } else {
+        // Iniciar nova linha
+        if (!alreadySelected) {
+            userSelectedStars.push(starData);
+            document.getElementById('star-count').innerText = userSelectedStars.length;
+        }
+        activeStar = starData;
+        starObj.material.color.setHex(0x00ffff);
     }
 }
 
@@ -147,56 +239,124 @@ function drawVisualLine(start, end, colorHex) {
 }
 
 window.onForgeConstellation = async function() {
-    if (userSelectedStars.length < 2) return;
+    if (userSelectedStars.length < 2) {
+        alert("Por favor, liga pelo menos 2 estrelas para forjar uma constelação!");
+        return;
+    }
     if (tempLine) scene.remove(tempLine);
 
-    const payload = { skeleton_stars: userSelectedStars, edges: userCreatedEdges };
-    const response = await fetch('http://127.0.0.1:5000/api/complete', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-    });
+    // Obter referências dos elementos
+    const forgeBtn = document.getElementById('forge-btn');
+    const mythLoading = document.getElementById('myth-loading');
+    const mythContent = document.getElementById('myth-content');
+    const sidebar = document.getElementById('interface-myth');
 
-    const result = await response.json();
-    result.ai_edges.forEach(edge => {
-        const fromStar = userSelectedStars.find(s => s.id === edge.from);
-        const toStar = starsGroup.children.find(s => s.userData.id === edge.to);
-        if (fromStar && toStar) {
-            drawVisualLine(fromStar.coords, { x: toStar.position.x, y: toStar.position.y, z: toStar.position.z }, 0xa8c4e0);
+    // Desativar o botão e iniciar estado de carregamento
+    forgeBtn.disabled = true;
+    forgeBtn.innerText = 'A FORJAR...';
+    forgeBtn.style.opacity = '0.6';
+
+    // Abrir imediatamente a sidebar com o loading spinner visível
+    mythContent.style.display = 'none';
+    mythLoading.style.display = 'flex';
+    sidebar.classList.add('visible');
+
+    try {
+        const payload = { skeleton_stars: userSelectedStars, edges: userCreatedEdges };
+        const response = await fetch('http://127.0.0.1:5000/api/complete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        result.ai_edges.forEach(edge => {
+            const fromStarObj = starsGroup.children.find(s => s.userData.id === edge.from);
+            const toStarObj = starsGroup.children.find(s => s.userData.id === edge.to);
+            if (fromStarObj && toStarObj) {
+                drawVisualLine(
+                    { x: fromStarObj.position.x, y: fromStarObj.position.y, z: fromStarObj.position.z },
+                    { x: toStarObj.position.x, y: toStarObj.position.y, z: toStarObj.position.z },
+                    0xa8c4e0
+                );
+            }
+        });
+
+        const mythRes = await fetch('http://127.0.0.1:5000/api/myth', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                constellation_name: "Nova Constelação",
+                star_names: userSelectedStars.map(s => s.name),
+                stars: userSelectedStars.map(s => ({ name: s.name, con: s.con })),
+                properties: result.properties
+            })
+        });
+
+        const myth = await mythRes.json();
+        
+        const badge = document.getElementById('myth-badge');
+        if (myth.is_real) {
+            badge.innerText = `Constelação Real: ${myth.real_name}`;
+            badge.className = 'badge-real';
+            badge.style.display = 'inline-block';
+        } else {
+            badge.innerText = `Constelação Criada: ${myth.real_name}`;
+            badge.className = 'badge-custom';
+            badge.style.display = 'inline-block';
         }
-    });
+        
+        document.getElementById('myth-title').innerText = myth.titulo;
+        document.getElementById('myth-text').innerText = myth.texto;
+        
+        // Esconder loading e mostrar conteúdo do mito
+        mythLoading.style.display = 'none';
+        mythContent.style.display = 'block';
 
-    const mythRes = await fetch('http://127.0.0.1:5000/api/myth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            constellation_name: "Nova Constelação",
-            star_names: userSelectedStars.map(s => s.name),
-            stars: userSelectedStars.map(s => ({ name: s.name, con: s.con })),
-            properties: result.properties
-        })
-    });
-
-    const myth = await mythRes.json();
-    
-    const badge = document.getElementById('myth-badge');
-    if (myth.is_real) {
-        badge.innerText = `Constelação Real: ${myth.real_name}`;
-        badge.className = 'badge-real';
-        badge.style.display = 'inline-block';
-    } else {
-        badge.innerText = `Constelação Criada: ${myth.real_name}`;
-        badge.className = 'badge-custom';
-        badge.style.display = 'inline-block';
+        // ANIMAR E CENTRAR CÂMARA NA CONSTELAÇÃO (LOCK-IN)
+        if (userSelectedStars.length > 0) {
+            const centroid = new THREE.Vector3();
+            userSelectedStars.forEach(s => {
+                centroid.add(new THREE.Vector3(s.coords.x, s.coords.y, s.coords.z));
+            });
+            centroid.divideScalar(userSelectedStars.length);
+            
+            const dir = centroid.clone().normalize();
+            targetCameraPosition = dir.clone().multiplyScalar(-camera.position.length());
+            isCentering = true;
+        }
+    } catch (err) {
+        console.error("Erro ao forjar constelação:", err);
+        sidebar.classList.remove('visible');
+    } finally {
+        // Restaurar estado do botão
+        forgeBtn.disabled = false;
+        forgeBtn.innerText = 'GERAR MITO';
+        forgeBtn.style.opacity = '1';
     }
-    
-    document.getElementById('myth-title').innerText = myth.titulo;
-    document.getElementById('myth-text').innerText = myth.texto;
-    document.getElementById('interface-myth').classList.add('visible');
 }
+
+// Fechar sidebar do mito
+window.closeMythSidebar = function() {
+    document.getElementById('interface-myth').classList.remove('visible');
+};
+
+// Se o utilizador começar a rodar manualmente, cancela a focagem automática para não disputar o controlo
+controls.addEventListener('start', () => {
+    isCentering = false;
+});
 
 function animate() {
     requestAnimationFrame(animate);
+    
+    if (isCentering && targetCameraPosition) {
+        camera.position.lerp(targetCameraPosition, 0.05);
+        if (camera.position.distanceTo(targetCameraPosition) < 0.001) {
+            camera.position.copy(targetCameraPosition);
+            isCentering = false;
+        }
+    }
+    
     controls.update();
     renderer.render(scene, camera);
 }
