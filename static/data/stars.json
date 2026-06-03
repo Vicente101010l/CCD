@@ -1,0 +1,4970 @@
+[
+  {
+    "id": 32263,
+    "name": "Sirius",
+    "coords": {
+      "x": -9.3728,
+      "y": 46.9609,
+      "z": -14.3815
+    },
+    "mag": -1.44,
+    "color": "#e3e7ff",
+    "con": "CMa"
+  },
+  {
+    "id": 30365,
+    "name": "Canopus",
+    "coords": {
+      "x": -3.1611,
+      "y": 30.1371,
+      "z": -39.7714
+    },
+    "mag": -0.62,
+    "color": "#e3e7ff",
+    "con": "Car"
+  },
+  {
+    "id": 69451,
+    "name": "Arcturus",
+    "coords": {
+      "x": -39.1894,
+      "y": -26.3493,
+      "z": 16.4288
+    },
+    "mag": -0.05,
+    "color": "#ffd2a1",
+    "con": "Boo"
+  },
+  {
+    "id": 71456,
+    "name": "Rigil Kentaurus",
+    "coords": {
+      "x": -18.693,
+      "y": -15.6309,
+      "z": -43.6606
+    },
+    "mag": -0.01,
+    "color": "#fff4ea",
+    "con": "Cen"
+  },
+  {
+    "id": 90979,
+    "name": "Vega",
+    "coords": {
+      "x": 6.2548,
+      "y": -38.4707,
+      "z": 31.3191
+    },
+    "mag": 0.03,
+    "color": "#aabfff",
+    "con": "Lyr"
+  },
+  {
+    "id": 24549,
+    "name": "Capella",
+    "coords": {
+      "x": 6.525,
+      "y": 34.1158,
+      "z": 35.9658
+    },
+    "mag": 0.08,
+    "color": "#fff4ea",
+    "con": "Aur"
+  },
+  {
+    "id": 24378,
+    "name": "Rigel",
+    "coords": {
+      "x": 9.7526,
+      "y": 48.5181,
+      "z": -7.1329
+    },
+    "mag": 0.18,
+    "color": "#aabfff",
+    "con": "Ori"
+  },
+  {
+    "id": 37173,
+    "name": "Procyon",
+    "coords": {
+      "x": -20.9056,
+      "y": 45.191,
+      "z": 4.5533
+    },
+    "mag": 0.4,
+    "color": "#f8f7ff",
+    "con": "CMi"
+  },
+  {
+    "id": 7574,
+    "name": "Achernar",
+    "coords": {
+      "x": 24.6361,
+      "y": 11.1902,
+      "z": -42.0457
+    },
+    "mag": 0.45,
+    "color": "#aabfff",
+    "con": "Eri"
+  },
+  {
+    "id": 27919,
+    "name": "Betelgeuse",
+    "coords": {
+      "x": 1.0445,
+      "y": 49.5718,
+      "z": 6.4459
+    },
+    "mag": 0.45,
+    "color": "#ff9e3a",
+    "con": "Ori"
+  },
+  {
+    "id": 68483,
+    "name": "Hadar",
+    "coords": {
+      "x": -21.1969,
+      "y": -12.7141,
+      "z": -43.4631
+    },
+    "mag": 0.61,
+    "color": "#aabfff",
+    "con": "Cen"
+  },
+  {
+    "id": 97338,
+    "name": "Altair",
+    "coords": {
+      "x": 22.9611,
+      "y": -43.7421,
+      "z": 7.7082
+    },
+    "mag": 0.76,
+    "color": "#e3e7ff",
+    "con": "Aql"
+  },
+  {
+    "id": 60530,
+    "name": "Acrux",
+    "coords": {
+      "x": -22.4703,
+      "y": -2.6196,
+      "z": -44.5895
+    },
+    "mag": 0.77,
+    "color": "#aabfff",
+    "con": "Cru"
+  },
+  {
+    "id": 21368,
+    "name": "Aldebaran",
+    "coords": {
+      "x": 17.1952,
+      "y": 44.7487,
+      "z": 14.2085
+    },
+    "mag": 0.87,
+    "color": "#ff9e3a",
+    "con": "Tau"
+  },
+  {
+    "id": 118360,
+    "name": "Estrela 118360",
+    "coords": {
+      "x": 6.5264,
+      "y": 34.1137,
+      "z": 35.9675
+    },
+    "mag": 0.96,
+    "color": "#fff4ea",
+    "con": "Aur"
+  },
+  {
+    "id": 65269,
+    "name": "Spica",
+    "coords": {
+      "x": -45.704,
+      "y": -17.8176,
+      "z": -9.6786
+    },
+    "mag": 0.98,
+    "color": "#aabfff",
+    "con": "Vir"
+  },
+  {
+    "id": 80519,
+    "name": "Antares",
+    "coords": {
+      "x": -17.2408,
+      "y": -41.3206,
+      "z": -22.2568
+    },
+    "mag": 1.06,
+    "color": "#ff9e3a",
+    "con": "Sco"
+  },
+  {
+    "id": 37718,
+    "name": "Pollux",
+    "coords": {
+      "x": -19.5757,
+      "y": 39.558,
+      "z": 23.4938
+    },
+    "mag": 1.16,
+    "color": "#ffd2a1",
+    "con": "Gem"
+  },
+  {
+    "id": 113008,
+    "name": "Fomalhaut",
+    "coords": {
+      "x": 41.8666,
+      "y": -11.6794,
+      "z": -24.714
+    },
+    "mag": 1.17,
+    "color": "#e3e7ff",
+    "con": "PsA"
+  },
+  {
+    "id": 62239,
+    "name": "Mimosa",
+    "coords": {
+      "x": -24.6898,
+      "y": -5.2166,
+      "z": -43.1648
+    },
+    "mag": 1.25,
+    "color": "#aabfff",
+    "con": "Cru"
+  },
+  {
+    "id": 101767,
+    "name": "Deneb",
+    "coords": {
+      "x": 22.7825,
+      "y": -26.8091,
+      "z": 35.5279
+    },
+    "mag": 1.25,
+    "color": "#e3e7ff",
+    "con": "Cyg"
+  },
+  {
+    "id": 71453,
+    "name": "Toliman",
+    "coords": {
+      "x": -18.6922,
+      "y": -15.6268,
+      "z": -43.6624
+    },
+    "mag": 1.35,
+    "color": "#ffd2a1",
+    "con": "Cen"
+  },
+  {
+    "id": 49528,
+    "name": "Regulus",
+    "coords": {
+      "x": -43.2251,
+      "y": 22.8933,
+      "z": 10.3676
+    },
+    "mag": 1.36,
+    "color": "#aabfff",
+    "con": "Leo"
+  },
+  {
+    "id": 33492,
+    "name": "Adhara",
+    "coords": {
+      "x": -11.0679,
+      "y": 42.3194,
+      "z": -24.2192
+    },
+    "mag": 1.5,
+    "color": "#aabfff",
+    "con": "CMa"
+  },
+  {
+    "id": 36744,
+    "name": "Castor",
+    "coords": {
+      "x": -17.03,
+      "y": 38.8886,
+      "z": 26.4132
+    },
+    "mag": 1.58,
+    "color": "#e3e7ff",
+    "con": "Gem"
+  },
+  {
+    "id": 60893,
+    "name": "Gacrux",
+    "coords": {
+      "x": -26.8984,
+      "y": -3.6806,
+      "z": -41.9873
+    },
+    "mag": 1.59,
+    "color": "#ff9e3a",
+    "con": "Cru"
+  },
+  {
+    "id": 85665,
+    "name": "Shaula",
+    "coords": {
+      "x": -4.5819,
+      "y": -39.6131,
+      "z": -30.1631
+    },
+    "mag": 1.62,
+    "color": "#aabfff",
+    "con": "Sco"
+  },
+  {
+    "id": 25273,
+    "name": "Bellatrix",
+    "coords": {
+      "x": 7.5314,
+      "y": 49.1192,
+      "z": 5.5298
+    },
+    "mag": 1.64,
+    "color": "#aabfff",
+    "con": "Ori"
+  },
+  {
+    "id": 25364,
+    "name": "Elnath",
+    "coords": {
+      "x": 6.4329,
+      "y": 43.4221,
+      "z": 23.9403
+    },
+    "mag": 1.65,
+    "color": "#aabfff",
+    "con": "Tau"
+  },
+  {
+    "id": 45106,
+    "name": "Miaplacidus",
+    "coords": {
+      "x": -12.9412,
+      "y": 11.5303,
+      "z": -46.8997
+    },
+    "mag": 1.67,
+    "color": "#e3e7ff",
+    "con": "Car"
+  },
+  {
+    "id": 26246,
+    "name": "Alnilam",
+    "coords": {
+      "x": 5.1789,
+      "y": 49.72,
+      "z": -1.0488
+    },
+    "mag": 1.69,
+    "color": "#aabfff",
+    "con": "Ori"
+  },
+  {
+    "id": 108922,
+    "name": "Alnair",
+    "coords": {
+      "x": 30.1467,
+      "y": -15.99,
+      "z": -36.5445
+    },
+    "mag": 1.73,
+    "color": "#aabfff",
+    "con": "Gru"
+  },
+  {
+    "id": 26662,
+    "name": "Alnitak",
+    "coords": {
+      "x": 4.1904,
+      "y": 49.7953,
+      "z": -1.6949
+    },
+    "mag": 1.74,
+    "color": "#aabfff",
+    "con": "Ori"
+  },
+  {
+    "id": 39840,
+    "name": "Gam2Vel",
+    "coords": {
+      "x": -18.1478,
+      "y": 28.615,
+      "z": -36.7674
+    },
+    "mag": 1.75,
+    "color": "#aabfff",
+    "con": "Vel"
+  },
+  {
+    "id": 62757,
+    "name": "Alioth",
+    "coords": {
+      "x": -27.2145,
+      "y": -6.5373,
+      "z": 41.4323
+    },
+    "mag": 1.76,
+    "color": "#aabfff",
+    "con": "UMa"
+  },
+  {
+    "id": 15824,
+    "name": "Mirfak",
+    "coords": {
+      "x": 20.249,
+      "y": 25.0776,
+      "z": 38.2242
+    },
+    "mag": 1.79,
+    "color": "#f8f7ff",
+    "con": "Per"
+  },
+  {
+    "id": 89906,
+    "name": "Kaus Australis",
+    "coords": {
+      "x": 4.344,
+      "y": -41.034,
+      "z": -28.2373
+    },
+    "mag": 1.79,
+    "color": "#aabfff",
+    "con": "Sgr"
+  },
+  {
+    "id": 53905,
+    "name": "Dubhe",
+    "coords": {
+      "x": -22.9554,
+      "y": 5.7524,
+      "z": 44.045
+    },
+    "mag": 1.81,
+    "color": "#ffd2a1",
+    "con": "UMa"
+  },
+  {
+    "id": 34354,
+    "name": "Wezen",
+    "coords": {
+      "x": -13.1679,
+      "y": 42.8088,
+      "z": -22.2264
+    },
+    "mag": 1.83,
+    "color": "#fff4ea",
+    "con": "CMa"
+  },
+  {
+    "id": 67088,
+    "name": "Alkaid",
+    "coords": {
+      "x": -29.073,
+      "y": -14.7401,
+      "z": 37.9143
+    },
+    "mag": 1.85,
+    "color": "#aabfff",
+    "con": "UMa"
+  },
+  {
+    "id": 40921,
+    "name": "Avior",
+    "coords": {
+      "x": -14.7786,
+      "y": 20.6208,
+      "z": -43.0857
+    },
+    "mag": 1.86,
+    "color": "#ffd2a1",
+    "con": "Car"
+  },
+  {
+    "id": 85965,
+    "name": "Sargas",
+    "coords": {
+      "x": -3.6132,
+      "y": -36.39,
+      "z": -34.0985
+    },
+    "mag": 1.86,
+    "color": "#f8f7ff",
+    "con": "Sco"
+  },
+  {
+    "id": 28288,
+    "name": "Menkalinan",
+    "coords": {
+      "x": 0.0728,
+      "y": 35.3877,
+      "z": 35.3229
+    },
+    "mag": 1.9,
+    "color": "#e3e7ff",
+    "con": "Aur"
+  },
+  {
+    "id": 82022,
+    "name": "Atria",
+    "coords": {
+      "x": -5.4807,
+      "y": -17.0359,
+      "z": -46.6877
+    },
+    "mag": 1.91,
+    "color": "#ff9e3a",
+    "con": "TrA"
+  },
+  {
+    "id": 31601,
+    "name": "Alhena",
+    "coords": {
+      "x": -7.8571,
+      "y": 47.318,
+      "z": 14.1164
+    },
+    "mag": 1.93,
+    "color": "#e3e7ff",
+    "con": "Gem"
+  },
+  {
+    "id": 42794,
+    "name": "Alsephina",
+    "coords": {
+      "x": -19.0182,
+      "y": 21.7427,
+      "z": -40.8113
+    },
+    "mag": 1.93,
+    "color": "#e3e7ff",
+    "con": "Vel"
+  },
+  {
+    "id": 100425,
+    "name": "Peacock",
+    "coords": {
+      "x": 16.2794,
+      "y": -22.0713,
+      "z": -41.8072
+    },
+    "mag": 1.94,
+    "color": "#aabfff",
+    "con": "Pav"
+  },
+  {
+    "id": 11734,
+    "name": "Polaris",
+    "coords": {
+      "x": 0.5063,
+      "y": 0.395,
+      "z": 49.9959
+    },
+    "mag": 1.97,
+    "color": "#fff4ea",
+    "con": "UMi"
+  },
+  {
+    "id": 30251,
+    "name": "Mirzam",
+    "coords": {
+      "x": -4.7034,
+      "y": 47.3316,
+      "z": -15.4143
+    },
+    "mag": 1.98,
+    "color": "#aabfff",
+    "con": "CMa"
+  },
+  {
+    "id": 46259,
+    "name": "Alphard",
+    "coords": {
+      "x": -38.8966,
+      "y": 30.5023,
+      "z": -7.5273
+    },
+    "mag": 1.99,
+    "color": "#ff9e3a",
+    "con": "Hya"
+  },
+  {
+    "id": 9861,
+    "name": "Hamal",
+    "coords": {
+      "x": 38.984,
+      "y": 24.1649,
+      "z": 19.9074
+    },
+    "mag": 2.01,
+    "color": "#ffd2a1",
+    "con": "Ari"
+  },
+  {
+    "id": 50440,
+    "name": "Algieba",
+    "coords": {
+      "x": -42.6229,
+      "y": 19.8816,
+      "z": 16.971
+    },
+    "mag": 2.01,
+    "color": "#ffd2a1",
+    "con": "Leo"
+  },
+  {
+    "id": 3413,
+    "name": "Diphda",
+    "coords": {
+      "x": 46.6989,
+      "y": 8.9906,
+      "z": -15.4397
+    },
+    "mag": 2.04,
+    "color": "#ffd2a1",
+    "con": "Cet"
+  },
+  {
+    "id": 92564,
+    "name": "Nunki",
+    "coords": {
+      "x": 10.7048,
+      "y": -43.5286,
+      "z": -22.151
+    },
+    "mag": 2.05,
+    "color": "#aabfff",
+    "con": "Sgr"
+  },
+  {
+    "id": 68714,
+    "name": "Menkent",
+    "coords": {
+      "x": -34.2647,
+      "y": -21.1381,
+      "z": -29.6498
+    },
+    "mag": 2.06,
+    "color": "#ffd2a1",
+    "con": "Cen"
+  },
+  {
+    "id": 676,
+    "name": "Alpheratz",
+    "coords": {
+      "x": 43.6634,
+      "y": 1.5987,
+      "z": 24.3095
+    },
+    "mag": 2.07,
+    "color": "#aabfff",
+    "con": "And"
+  },
+  {
+    "id": 5436,
+    "name": "Mirach",
+    "coords": {
+      "x": 38.7777,
+      "y": 12.1767,
+      "z": 29.1207
+    },
+    "mag": 2.07,
+    "color": "#ff9e3a",
+    "con": "And"
+  },
+  {
+    "id": 27298,
+    "name": "Saiph",
+    "coords": {
+      "x": 2.6319,
+      "y": 49.2193,
+      "z": -8.3983
+    },
+    "mag": 2.07,
+    "color": "#aabfff",
+    "con": "Ori"
+  },
+  {
+    "id": 72380,
+    "name": "Kochab",
+    "coords": {
+      "x": -10.0364,
+      "y": -9.2537,
+      "z": 48.1003
+    },
+    "mag": 2.07,
+    "color": "#ff9e3a",
+    "con": "UMi"
+  },
+  {
+    "id": 111768,
+    "name": "Tiaki",
+    "coords": {
+      "x": 32.2465,
+      "y": -11.3135,
+      "z": -36.4989
+    },
+    "mag": 2.07,
+    "color": "#ff9e3a",
+    "con": "Gru"
+  },
+  {
+    "id": 85769,
+    "name": "Rasalhague",
+    "coords": {
+      "x": -5.3269,
+      "y": -48.5118,
+      "z": 10.8731
+    },
+    "mag": 2.08,
+    "color": "#e3e7ff",
+    "con": "Oph"
+  },
+  {
+    "id": 14540,
+    "name": "Algol",
+    "coords": {
+      "x": 25.7325,
+      "y": 27.6355,
+      "z": 32.7737
+    },
+    "mag": 2.09,
+    "color": "#aabfff",
+    "con": "Per"
+  },
+  {
+    "id": 9618,
+    "name": "Almach",
+    "coords": {
+      "x": 31.6928,
+      "y": 19.024,
+      "z": 33.6698
+    },
+    "mag": 2.1,
+    "color": "#ffd2a1",
+    "con": "And"
+  },
+  {
+    "id": 57459,
+    "name": "Denebola",
+    "coords": {
+      "x": -48.3365,
+      "y": 2.3092,
+      "z": 12.5799
+    },
+    "mag": 2.14,
+    "color": "#e3e7ff",
+    "con": "Leo"
+  },
+  {
+    "id": 4417,
+    "name": "Cih",
+    "coords": {
+      "x": 23.7115,
+      "y": 5.9899,
+      "z": 43.6106
+    },
+    "mag": 2.15,
+    "color": "#aabfff",
+    "con": "Cas"
+  },
+  {
+    "id": 61739,
+    "name": "Gam Cen",
+    "coords": {
+      "x": -32.2922,
+      "y": -5.9147,
+      "z": -37.7125
+    },
+    "mag": 2.2,
+    "color": "#aabfff",
+    "con": "Cen"
+  },
+  {
+    "id": 39318,
+    "name": "Naos",
+    "coords": {
+      "x": -19.6666,
+      "y": 32.8656,
+      "z": -32.1415
+    },
+    "mag": 2.21,
+    "color": "#aabfff",
+    "con": "Pup"
+  },
+  {
+    "id": 45425,
+    "name": "Aspidiske",
+    "coords": {
+      "x": -19.3591,
+      "y": 16.6676,
+      "z": -42.9816
+    },
+    "mag": 2.21,
+    "color": "#e3e7ff",
+    "con": "Car"
+  },
+  {
+    "id": 76035,
+    "name": "Alphecca",
+    "coords": {
+      "x": -26.4586,
+      "y": -35.9821,
+      "z": 22.4774
+    },
+    "mag": 2.22,
+    "color": "#e3e7ff",
+    "con": "CrB"
+  },
+  {
+    "id": 44689,
+    "name": "Suhail",
+    "coords": {
+      "x": -26.5544,
+      "y": 24.7633,
+      "z": -34.375
+    },
+    "mag": 2.23,
+    "color": "#ff9e3a",
+    "con": "Vel"
+  },
+  {
+    "id": 65173,
+    "name": "Mizar",
+    "coords": {
+      "x": -26.8271,
+      "y": -10.288,
+      "z": 40.9202
+    },
+    "mag": 2.23,
+    "color": "#e3e7ff",
+    "con": "UMa"
+  },
+  {
+    "id": 100128,
+    "name": "Sadr",
+    "coords": {
+      "x": 22.1893,
+      "y": -31.0428,
+      "z": 32.3106
+    },
+    "mag": 2.23,
+    "color": "#fff4ea",
+    "con": "Cyg"
+  },
+  {
+    "id": 3172,
+    "name": "Schedar",
+    "coords": {
+      "x": 27.1402,
+      "y": 4.8475,
+      "z": 41.7123
+    },
+    "mag": 2.24,
+    "color": "#ffd2a1",
+    "con": "Cas"
+  },
+  {
+    "id": 87561,
+    "name": "Eltanin",
+    "coords": {
+      "x": -0.461,
+      "y": -31.1299,
+      "z": 39.1244
+    },
+    "mag": 2.24,
+    "color": "#ff9e3a",
+    "con": "Dra"
+  },
+  {
+    "id": 25865,
+    "name": "Mintaka",
+    "coords": {
+      "x": 6.0919,
+      "y": 49.6268,
+      "z": -0.261
+    },
+    "mag": 2.25,
+    "color": "#aabfff",
+    "con": "Ori"
+  },
+  {
+    "id": 744,
+    "name": "Caph",
+    "coords": {
+      "x": 25.6192,
+      "y": 1.0265,
+      "z": 42.9255
+    },
+    "mag": 2.28,
+    "color": "#f8f7ff",
+    "con": "Cas"
+  },
+  {
+    "id": 66447,
+    "name": "Eps Cen",
+    "coords": {
+      "x": -26.9822,
+      "y": -12.5659,
+      "z": -40.1754
+    },
+    "mag": 2.29,
+    "color": "#aabfff",
+    "con": "Cen"
+  },
+  {
+    "id": 78165,
+    "name": "Dschubba",
+    "coords": {
+      "x": -23.0184,
+      "y": -40.0034,
+      "z": -19.2323
+    },
+    "mag": 2.29,
+    "color": "#aabfff",
+    "con": "Sco"
+  },
+  {
+    "id": 82144,
+    "name": "Larawag",
+    "coords": {
+      "x": -12.3935,
+      "y": -39.4052,
+      "z": -28.1714
+    },
+    "mag": 2.29,
+    "color": "#ffd2a1",
+    "con": "Sco"
+  },
+  {
+    "id": 71634,
+    "name": "Alp Lup",
+    "coords": {
+      "x": -25.7476,
+      "y": -21.9768,
+      "z": -36.7979
+    },
+    "mag": 2.3,
+    "color": "#aabfff",
+    "con": "Lup"
+  },
+  {
+    "id": 71125,
+    "name": "Eta Cen",
+    "coords": {
+      "x": -28.855,
+      "y": -23.2637,
+      "z": -33.5588
+    },
+    "mag": 2.33,
+    "color": "#aabfff",
+    "con": "Cen"
+  },
+  {
+    "id": 53754,
+    "name": "Merak",
+    "coords": {
+      "x": -26.7958,
+      "y": 6.9497,
+      "z": 41.6376
+    },
+    "mag": 2.34,
+    "color": "#e3e7ff",
+    "con": "UMa"
+  },
+  {
+    "id": 71879,
+    "name": "Izar",
+    "coords": {
+      "x": -33.4742,
+      "y": -29.3528,
+      "z": 22.7572
+    },
+    "mag": 2.35,
+    "color": "#ffd2a1",
+    "con": "Boo"
+  },
+  {
+    "id": 106972,
+    "name": "Enif",
+    "coords": {
+      "x": 40.8601,
+      "y": -27.5123,
+      "z": 8.575
+    },
+    "mag": 2.38,
+    "color": "#ff9e3a",
+    "con": "Peg"
+  },
+  {
+    "id": 86403,
+    "name": "Kap Sco",
+    "coords": {
+      "x": -2.965,
+      "y": -38.7275,
+      "z": -31.4863
+    },
+    "mag": 2.39,
+    "color": "#aabfff",
+    "con": "Sco"
+  },
+  {
+    "id": 2076,
+    "name": "Ankaa",
+    "coords": {
+      "x": 36.7351,
+      "y": 4.2316,
+      "z": -33.6545
+    },
+    "mag": 2.4,
+    "color": "#ffd2a1",
+    "con": "Phe"
+  },
+  {
+    "id": 57828,
+    "name": "Phecda",
+    "coords": {
+      "x": -29.5936,
+      "y": 0.7968,
+      "z": 40.2937
+    },
+    "mag": 2.41,
+    "color": "#e3e7ff",
+    "con": "UMa"
+  },
+  {
+    "id": 83755,
+    "name": "Sabik",
+    "coords": {
+      "x": -10.3394,
+      "y": -47.005,
+      "z": -13.5509
+    },
+    "mag": 2.43,
+    "color": "#e3e7ff",
+    "con": "Oph"
+  },
+  {
+    "id": 113521,
+    "name": "Scheat",
+    "coords": {
+      "x": 42.7925,
+      "y": -10.7142,
+      "z": 23.5373
+    },
+    "mag": 2.44,
+    "color": "#ff9e3a",
+    "con": "Peg"
+  },
+  {
+    "id": 35806,
+    "name": "Aludra",
+    "coords": {
+      "x": -15.6425,
+      "y": 40.6996,
+      "z": -24.4715
+    },
+    "mag": 2.45,
+    "color": "#aabfff",
+    "con": "CMa"
+  },
+  {
+    "id": 104861,
+    "name": "Alderamin",
+    "coords": {
+      "x": 17.5432,
+      "y": -14.9067,
+      "z": 44.385
+    },
+    "mag": 2.45,
+    "color": "#e3e7ff",
+    "con": "Cep"
+  },
+  {
+    "id": 45809,
+    "name": "Markeb",
+    "coords": {
+      "x": -22.1324,
+      "y": 18.2262,
+      "z": -40.9629
+    },
+    "mag": 2.47,
+    "color": "#aabfff",
+    "con": "Vel"
+  },
+  {
+    "id": 102157,
+    "name": "Aljanah",
+    "coords": {
+      "x": 27.5051,
+      "y": -31.0311,
+      "z": 27.9381
+    },
+    "mag": 2.48,
+    "color": "#ffd2a1",
+    "con": "Cyg"
+  },
+  {
+    "id": 113603,
+    "name": "Markab",
+    "coords": {
+      "x": 46.8549,
+      "y": -11.5171,
+      "z": 13.1139
+    },
+    "mag": 2.49,
+    "color": "#aabfff",
+    "con": "Peg"
+  },
+  {
+    "id": 14100,
+    "name": "Menkar",
+    "coords": {
+      "x": 34.9128,
+      "y": 35.6143,
+      "z": 3.5659
+    },
+    "mag": 2.54,
+    "color": "#ff9e3a",
+    "con": "Cet"
+  },
+  {
+    "id": 81130,
+    "name": "13Zet Oph",
+    "coords": {
+      "x": -17.3822,
+      "y": -45.9759,
+      "z": -9.1693
+    },
+    "mag": 2.54,
+    "color": "#e3e7ff",
+    "con": "Oph"
+  },
+  {
+    "id": 67786,
+    "name": "Zet Cen",
+    "coords": {
+      "x": -29.6961,
+      "y": -16.3829,
+      "z": -36.7388
+    },
+    "mag": 2.55,
+    "color": "#aabfff",
+    "con": "Cen"
+  },
+  {
+    "id": 54712,
+    "name": "Zosma",
+    "coords": {
+      "x": -45.8907,
+      "y": 9.314,
+      "z": 17.5298
+    },
+    "mag": 2.56,
+    "color": "#e3e7ff",
+    "con": "Leo"
+  },
+  {
+    "id": 78580,
+    "name": "Acrab",
+    "coords": {
+      "x": -22.5482,
+      "y": -41.2864,
+      "z": -16.9414
+    },
+    "mag": 2.56,
+    "color": "#aabfff",
+    "con": "Sco"
+  },
+  {
+    "id": 25920,
+    "name": "Arneb",
+    "coords": {
+      "x": 5.6505,
+      "y": 47.264,
+      "z": -15.3033
+    },
+    "mag": 2.58,
+    "color": "#e3e7ff",
+    "con": "Lep"
+  },
+  {
+    "id": 59016,
+    "name": "Del Cen",
+    "coords": {
+      "x": -31.6328,
+      "y": -1.1542,
+      "z": -38.7044
+    },
+    "mag": 2.58,
+    "color": "#aabfff",
+    "con": "Cen"
+  },
+  {
+    "id": 59621,
+    "name": "Gienah",
+    "coords": {
+      "x": -47.5615,
+      "y": -3.2854,
+      "z": -15.0702
+    },
+    "mag": 2.58,
+    "color": "#aabfff",
+    "con": "Crv"
+  },
+  {
+    "id": 93213,
+    "name": "Ascella",
+    "coords": {
+      "x": 11.6972,
+      "y": -41.7457,
+      "z": -24.9093
+    },
+    "mag": 2.6,
+    "color": "#e3e7ff",
+    "con": "Sgr"
+  },
+  {
+    "id": 74556,
+    "name": "Zubeneschamali",
+    "coords": {
+      "x": -32.2002,
+      "y": -37.3724,
+      "z": -8.1516
+    },
+    "mag": 2.61,
+    "color": "#aabfff",
+    "con": "Lib"
+  },
+  {
+    "id": 76835,
+    "name": "Unukalhai",
+    "coords": {
+      "x": -27.7358,
+      "y": -41.2239,
+      "z": 5.5957
+    },
+    "mag": 2.63,
+    "color": "#ffd2a1",
+    "con": "Ser"
+  },
+  {
+    "id": 8884,
+    "name": "Sheratan",
+    "coords": {
+      "x": 41.0124,
+      "y": 22.4165,
+      "z": 17.7619
+    },
+    "mag": 2.64,
+    "color": "#e3e7ff",
+    "con": "Ari"
+  },
+  {
+    "id": 26569,
+    "name": "Phact",
+    "coords": {
+      "x": 3.6728,
+      "y": 41.2525,
+      "z": -28.0132
+    },
+    "mag": 2.65,
+    "color": "#aabfff",
+    "con": "Col"
+  },
+  {
+    "id": 28309,
+    "name": "Mahasim",
+    "coords": {
+      "x": 0.0484,
+      "y": 39.8198,
+      "z": 30.2387
+    },
+    "mag": 2.65,
+    "color": "#aabfff",
+    "con": "Aur"
+  },
+  {
+    "id": 61166,
+    "name": "Kraz",
+    "coords": {
+      "x": -45.3733,
+      "y": -6.8595,
+      "z": -19.8548
+    },
+    "mag": 2.65,
+    "color": "#fff4ea",
+    "con": "Crv"
+  },
+  {
+    "id": 6672,
+    "name": "Ruchbah",
+    "coords": {
+      "x": 23.1021,
+      "y": 9.0787,
+      "z": 43.4036
+    },
+    "mag": 2.66,
+    "color": "#e3e7ff",
+    "con": "Cas"
+  },
+  {
+    "id": 67711,
+    "name": "Muphrid",
+    "coords": {
+      "x": -41.6272,
+      "y": -22.763,
+      "z": 15.7806
+    },
+    "mag": 2.68,
+    "color": "#f8f7ff",
+    "con": "Boo"
+  },
+  {
+    "id": 73046,
+    "name": "Bet Lup",
+    "coords": {
+      "x": -25.9655,
+      "y": -25.635,
+      "z": -34.1853
+    },
+    "mag": 2.68,
+    "color": "#aabfff",
+    "con": "Lup"
+  },
+  {
+    "id": 22961,
+    "name": "Hassaleh",
+    "coords": {
+      "x": 11.3621,
+      "y": 40.2827,
+      "z": 27.3534
+    },
+    "mag": 2.69,
+    "color": "#ff9e3a",
+    "con": "Aur"
+  },
+  {
+    "id": 52575,
+    "name": "Mu  Vel",
+    "coords": {
+      "x": -30.879,
+      "y": 10.2168,
+      "z": -37.9751
+    },
+    "mag": 2.69,
+    "color": "#ffd2a1",
+    "con": "Vel"
+  },
+  {
+    "id": 61392,
+    "name": "Alp Mus",
+    "coords": {
+      "x": -17.574,
+      "y": -2.8766,
+      "z": -46.7213
+    },
+    "mag": 2.69,
+    "color": "#aabfff",
+    "con": "Mus"
+  },
+  {
+    "id": 85436,
+    "name": "Lesath",
+    "coords": {
+      "x": -5.0603,
+      "y": -39.4527,
+      "z": -30.2965
+    },
+    "mag": 2.7,
+    "color": "#aabfff",
+    "con": "Sco"
+  },
+  {
+    "id": 35169,
+    "name": "Pi  Pup",
+    "coords": {
+      "x": -13.1717,
+      "y": 37.6426,
+      "z": -30.1586
+    },
+    "mag": 2.71,
+    "color": "#ff9e3a",
+    "con": "Pup"
+  },
+  {
+    "id": 89653,
+    "name": "Kaus Media",
+    "coords": {
+      "x": 3.9679,
+      "y": -43.1942,
+      "z": -24.87
+    },
+    "mag": 2.72,
+    "color": "#ffd2a1",
+    "con": "Sgr"
+  },
+  {
+    "id": 96970,
+    "name": "Tarazed",
+    "coords": {
+      "x": 21.978,
+      "y": -43.9564,
+      "z": 9.2089
+    },
+    "mag": 2.72,
+    "color": "#ff9e3a",
+    "con": "Aql"
+  },
+  {
+    "id": 79352,
+    "name": "Yed Prior",
+    "coords": {
+      "x": -22.1962,
+      "y": -44.6873,
+      "z": -3.2217
+    },
+    "mag": 2.73,
+    "color": "#ff9e3a",
+    "con": "Oph"
+  },
+  {
+    "id": 80089,
+    "name": "Athebyne",
+    "coords": {
+      "x": -9.7003,
+      "y": -21.785,
+      "z": 43.9468
+    },
+    "mag": 2.73,
+    "color": "#ffd2a1",
+    "con": "Dra"
+  },
+  {
+    "id": 52268,
+    "name": "The Car",
+    "coords": {
+      "x": -20.3991,
+      "y": 7.128,
+      "z": -45.0895
+    },
+    "mag": 2.74,
+    "color": "#aabfff",
+    "con": "Car"
+  },
+  {
+    "id": 61748,
+    "name": "Porrima",
+    "coords": {
+      "x": -49.1604,
+      "y": -9.0361,
+      "z": -1.2647
+    },
+    "mag": 2.74,
+    "color": "#f8f7ff",
+    "con": "Vir"
+  },
+  {
+    "id": 26176,
+    "name": "Hatysa",
+    "coords": {
+      "x": 5.321,
+      "y": 49.4488,
+      "z": -5.1482
+    },
+    "mag": 2.75,
+    "color": "#aabfff",
+    "con": "Ori"
+  },
+  {
+    "id": 64904,
+    "name": "Iot Cen",
+    "coords": {
+      "x": -37.6293,
+      "y": -13.807,
+      "z": -29.8899
+    },
+    "mag": 2.75,
+    "color": "#e3e7ff",
+    "con": "Cen"
+  },
+  {
+    "id": 72396,
+    "name": "Zubenelgenubi",
+    "coords": {
+      "x": -35.3037,
+      "y": -32.5997,
+      "z": -13.8169
+    },
+    "mag": 2.75,
+    "color": "#e3e7ff",
+    "con": "Lib"
+  },
+  {
+    "id": 86475,
+    "name": "Cebalrai",
+    "coords": {
+      "x": -3.5912,
+      "y": -49.7117,
+      "z": 3.9815
+    },
+    "mag": 2.76,
+    "color": "#ffd2a1",
+    "con": "Oph"
+  },
+  {
+    "id": 23820,
+    "name": "Cursa",
+    "coords": {
+      "x": 11.2351,
+      "y": 48.5193,
+      "z": -4.4329
+    },
+    "mag": 2.78,
+    "color": "#e3e7ff",
+    "con": "Eri"
+  },
+  {
+    "id": 80571,
+    "name": "Kornephoros",
+    "coords": {
+      "x": -17.7628,
+      "y": -42.9998,
+      "z": 18.3166
+    },
+    "mag": 2.78,
+    "color": "#ffd2a1",
+    "con": "Her"
+  },
+  {
+    "id": 84086,
+    "name": "Rasalgethi",
+    "coords": {
+      "x": -9.5215,
+      "y": -47.4861,
+      "z": 12.4263
+    },
+    "mag": 2.78,
+    "color": "#ffd2a1",
+    "con": "Her"
+  },
+  {
+    "id": 59565,
+    "name": "Imai",
+    "coords": {
+      "x": -25.8828,
+      "y": -1.7129,
+      "z": -42.7451
+    },
+    "mag": 2.79,
+    "color": "#aabfff",
+    "con": "Cru"
+  },
+  {
+    "id": 85410,
+    "name": "Rastaban",
+    "coords": {
+      "x": -3.9337,
+      "y": -30.3213,
+      "z": 39.5619
+    },
+    "mag": 2.79,
+    "color": "#ffd2a1",
+    "con": "Dra"
+  },
+  {
+    "id": 76065,
+    "name": "Gam Lup",
+    "coords": {
+      "x": -22.2382,
+      "y": -30.3681,
+      "z": -32.9126
+    },
+    "mag": 2.8,
+    "color": "#aabfff",
+    "con": "Lup"
+  },
+  {
+    "id": 25542,
+    "name": "Nihal",
+    "coords": {
+      "x": 6.4573,
+      "y": 46.3058,
+      "z": -17.7223
+    },
+    "mag": 2.81,
+    "color": "#fff4ea",
+    "con": "Lep"
+  },
+  {
+    "id": 81444,
+    "name": "40Zet Her",
+    "coords": {
+      "x": -14.3402,
+      "y": -40.098,
+      "z": 26.2013
+    },
+    "mag": 2.81,
+    "color": "#fff4ea",
+    "con": "Her"
+  },
+  {
+    "id": 2016,
+    "name": "Bet Hyi",
+    "coords": {
+      "x": 10.9617,
+      "y": 1.2369,
+      "z": -48.7679
+    },
+    "mag": 2.82,
+    "color": "#fff4ea",
+    "con": "Hyi"
+  },
+  {
+    "id": 81020,
+    "name": "Paikauhale",
+    "coords": {
+      "x": -15.8103,
+      "y": -41.1241,
+      "z": -23.6399
+    },
+    "mag": 2.82,
+    "color": "#aabfff",
+    "con": "Sco"
+  },
+  {
+    "id": 90217,
+    "name": "Kaus Borealis",
+    "coords": {
+      "x": 5.4977,
+      "y": -44.8227,
+      "z": -21.4639
+    },
+    "mag": 2.82,
+    "color": "#ffd2a1",
+    "con": "Sgr"
+  },
+  {
+    "id": 1065,
+    "name": "Algenib",
+    "coords": {
+      "x": 48.1741,
+      "y": 2.7853,
+      "z": 13.0956
+    },
+    "mag": 2.83,
+    "color": "#aabfff",
+    "con": "Peg"
+  },
+  {
+    "id": 39644,
+    "name": "Tureis",
+    "coords": {
+      "x": -24.0708,
+      "y": 38.6923,
+      "z": -20.5792
+    },
+    "mag": 2.83,
+    "color": "#f8f7ff",
+    "con": "Pup"
+  },
+  {
+    "id": 77716,
+    "name": "Bet TrA",
+    "coords": {
+      "x": -11.5899,
+      "y": -19.1264,
+      "z": -44.7197
+    },
+    "mag": 2.83,
+    "color": "#f8f7ff",
+    "con": "TrA"
+  },
+  {
+    "id": 18201,
+    "name": "44Zet Per",
+    "coords": {
+      "x": 22.1624,
+      "y": 36.2126,
+      "z": 26.4098
+    },
+    "mag": 2.84,
+    "color": "#e3e7ff",
+    "con": "Per"
+  },
+  {
+    "id": 84999,
+    "name": "Bet Ara",
+    "coords": {
+      "x": -4.2683,
+      "y": -27.9751,
+      "z": -41.2211
+    },
+    "mag": 2.84,
+    "color": "#ff9e3a",
+    "con": "Ara"
+  },
+  {
+    "id": 85530,
+    "name": "Alp Ara",
+    "coords": {
+      "x": -3.949,
+      "y": -31.9792,
+      "z": -38.2327
+    },
+    "mag": 2.84,
+    "color": "#aabfff",
+    "con": "Ara"
+  },
+  {
+    "id": 17661,
+    "name": "Alcyone",
+    "coords": {
+      "x": 24.9433,
+      "y": 38.2208,
+      "z": 20.4206
+    },
+    "mag": 2.85,
+    "color": "#aabfff",
+    "con": "Tau"
+  },
+  {
+    "id": 63405,
+    "name": "Vindemiatrix",
+    "coords": {
+      "x": -47.2927,
+      "y": -13.1547,
+      "z": 9.5055
+    },
+    "mag": 2.85,
+    "color": "#ffd2a1",
+    "con": "Vir"
+  },
+  {
+    "id": 107213,
+    "name": "Deneb Algedi",
+    "coords": {
+      "x": 40.1735,
+      "y": -26.3287,
+      "z": -13.8886
+    },
+    "mag": 2.85,
+    "color": "#e3e7ff",
+    "con": "Cap"
+  },
+  {
+    "id": 118485,
+    "name": "Castor B",
+    "coords": {
+      "x": -17.0313,
+      "y": 38.8869,
+      "z": 26.4149
+    },
+    "mag": 2.85,
+    "color": "#fff4ea",
+    "con": "Gem"
+  },
+  {
+    "id": 9217,
+    "name": "Alp Hyi",
+    "coords": {
+      "x": 20.6788,
+      "y": 11.7914,
+      "z": -43.9699
+    },
+    "mag": 2.86,
+    "color": "#e3e7ff",
+    "con": "Hyi"
+  },
+  {
+    "id": 96858,
+    "name": "Fawaris",
+    "coords": {
+      "x": 15.598,
+      "y": -31.6385,
+      "z": 35.436
+    },
+    "mag": 2.86,
+    "color": "#aabfff",
+    "con": "Cyg"
+  },
+  {
+    "id": 30270,
+    "name": "Tejat",
+    "coords": {
+      "x": -4.6197,
+      "y": 45.9578,
+      "z": 19.1451
+    },
+    "mag": 2.87,
+    "color": "#ff9e3a",
+    "con": "Gem"
+  },
+  {
+    "id": 74717,
+    "name": "Gam TrA",
+    "coords": {
+      "x": -11.7515,
+      "y": -13.8703,
+      "z": -46.5781
+    },
+    "mag": 2.87,
+    "color": "#e3e7ff",
+    "con": "TrA"
+  },
+  {
+    "id": 109784,
+    "name": "Alp Tuc",
+    "coords": {
+      "x": 22.4106,
+      "y": -10.6292,
+      "z": -43.4141
+    },
+    "mag": 2.87,
+    "color": "#ffd2a1",
+    "con": "Tuc"
+  },
+  {
+    "id": 13813,
+    "name": "Acamar",
+    "coords": {
+      "x": 27.1663,
+      "y": 26.7572,
+      "z": -32.3426
+    },
+    "mag": 2.88,
+    "color": "#e3e7ff",
+    "con": "Eri"
+  },
+  {
+    "id": 93846,
+    "name": "Albaldah",
+    "coords": {
+      "x": 13.9886,
+      "y": -44.526,
+      "z": -17.9376
+    },
+    "mag": 2.88,
+    "color": "#f8f7ff",
+    "con": "Sgr"
+  },
+  {
+    "id": 36087,
+    "name": "Gomeisa",
+    "coords": {
+      "x": -18.3645,
+      "y": 45.9432,
+      "z": 7.2086
+    },
+    "mag": 2.89,
+    "color": "#aabfff",
+    "con": "CMi"
+  },
+  {
+    "id": 62925,
+    "name": "Cor Caroli",
+    "coords": {
+      "x": -38.0625,
+      "y": -9.4949,
+      "z": 31.0015
+    },
+    "mag": 2.89,
+    "color": "#aabfff",
+    "con": "CVn"
+  },
+  {
+    "id": 78029,
+    "name": "Fang",
+    "coords": {
+      "x": -22.6425,
+      "y": -38.7681,
+      "z": -22.008
+    },
+    "mag": 2.89,
+    "color": "#aabfff",
+    "con": "Sco"
+  },
+  {
+    "id": 18485,
+    "name": "45Eps Per",
+    "coords": {
+      "x": 19.458,
+      "y": 32.985,
+      "z": 32.1462
+    },
+    "mag": 2.9,
+    "color": "#aabfff",
+    "con": "Per"
+  },
+  {
+    "id": 79870,
+    "name": "Alniyat",
+    "coords": {
+      "x": -18.8455,
+      "y": -40.9676,
+      "z": -21.5986
+    },
+    "mag": 2.9,
+    "color": "#e3e7ff",
+    "con": "Sco"
+  },
+  {
+    "id": 105936,
+    "name": "Sadalsuud",
+    "coords": {
+      "x": 39.6854,
+      "y": -30.0251,
+      "z": -4.8541
+    },
+    "mag": 2.9,
+    "color": "#fff4ea",
+    "con": "Aqr"
+  },
+  {
+    "id": 14292,
+    "name": "23Gam Per",
+    "coords": {
+      "x": 20.5823,
+      "y": 21.4624,
+      "z": 40.1962
+    },
+    "mag": 2.91,
+    "color": "#fff4ea",
+    "con": "Per"
+  },
+  {
+    "id": 47866,
+    "name": "Ups Car",
+    "coords": {
+      "x": -17.629,
+      "y": 11.5469,
+      "z": -45.3419
+    },
+    "mag": 2.92,
+    "color": "#e3e7ff",
+    "con": "Car"
+  },
+  {
+    "id": 111804,
+    "name": "Matar",
+    "coords": {
+      "x": 40.789,
+      "y": -14.2437,
+      "z": 25.167
+    },
+    "mag": 2.93,
+    "color": "#fff4ea",
+    "con": "Peg"
+  },
+  {
+    "id": 32682,
+    "name": "Tau Pup",
+    "coords": {
+      "x": -6.8583,
+      "y": 30.9766,
+      "z": -38.6447
+    },
+    "mag": 2.94,
+    "color": "#ffd2a1",
+    "con": "Pup"
+  },
+  {
+    "id": 60776,
+    "name": "Algorab",
+    "coords": {
+      "x": -47.5307,
+      "y": -6.2289,
+      "z": -14.2137
+    },
+    "mag": 2.94,
+    "color": "#aabfff",
+    "con": "Crv"
+  },
+  {
+    "id": 108728,
+    "name": "Sadalmelik",
+    "coords": {
+      "x": 43.9177,
+      "y": -23.899,
+      "z": -0.2791
+    },
+    "mag": 2.95,
+    "color": "#ffd2a1",
+    "con": "Aqr"
+  },
+  {
+    "id": 18497,
+    "name": "Zaurak",
+    "coords": {
+      "x": 24.6695,
+      "y": 41.8928,
+      "z": -11.6795
+    },
+    "mag": 2.97,
+    "color": "#ff9e3a",
+    "con": "Eri"
+  },
+  {
+    "id": 26386,
+    "name": "Tianguan",
+    "coords": {
+      "x": 4.5416,
+      "y": 46.4126,
+      "z": 18.0345
+    },
+    "mag": 2.97,
+    "color": "#aabfff",
+    "con": "Tau"
+  },
+  {
+    "id": 47772,
+    "name": "Ras Elased Australis",
+    "coords": {
+      "x": -38.1397,
+      "y": 25.2798,
+      "z": 20.1567
+    },
+    "mag": 2.97,
+    "color": "#fff4ea",
+    "con": "Leo"
+  },
+  {
+    "id": 88361,
+    "name": "Alnasl",
+    "coords": {
+      "x": 1.0925,
+      "y": -43.1012,
+      "z": -25.3198
+    },
+    "mag": 2.98,
+    "color": "#ffd2a1",
+    "con": "Sgr"
+  },
+  {
+    "id": 64758,
+    "name": "46Gam Hya",
+    "coords": {
+      "x": -43.2679,
+      "y": -15.5181,
+      "z": -19.6742
+    },
+    "mag": 2.99,
+    "color": "#ffd2a1",
+    "con": "Hya"
+  },
+  {
+    "id": 86804,
+    "name": "Iot1Sco",
+    "coords": {
+      "x": -2.07,
+      "y": -38.1748,
+      "z": -32.2242
+    },
+    "mag": 2.99,
+    "color": "#f8f7ff",
+    "con": "Sco"
+  },
+  {
+    "id": 93452,
+    "name": "Okab",
+    "coords": {
+      "x": 13.6672,
+      "y": -46.5798,
+      "z": 11.9805
+    },
+    "mag": 2.99,
+    "color": "#e3e7ff",
+    "con": "Aql"
+  },
+  {
+    "id": 10041,
+    "name": "4Bet Tri",
+    "coords": {
+      "x": 34.5924,
+      "y": 21.9411,
+      "z": 28.6697
+    },
+    "mag": 3.0,
+    "color": "#e3e7ff",
+    "con": "Tri"
+  },
+  {
+    "id": 54380,
+    "name": "52Psi UMa",
+    "coords": {
+      "x": -34.8067,
+      "y": 7.7701,
+      "z": 35.0445
+    },
+    "mag": 3.0,
+    "color": "#ffd2a1",
+    "con": "UMa"
+  },
+  {
+    "id": 74868,
+    "name": "Pherkad",
+    "coords": {
+      "x": -9.9821,
+      "y": -11.9733,
+      "z": 47.5079
+    },
+    "mag": 3.0,
+    "color": "#e3e7ff",
+    "con": "UMi"
+  },
+  {
+    "id": 82263,
+    "name": "Xamidimura",
+    "coords": {
+      "x": -11.5334,
+      "y": -37.6481,
+      "z": -30.8156
+    },
+    "mag": 3.0,
+    "color": "#aabfff",
+    "con": "Sco"
+  },
+  {
+    "id": 107742,
+    "name": "Aldhanab",
+    "coords": {
+      "x": 33.8769,
+      "y": -20.7743,
+      "z": -30.3444
+    },
+    "mag": 3.0,
+    "color": "#aabfff",
+    "con": "Gru"
+  },
+  {
+    "id": 17316,
+    "name": "39Del Per",
+    "coords": {
+      "x": 18.916,
+      "y": 27.7623,
+      "z": 37.0329
+    },
+    "mag": 3.01,
+    "color": "#aabfff",
+    "con": "Per"
+  },
+  {
+    "id": 30049,
+    "name": "Furud",
+    "coords": {
+      "x": -3.8305,
+      "y": 43.1037,
+      "z": -25.0479
+    },
+    "mag": 3.02,
+    "color": "#aabfff",
+    "con": "CMa"
+  },
+  {
+    "id": 33888,
+    "name": "24Omi2CMa",
+    "coords": {
+      "x": -12.4194,
+      "y": 44.0178,
+      "z": -20.2038
+    },
+    "mag": 3.02,
+    "color": "#aabfff",
+    "con": "CMa"
+  },
+  {
+    "id": 59134,
+    "name": "2Eps Crv",
+    "coords": {
+      "x": -46.1088,
+      "y": -2.0383,
+      "z": -19.2307
+    },
+    "mag": 3.02,
+    "color": "#ffd2a1",
+    "con": "Crv"
+  },
+  {
+    "id": 23361,
+    "name": "Almaaz",
+    "coords": {
+      "x": 9.0369,
+      "y": 34.9237,
+      "z": 34.6218
+    },
+    "mag": 3.03,
+    "color": "#f8f7ff",
+    "con": "Aur"
+  },
+  {
+    "id": 62127,
+    "name": "Bet Mus",
+    "coords": {
+      "x": -18.264,
+      "y": -3.7391,
+      "z": -46.3945
+    },
+    "mag": 3.04,
+    "color": "#aabfff",
+    "con": "Mus"
+  },
+  {
+    "id": 70851,
+    "name": "Seginus",
+    "coords": {
+      "x": -30.9089,
+      "y": -24.1656,
+      "z": 30.9946
+    },
+    "mag": 3.04,
+    "color": "#e3e7ff",
+    "con": "Boo"
+  },
+  {
+    "id": 95648,
+    "name": "Albireo",
+    "coords": {
+      "x": 17.0291,
+      "y": -40.7487,
+      "z": 23.4425
+    },
+    "mag": 3.05,
+    "color": "#ffd2a1",
+    "con": "Cyg"
+  },
+  {
+    "id": 100020,
+    "name": "Dabih",
+    "coords": {
+      "x": 27.9042,
+      "y": -39.4794,
+      "z": -12.7566
+    },
+    "mag": 3.05,
+    "color": "#fff4ea",
+    "con": "Cap"
+  },
+  {
+    "id": 32161,
+    "name": "Mebsuta",
+    "coords": {
+      "x": -8.6242,
+      "y": 44.4378,
+      "z": 21.2346
+    },
+    "mag": 3.06,
+    "color": "#ffd2a1",
+    "con": "Gem"
+  },
+  {
+    "id": 50655,
+    "name": "Tania Australis",
+    "coords": {
+      "x": -34.0985,
+      "y": 15.4805,
+      "z": 33.1307
+    },
+    "mag": 3.06,
+    "color": "#ff9e3a",
+    "con": "UMa"
+  },
+  {
+    "id": 94081,
+    "name": "Altais",
+    "coords": {
+      "x": 5.9163,
+      "y": -18.0595,
+      "z": 46.2477
+    },
+    "mag": 3.07,
+    "color": "#ffd2a1",
+    "con": "Dra"
+  },
+  {
+    "id": 89364,
+    "name": "Eta Sgr",
+    "coords": {
+      "x": 3.0779,
+      "y": -39.9382,
+      "z": -29.9244
+    },
+    "mag": 3.1,
+    "color": "#ff9e3a",
+    "con": "Sgr"
+  },
+  {
+    "id": 43689,
+    "name": "16Zet Hya",
+    "coords": {
+      "x": -34.4513,
+      "y": 35.8648,
+      "z": 5.1792
+    },
+    "mag": 3.11,
+    "color": "#ffd2a1",
+    "con": "Hya"
+  },
+  {
+    "id": 52789,
+    "name": "Nu  Hya",
+    "coords": {
+      "x": -45.7702,
+      "y": 14.5137,
+      "z": -13.9442
+    },
+    "mag": 3.11,
+    "color": "#ffd2a1",
+    "con": "Hya"
+  },
+  {
+    "id": 56392,
+    "name": "Lam Cen",
+    "coords": {
+      "x": -22.5576,
+      "y": 2.3926,
+      "z": -44.5582
+    },
+    "mag": 3.11,
+    "color": "#aabfff",
+    "con": "Cen"
+  },
+  {
+    "id": 101445,
+    "name": "Alp Ind",
+    "coords": {
+      "x": 21.5221,
+      "y": -26.2091,
+      "z": -36.7407
+    },
+    "mag": 3.11,
+    "color": "#ffd2a1",
+    "con": "Ind"
+  },
+  {
+    "id": 27559,
+    "name": "Wazn",
+    "coords": {
+      "x": 1.5998,
+      "y": 40.5378,
+      "z": -29.2254
+    },
+    "mag": 3.12,
+    "color": "#ffd2a1",
+    "con": "Col"
+  },
+  {
+    "id": 44000,
+    "name": "Talitha",
+    "coords": {
+      "x": -23.5563,
+      "y": 23.7197,
+      "z": 37.1817
+    },
+    "mag": 3.12,
+    "color": "#e3e7ff",
+    "con": "UMa"
+  },
+  {
+    "id": 82826,
+    "name": "Zet Ara",
+    "coords": {
+      "x": -7.4008,
+      "y": -26.9698,
+      "z": -41.4471
+    },
+    "mag": 3.12,
+    "color": "#ff9e3a",
+    "con": "Ara"
+  },
+  {
+    "id": 84121,
+    "name": "Sarin",
+    "coords": {
+      "x": -8.8459,
+      "y": -44.5039,
+      "z": 21.0037
+    },
+    "mag": 3.12,
+    "color": "#e3e7ff",
+    "con": "Her"
+  },
+  {
+    "id": 73107,
+    "name": "Kap Cen",
+    "coords": {
+      "x": -26.3269,
+      "y": -26.1349,
+      "z": -33.524
+    },
+    "mag": 3.13,
+    "color": "#aabfff",
+    "con": "Cen"
+  },
+  {
+    "id": 45728,
+    "name": "40Alp Lyn",
+    "coords": {
+      "x": -31.7282,
+      "y": 26.3752,
+      "z": 28.243
+    },
+    "mag": 3.14,
+    "color": "#ff9e3a",
+    "con": "Lyn"
+  },
+  {
+    "id": 46568,
+    "name": "HR 3803",
+    "coords": {
+      "x": -21.6726,
+      "y": 16.4471,
+      "z": -41.9499
+    },
+    "mag": 3.16,
+    "color": "#ff9e3a",
+    "con": "Vel"
+  },
+  {
+    "id": 84122,
+    "name": "67Pi  Her",
+    "coords": {
+      "x": -7.8017,
+      "y": -39.2642,
+      "z": 29.9576
+    },
+    "mag": 3.16,
+    "color": "#ff9e3a",
+    "con": "Her"
+  },
+  {
+    "id": 31605,
+    "name": "Nu  Pup",
+    "coords": {
+      "x": -5.9787,
+      "y": 35.9572,
+      "z": -34.2248
+    },
+    "mag": 3.17,
+    "color": "#aabfff",
+    "con": "Pup"
+  },
+  {
+    "id": 46720,
+    "name": "25The UMa",
+    "coords": {
+      "x": -24.8309,
+      "y": 18.5662,
+      "z": 39.2265
+    },
+    "mag": 3.17,
+    "color": "#f8f7ff",
+    "con": "UMa"
+  },
+  {
+    "id": 83638,
+    "name": "Aldhibah",
+    "coords": {
+      "x": -4.5571,
+      "y": -20.0527,
+      "z": 45.5754
+    },
+    "mag": 3.17,
+    "color": "#aabfff",
+    "con": "Dra"
+  },
+  {
+    "id": 91754,
+    "name": "27Phi Sgr",
+    "coords": {
+      "x": 8.8172,
+      "y": -43.6728,
+      "z": -22.6924
+    },
+    "mag": 3.17,
+    "color": "#aabfff",
+    "con": "Sgr"
+  },
+  {
+    "id": 23712,
+    "name": "Haedus",
+    "coords": {
+      "x": 8.6956,
+      "y": 36.5816,
+      "z": 32.9571
+    },
+    "mag": 3.18,
+    "color": "#aabfff",
+    "con": "Aur"
+  },
+  {
+    "id": 71682,
+    "name": "Alp Cir",
+    "coords": {
+      "x": -16.0526,
+      "y": -13.7717,
+      "z": -45.3062
+    },
+    "mag": 3.18,
+    "color": "#e3e7ff",
+    "con": "Cir"
+  },
+  {
+    "id": 22396,
+    "name": "Tabit",
+    "coords": {
+      "x": 14.9575,
+      "y": 47.3239,
+      "z": 6.0599
+    },
+    "mag": 3.19,
+    "color": "#f8f7ff",
+    "con": "Ori"
+  },
+  {
+    "id": 23630,
+    "name": "2Eps Lep",
+    "coords": {
+      "x": 10.8995,
+      "y": 44.9339,
+      "z": -19.0301
+    },
+    "mag": 3.19,
+    "color": "#ff9e3a",
+    "con": "Lep"
+  },
+  {
+    "id": 82745,
+    "name": "27Kap Oph",
+    "coords": {
+      "x": -13.2522,
+      "y": -47.5188,
+      "z": 8.1448
+    },
+    "mag": 3.19,
+    "color": "#ffd2a1",
+    "con": "Oph"
+  },
+  {
+    "id": 86991,
+    "name": "Fuyue",
+    "coords": {
+      "x": -1.7655,
+      "y": -39.87,
+      "z": -30.1209
+    },
+    "mag": 3.19,
+    "color": "#ffd2a1",
+    "con": "Sco"
+  },
+  {
+    "id": 104394,
+    "name": "64Zet Cyg",
+    "coords": {
+      "x": 32.2231,
+      "y": -28.7763,
+      "z": 25.1713
+    },
+    "mag": 3.21,
+    "color": "#ffd2a1",
+    "con": "Cyg"
+  },
+  {
+    "id": 116361,
+    "name": "Errai",
+    "coords": {
+      "x": 10.6658,
+      "y": -0.9637,
+      "z": 48.8397
+    },
+    "mag": 3.21,
+    "color": "#ffd2a1",
+    "con": "Cep"
+  },
+  {
+    "id": 74912,
+    "name": "Del Lup",
+    "coords": {
+      "x": -24.2107,
+      "y": -29.2066,
+      "z": -32.5702
+    },
+    "mag": 3.22,
+    "color": "#aabfff",
+    "con": "Lup"
+  },
+  {
+    "id": 79640,
+    "name": "Yed Posterior",
+    "coords": {
+      "x": -21.3903,
+      "y": -45.008,
+      "z": -4.0904
+    },
+    "mag": 3.23,
+    "color": "#ffd2a1",
+    "con": "Oph"
+  },
+  {
+    "id": 89684,
+    "name": "58Eta Ser",
+    "coords": {
+      "x": 4.6365,
+      "y": -49.7203,
+      "z": -2.5286
+    },
+    "mag": 3.23,
+    "color": "#ffd2a1",
+    "con": "Ser"
+  },
+  {
+    "id": 105691,
+    "name": "Alfirk",
+    "coords": {
+      "x": 13.1423,
+      "y": -10.207,
+      "z": 47.1497
+    },
+    "mag": 3.23,
+    "color": "#aabfff",
+    "con": "Cep"
+  },
+  {
+    "id": 32521,
+    "name": "Alp Pic",
+    "coords": {
+      "x": -4.909,
+      "y": 23.0007,
+      "z": -44.1233
+    },
+    "mag": 3.24,
+    "color": "#e3e7ff",
+    "con": "Pic"
+  },
+  {
+    "id": 99156,
+    "name": "65The Aql",
+    "coords": {
+      "x": 27.1018,
+      "y": -42.0116,
+      "z": -0.7168
+    },
+    "mag": 3.24,
+    "color": "#aabfff",
+    "con": "Aql"
+  },
+  {
+    "id": 36274,
+    "name": "Sig Pup",
+    "coords": {
+      "x": -13.812,
+      "y": 33.6645,
+      "z": -34.2918
+    },
+    "mag": 3.25,
+    "color": "#ff9e3a",
+    "con": "Pup"
+  },
+  {
+    "id": 68675,
+    "name": "49Pi  Hya",
+    "coords": {
+      "x": -38.0542,
+      "y": -23.4046,
+      "z": -22.4522
+    },
+    "mag": 3.25,
+    "color": "#ffd2a1",
+    "con": "Hya"
+  },
+  {
+    "id": 73486,
+    "name": "Brachium",
+    "coords": {
+      "x": -31.3961,
+      "y": -32.5316,
+      "z": -21.3537
+    },
+    "mag": 3.25,
+    "color": "#ff9e3a",
+    "con": "Lib"
+  },
+  {
+    "id": 92902,
+    "name": "Sulafat",
+    "coords": {
+      "x": 10.7038,
+      "y": -40.6964,
+      "z": 27.0043
+    },
+    "mag": 3.25,
+    "color": "#aabfff",
+    "con": "Lyr"
+  },
+  {
+    "id": 17637,
+    "name": "Gam Hyi",
+    "coords": {
+      "x": 7.4347,
+      "y": 11.3656,
+      "z": -48.1201
+    },
+    "mag": 3.26,
+    "color": "#ff9e3a",
+    "con": "Hyi"
+  },
+  {
+    "id": 3086,
+    "name": "31Del And",
+    "coords": {
+      "x": 42.2903,
+      "y": 7.3291,
+      "z": 25.6479
+    },
+    "mag": 3.27,
+    "color": "#ffd2a1",
+    "con": "And"
+  },
+  {
+    "id": 84711,
+    "name": "42The Oph",
+    "coords": {
+      "x": -7.4773,
+      "y": -44.6944,
+      "z": -21.1306
+    },
+    "mag": 3.27,
+    "color": "#aabfff",
+    "con": "Oph"
+  },
+  {
+    "id": 112776,
+    "name": "Skat",
+    "coords": {
+      "x": 46.1635,
+      "y": -13.5319,
+      "z": -13.6315
+    },
+    "mag": 3.27,
+    "color": "#e3e7ff",
+    "con": "Aqr"
+  },
+  {
+    "id": 24249,
+    "name": "5Mu  Lep",
+    "coords": {
+      "x": 9.7915,
+      "y": 47.0043,
+      "z": -13.9541
+    },
+    "mag": 3.29,
+    "color": "#aabfff",
+    "con": "Lep"
+  },
+  {
+    "id": 49958,
+    "name": "Ome Car",
+    "coords": {
+      "x": -15.2677,
+      "y": 7.6341,
+      "z": -46.9959
+    },
+    "mag": 3.29,
+    "color": "#aabfff",
+    "con": "Car"
+  },
+  {
+    "id": 75229,
+    "name": "Edasich",
+    "coords": {
+      "x": -16.1408,
+      "y": -20.0983,
+      "z": 42.8431
+    },
+    "mag": 3.29,
+    "color": "#ffd2a1",
+    "con": "Dra"
+  },
+  {
+    "id": 21228,
+    "name": "Alp Dor",
+    "coords": {
+      "x": 10.4995,
+      "y": 26.6532,
+      "z": -40.9801
+    },
+    "mag": 3.3,
+    "color": "#aabfff",
+    "con": "Dor"
+  },
+  {
+    "id": 51428,
+    "name": "HR 4140",
+    "coords": {
+      "x": -21.9897,
+      "y": 8.8817,
+      "z": -44.0178
+    },
+    "mag": 3.3,
+    "color": "#aabfff",
+    "con": "Car"
+  },
+  {
+    "id": 29582,
+    "name": "Propus",
+    "coords": {
+      "x": -2.9965,
+      "y": 46.0944,
+      "z": 19.1397
+    },
+    "mag": 3.31,
+    "color": "#ff9e3a",
+    "con": "Gem"
+  },
+  {
+    "id": 85008,
+    "name": "Gam Ara",
+    "coords": {
+      "x": -4.1646,
+      "y": -27.3708,
+      "z": -41.6353
+    },
+    "mag": 3.31,
+    "color": "#aabfff",
+    "con": "Ara"
+  },
+  {
+    "id": 5154,
+    "name": "Bet Phe",
+    "coords": {
+      "x": 32.864,
+      "y": 9.7479,
+      "z": -36.3997
+    },
+    "mag": 3.32,
+    "color": "#fff4ea",
+    "con": "Phe"
+  },
+  {
+    "id": 14318,
+    "name": "25Rho Per",
+    "coords": {
+      "x": 26.9092,
+      "y": 28.1531,
+      "z": 31.3576
+    },
+    "mag": 3.32,
+    "color": "#ff9e3a",
+    "con": "Per"
+  },
+  {
+    "id": 59592,
+    "name": "Megrez",
+    "coords": {
+      "x": -27.1465,
+      "y": -1.83,
+      "z": 41.949
+    },
+    "mag": 3.32,
+    "color": "#e3e7ff",
+    "con": "UMa"
+  },
+  {
+    "id": 83885,
+    "name": "Eta Sco",
+    "coords": {
+      "x": -7.5494,
+      "y": -35.6341,
+      "z": -34.2523
+    },
+    "mag": 3.32,
+    "color": "#f8f7ff",
+    "con": "Sco"
+  },
+  {
+    "id": 87775,
+    "name": "64Nu  Oph",
+    "coords": {
+      "x": -0.2093,
+      "y": -49.2739,
+      "z": -8.4878
+    },
+    "mag": 3.32,
+    "color": "#ffd2a1",
+    "con": "Oph"
+  },
+  {
+    "id": 93569,
+    "name": "40Tau Sgr",
+    "coords": {
+      "x": 12.7507,
+      "y": -42.4062,
+      "z": -23.2192
+    },
+    "mag": 3.32,
+    "color": "#ffd2a1",
+    "con": "Sgr"
+  },
+  {
+    "id": 19730,
+    "name": "Alp Ret",
+    "coords": {
+      "x": 10.2722,
+      "y": 20.6989,
+      "z": -44.34
+    },
+    "mag": 3.33,
+    "color": "#ffd2a1",
+    "con": "Ret"
+  },
+  {
+    "id": 54718,
+    "name": "Chertan",
+    "coords": {
+      "x": -47.2404,
+      "y": 9.5596,
+      "z": 13.3027
+    },
+    "mag": 3.33,
+    "color": "#aabfff",
+    "con": "Leo"
+  },
+  {
+    "id": 38062,
+    "name": "Azmidi",
+    "coords": {
+      "x": -20.8241,
+      "y": 40.3053,
+      "z": -21.02
+    },
+    "mag": 3.34,
+    "color": "#ffd2a1",
+    "con": "Pup"
+  },
+  {
+    "id": 8867,
+    "name": "Segin",
+    "coords": {
+      "x": 19.4712,
+      "y": 10.6155,
+      "z": 44.8128
+    },
+    "mag": 3.35,
+    "color": "#aabfff",
+    "con": "Cas"
+  },
+  {
+    "id": 25218,
+    "name": "28Eta Ori",
+    "coords": {
+      "x": 7.7122,
+      "y": 49.3574,
+      "z": -2.0913
+    },
+    "mag": 3.35,
+    "color": "#aabfff",
+    "con": "Ori"
+  },
+  {
+    "id": 32276,
+    "name": "Alzirr",
+    "coords": {
+      "x": -9.5688,
+      "y": 47.7904,
+      "z": 11.1588
+    },
+    "mag": 3.35,
+    "color": "#f8f7ff",
+    "con": "Gem"
+  },
+  {
+    "id": 41586,
+    "name": "Muscida",
+    "coords": {
+      "x": -14.9098,
+      "y": 19.3845,
+      "z": 43.6112
+    },
+    "mag": 3.35,
+    "color": "#fff4ea",
+    "con": "UMa"
+  },
+  {
+    "id": 95207,
+    "name": "30Del Aql",
+    "coords": {
+      "x": 18.1963,
+      "y": -46.4921,
+      "z": 2.7168
+    },
+    "mag": 3.36,
+    "color": "#f8f7ff",
+    "con": "Aql"
+  },
+  {
+    "id": 75035,
+    "name": "Eps Lup",
+    "coords": {
+      "x": -22.5286,
+      "y": -27.4955,
+      "z": -35.1633
+    },
+    "mag": 3.37,
+    "color": "#aabfff",
+    "con": "Lup"
+  },
+  {
+    "id": 42990,
+    "name": "Ashlesha",
+    "coords": {
+      "x": -33.049,
+      "y": 37.1015,
+      "z": 5.5898
+    },
+    "mag": 3.38,
+    "color": "#fff4ea",
+    "con": "Hya"
+  },
+  {
+    "id": 66040,
+    "name": "Heze",
+    "coords": {
+      "x": -45.79,
+      "y": -20.075,
+      "z": -0.5199
+    },
+    "mag": 3.38,
+    "color": "#e3e7ff",
+    "con": "Vir"
+  },
+  {
+    "id": 26142,
+    "name": "Meissa",
+    "coords": {
+      "x": 5.3323,
+      "y": 48.9608,
+      "z": 8.6258
+    },
+    "mag": 3.39,
+    "color": "#aabfff",
+    "con": "Ori"
+  },
+  {
+    "id": 50229,
+    "name": "HR 4050",
+    "coords": {
+      "x": -21.6083,
+      "y": 10.413,
+      "z": -43.8708
+    },
+    "mag": 3.39,
+    "color": "#ff9e3a",
+    "con": "Car"
+  },
+  {
+    "id": 62890,
+    "name": "Minelauva",
+    "coords": {
+      "x": -48.4503,
+      "y": -11.991,
+      "z": 2.9631
+    },
+    "mag": 3.39,
+    "color": "#ff9e3a",
+    "con": "Vir"
+  },
+  {
+    "id": 109146,
+    "name": "21Zet Cep",
+    "coords": {
+      "x": 23.4151,
+      "y": -12.0784,
+      "z": 42.4952
+    },
+    "mag": 3.39,
+    "color": "#ff9e3a",
+    "con": "Cep"
+  },
+  {
+    "id": 20842,
+    "name": "Chamukuy",
+    "coords": {
+      "x": 18.6638,
+      "y": 44.3249,
+      "z": 13.6735
+    },
+    "mag": 3.4,
+    "color": "#e3e7ff",
+    "con": "Tau"
+  },
+  {
+    "id": 119131,
+    "name": "Estrela 119131",
+    "coords": {
+      "x": -10.3416,
+      "y": -47.004,
+      "z": -13.5526
+    },
+    "mag": 3.4,
+    "color": "#fff4ea",
+    "con": "Oph"
+  },
+  {
+    "id": 6853,
+    "name": "Gam Phe",
+    "coords": {
+      "x": 33.7071,
+      "y": 13.6811,
+      "z": -34.3025
+    },
+    "mag": 3.41,
+    "color": "#ff9e3a",
+    "con": "Phe"
+  },
+  {
+    "id": 18677,
+    "name": "35Lam Tau",
+    "coords": {
+      "x": 24.2827,
+      "y": 42.3487,
+      "z": 10.8138
+    },
+    "mag": 3.41,
+    "color": "#aabfff",
+    "con": "Tau"
+  },
+  {
+    "id": 67251,
+    "name": "Nu  Cen",
+    "coords": {
+      "x": -33.1573,
+      "y": -17.1696,
+      "z": -33.2535
+    },
+    "mag": 3.41,
+    "color": "#aabfff",
+    "con": "Cen"
+  },
+  {
+    "id": 74167,
+    "name": "Zet Lup",
+    "coords": {
+      "x": -20.5238,
+      "y": -22.8511,
+      "z": -39.4538
+    },
+    "mag": 3.41,
+    "color": "#ffd2a1",
+    "con": "Lup"
+  },
+  {
+    "id": 102091,
+    "name": "3Eta Cep",
+    "coords": {
+      "x": 15.5815,
+      "y": -17.722,
+      "z": 44.0812
+    },
+    "mag": 3.41,
+    "color": "#ffd2a1",
+    "con": "Cep"
+  },
+  {
+    "id": 111676,
+    "name": "Homam",
+    "coords": {
+      "x": 46.2538,
+      "y": -16.5016,
+      "z": 9.3959
+    },
+    "mag": 3.41,
+    "color": "#aabfff",
+    "con": "Peg"
+  },
+  {
+    "id": 8777,
+    "name": "Mothallah",
+    "coords": {
+      "x": 38.2972,
+      "y": 20.5954,
+      "z": 24.681
+    },
+    "mag": 3.42,
+    "color": "#f8f7ff",
+    "con": "Tri"
+  },
+  {
+    "id": 78148,
+    "name": "Eta Lup",
+    "coords": {
+      "x": -19.5751,
+      "y": -33.9469,
+      "z": -31.0551
+    },
+    "mag": 3.42,
+    "color": "#aabfff",
+    "con": "Lup"
+  },
+  {
+    "id": 86705,
+    "name": "86Mu  Her",
+    "coords": {
+      "x": -2.6136,
+      "y": -44.1841,
+      "z": 23.2581
+    },
+    "mag": 3.42,
+    "color": "#fff4ea",
+    "con": "Her"
+  },
+  {
+    "id": 102064,
+    "name": "Bet Pav",
+    "coords": {
+      "x": 13.2993,
+      "y": -15.1706,
+      "z": -45.7491
+    },
+    "mag": 3.42,
+    "color": "#e3e7ff",
+    "con": "Pav"
+  },
+  {
+    "id": 44952,
+    "name": "HR 3659",
+    "coords": {
+      "x": -19.0779,
+      "y": 17.334,
+      "z": -42.8435
+    },
+    "mag": 3.43,
+    "color": "#aabfff",
+    "con": "Car"
+  },
+  {
+    "id": 50193,
+    "name": "Adhafera",
+    "coords": {
+      "x": -41.2986,
+      "y": 19.9889,
+      "z": 19.8713
+    },
+    "mag": 3.43,
+    "color": "#f8f7ff",
+    "con": "Leo"
+  },
+  {
+    "id": 93510,
+    "name": "16Lam Aql",
+    "coords": {
+      "x": 14.2011,
+      "y": -47.7516,
+      "z": -4.2557
+    },
+    "mag": 3.43,
+    "color": "#aabfff",
+    "con": "Aql"
+  },
+  {
+    "id": 50230,
+    "name": "Tania Borealis",
+    "coords": {
+      "x": -32.989,
+      "y": 15.8949,
+      "z": 34.0452
+    },
+    "mag": 3.45,
+    "color": "#e3e7ff",
+    "con": "UMa"
+  },
+  {
+    "id": 3814,
+    "name": "Achird",
+    "coords": {
+      "x": 26.0236,
+      "y": 5.6628,
+      "z": 42.3167
+    },
+    "mag": 3.46,
+    "color": "#f8f7ff",
+    "con": "Cas"
+  },
+  {
+    "id": 5353,
+    "name": "31Eta Cet",
+    "coords": {
+      "x": 47.025,
+      "y": 14.5094,
+      "z": -8.839
+    },
+    "mag": 3.46,
+    "color": "#ffd2a1",
+    "con": "Cet"
+  },
+  {
+    "id": 38713,
+    "name": "Chi Car",
+    "coords": {
+      "x": -14.6836,
+      "y": 26.279,
+      "z": -39.9225
+    },
+    "mag": 3.46,
+    "color": "#aabfff",
+    "con": "Car"
+  },
+  {
+    "id": 74438,
+    "name": "49Del Boo",
+    "coords": {
+      "x": -27.4806,
+      "y": -31.4747,
+      "z": 27.462
+    },
+    "mag": 3.46,
+    "color": "#ffd2a1",
+    "con": "Boo"
+  },
+  {
+    "id": 12673,
+    "name": "Kaffaljidhma",
+    "coords": {
+      "x": 37.7751,
+      "y": 32.6355,
+      "z": 2.8223
+    },
+    "mag": 3.47,
+    "color": "#e3e7ff",
+    "con": "Cet"
+  },
+  {
+    "id": 67259,
+    "name": "Mu  Cen",
+    "coords": {
+      "x": -32.7408,
+      "y": -16.9742,
+      "z": -33.7626
+    },
+    "mag": 3.47,
+    "color": "#aabfff",
+    "con": "Cen"
+  },
+  {
+    "id": 49441,
+    "name": "30Eta Leo",
+    "coords": {
+      "x": -42.2058,
+      "y": 22.5991,
+      "z": 14.4204
+    },
+    "mag": 3.48,
+    "color": "#aabfff",
+    "con": "Leo"
+  },
+  {
+    "id": 81583,
+    "name": "44Eta Her",
+    "coords": {
+      "x": -12.8416,
+      "y": -36.7192,
+      "z": 31.4133
+    },
+    "mag": 3.48,
+    "color": "#ffd2a1",
+    "con": "Her"
+  },
+  {
+    "id": 8087,
+    "name": "52Tau Cet",
+    "coords": {
+      "x": 43.206,
+      "y": 21.0889,
+      "z": -13.7294
+    },
+    "mag": 3.49,
+    "color": "#fff4ea",
+    "con": "Cet"
+  },
+  {
+    "id": 33769,
+    "name": "Nganurganity",
+    "coords": {
+      "x": -11.7528,
+      "y": 42.5819,
+      "z": -23.4233
+    },
+    "mag": 3.49,
+    "color": "#ff9e3a",
+    "con": "CMa"
+  },
+  {
+    "id": 55055,
+    "name": "Alula Borealis",
+    "coords": {
+      "x": -41.2031,
+      "y": 7.5475,
+      "z": 27.3009
+    },
+    "mag": 3.49,
+    "color": "#ff9e3a",
+    "con": "UMa"
+  },
+  {
+    "id": 73327,
+    "name": "Nekkar",
+    "coords": {
+      "x": -26.6986,
+      "y": -27.1559,
+      "z": 32.3997
+    },
+    "mag": 3.49,
+    "color": "#ffd2a1",
+    "con": "Boo"
+  },
+  {
+    "id": 90143,
+    "name": "Alp Tel",
+    "coords": {
+      "x": 4.0808,
+      "y": -34.5123,
+      "z": -35.9479
+    },
+    "mag": 3.49,
+    "color": "#aabfff",
+    "con": "Tel"
+  },
+  {
+    "id": 112263,
+    "name": "Eps Gru",
+    "coords": {
+      "x": 29.7444,
+      "y": -9.585,
+      "z": -39.0307
+    },
+    "mag": 3.49,
+    "color": "#e3e7ff",
+    "con": "Gru"
+  },
+  {
+    "id": 32672,
+    "name": "13Kap CMa",
+    "coords": {
+      "x": -9.0977,
+      "y": 41.1724,
+      "z": -26.8712
+    },
+    "mag": 3.5,
+    "color": "#aabfff",
+    "con": "CMa"
+  },
+  {
+    "id": 35453,
+    "name": "Wasat",
+    "coords": {
+      "x": -15.8811,
+      "y": 43.5603,
+      "z": 18.716
+    },
+    "mag": 3.5,
+    "color": "#f8f7ff",
+    "con": "Gem"
+  },
+  {
+    "id": 112364,
+    "name": "32Iot Cep",
+    "coords": {
+      "x": 19.2346,
+      "y": -6.0942,
+      "z": 45.7481
+    },
+    "mag": 3.5,
+    "color": "#ffd2a1",
+    "con": "Cep"
+  },
+  {
+    "id": 98026,
+    "name": "12Gam Sge",
+    "coords": {
+      "x": 23.3455,
+      "y": -40.9468,
+      "z": 16.6839
+    },
+    "mag": 3.51,
+    "color": "#ff9e3a",
+    "con": "Sge"
+  },
+  {
+    "id": 112389,
+    "name": "Sadalbari",
+    "coords": {
+      "x": 43.3573,
+      "y": -13.6698,
+      "z": 20.8153
+    },
+    "mag": 3.51,
+    "color": "#ffd2a1",
+    "con": "Peg"
+  },
+  {
+    "id": 17336,
+    "name": "Rana",
+    "coords": {
+      "x": 27.6885,
+      "y": 40.7609,
+      "z": -8.479
+    },
+    "mag": 3.52,
+    "color": "#ffd2a1",
+    "con": "Eri"
+  },
+  {
+    "id": 47373,
+    "name": "Subra",
+    "coords": {
+      "x": -40.49,
+      "y": 28.0495,
+      "z": 8.5898
+    },
+    "mag": 3.52,
+    "color": "#f8f7ff",
+    "con": "Leo"
+  },
+  {
+    "id": 48635,
+    "name": "Phi Vel",
+    "coords": {
+      "x": -24.9027,
+      "y": 14.8358,
+      "z": -40.7401
+    },
+    "mag": 3.52,
+    "color": "#aabfff",
+    "con": "Vel"
+  },
+  {
+    "id": 92133,
+    "name": "Sheliak",
+    "coords": {
+      "x": 9.0528,
+      "y": -40.7673,
+      "z": 27.4968
+    },
+    "mag": 3.52,
+    "color": "#e3e7ff",
+    "con": "Lyr"
+  },
+  {
+    "id": 92793,
+    "name": "37Xi 2Sgr",
+    "coords": {
+      "x": 11.6259,
+      "y": -45.1735,
+      "z": -18.0053
+    },
+    "mag": 3.52,
+    "color": "#ffd2a1",
+    "con": "Sgr"
+  },
+  {
+    "id": 109081,
+    "name": "Biham",
+    "coords": {
+      "x": 44.1113,
+      "y": -22.914,
+      "z": 5.3981
+    },
+    "mag": 3.52,
+    "color": "#e3e7ff",
+    "con": "Peg"
+  },
+  {
+    "id": 118838,
+    "name": "29Gam Vir",
+    "coords": {
+      "x": -49.1609,
+      "y": -9.0338,
+      "z": -1.2646
+    },
+    "mag": 3.52,
+    "color": "#fff4ea",
+    "con": "Vir"
+  },
+  {
+    "id": 20837,
+    "name": "Ain",
+    "coords": {
+      "x": 18.335,
+      "y": 43.5198,
+      "z": 16.4272
+    },
+    "mag": 3.53,
+    "color": "#ffd2a1",
+    "con": "Tau"
+  },
+  {
+    "id": 40411,
+    "name": "Tarf",
+    "coords": {
+      "x": -27.6931,
+      "y": 40.8582,
+      "z": 7.9816
+    },
+    "mag": 3.53,
+    "color": "#ff9e3a",
+    "con": "Cnc"
+  },
+  {
+    "id": 56174,
+    "name": "Xi  Hya",
+    "coords": {
+      "x": -42.1738,
+      "y": 4.9912,
+      "z": -26.3905
+    },
+    "mag": 3.54,
+    "color": "#ffd2a1",
+    "con": "Hya"
+  },
+  {
+    "id": 77280,
+    "name": "32Mu  Ser",
+    "coords": {
+      "x": -26.8866,
+      "y": -42.0495,
+      "z": -2.9916
+    },
+    "mag": 3.54,
+    "color": "#aabfff",
+    "con": "Ser"
+  },
+  {
+    "id": 85998,
+    "name": "55Xi  Ser",
+    "coords": {
+      "x": -4.7068,
+      "y": -47.9748,
+      "z": -13.2766
+    },
+    "mag": 3.54,
+    "color": "#e3e7ff",
+    "con": "Ser"
+  },
+  {
+    "id": 19992,
+    "name": "41Ups4Eri",
+    "coords": {
+      "x": 17.905,
+      "y": 37.4942,
+      "z": -27.8136
+    },
+    "mag": 3.55,
+    "color": "#aabfff",
+    "con": "Eri"
+  },
+  {
+    "id": 27220,
+    "name": "14Zet Lep",
+    "coords": {
+      "x": 2.7497,
+      "y": 48.258,
+      "z": -12.7908
+    },
+    "mag": 3.55,
+    "color": "#e3e7ff",
+    "con": "Lep"
+  },
+  {
+    "id": 69773,
+    "name": "Iot Lup",
+    "coords": {
+      "x": -28.4733,
+      "y": -19.827,
+      "z": -36.0022
+    },
+    "mag": 3.55,
+    "color": "#aabfff",
+    "con": "Lup"
+  },
+  {
+    "id": 89660,
+    "name": "44Chi Dra",
+    "coords": {
+      "x": 1.3616,
+      "y": -14.7788,
+      "z": 47.7466
+    },
+    "mag": 3.55,
+    "color": "#f8f7ff",
+    "con": "Dra"
+  },
+  {
+    "id": 98924,
+    "name": "Del Pav",
+    "coords": {
+      "x": 10.7542,
+      "y": -17.0894,
+      "z": -45.7417
+    },
+    "mag": 3.55,
+    "color": "#fff4ea",
+    "con": "Pav"
+  },
+  {
+    "id": 1559,
+    "name": "8Iot Cet",
+    "coords": {
+      "x": 49.2308,
+      "y": 4.1833,
+      "z": -7.6699
+    },
+    "mag": 3.56,
+    "color": "#ffd2a1",
+    "con": "Cet"
+  },
+  {
+    "id": 10578,
+    "name": "Phi Eri",
+    "coords": {
+      "x": 25.7587,
+      "y": 17.458,
+      "z": -39.137
+    },
+    "mag": 3.56,
+    "color": "#aabfff",
+    "con": "Eri"
+  },
+  {
+    "id": 55118,
+    "name": "12Del Crt",
+    "coords": {
+      "x": -47.5871,
+      "y": 8.5321,
+      "z": -12.7542
+    },
+    "mag": 3.56,
+    "color": "#ffd2a1",
+    "con": "Crt"
+  },
+  {
+    "id": 82294,
+    "name": "Pipirima",
+    "coords": {
+      "x": -11.4617,
+      "y": -37.6867,
+      "z": -30.7951
+    },
+    "mag": 3.56,
+    "color": "#aabfff",
+    "con": "Sco"
+  },
+  {
+    "id": 37633,
+    "name": "77Kap Gem",
+    "coords": {
+      "x": -20.0411,
+      "y": 40.8874,
+      "z": 20.6536
+    },
+    "mag": 3.57,
+    "color": "#ffd2a1",
+    "con": "Gem"
+  },
+  {
+    "id": 44343,
+    "name": "Alkaphrah",
+    "coords": {
+      "x": -24.4188,
+      "y": 23.6582,
+      "z": 36.6607
+    },
+    "mag": 3.57,
+    "color": "#e3e7ff",
+    "con": "UMa"
+  },
+  {
+    "id": 70828,
+    "name": "25Rho Boo",
+    "coords": {
+      "x": -34.0131,
+      "y": -26.5333,
+      "z": 25.2802
+    },
+    "mag": 3.57,
+    "color": "#ffd2a1",
+    "con": "Boo"
+  },
+  {
+    "id": 74948,
+    "name": "Phi1Lup",
+    "coords": {
+      "x": -25.6707,
+      "y": -31.0874,
+      "z": -29.5735
+    },
+    "mag": 3.57,
+    "color": "#ff9e3a",
+    "con": "Lup"
+  },
+  {
+    "id": 35253,
+    "name": "54Lam Gem",
+    "coords": {
+      "x": -16.018,
+      "y": 45.1752,
+      "z": 14.2346
+    },
+    "mag": 3.58,
+    "color": "#e3e7ff",
+    "con": "Gem"
+  },
+  {
+    "id": 99743,
+    "name": "Algedi",
+    "coords": {
+      "x": 27.6537,
+      "y": -40.216,
+      "z": -10.8602
+    },
+    "mag": 3.58,
+    "color": "#fff4ea",
+    "con": "Cap"
+  },
+  {
+    "id": 7593,
+    "name": "Nembus",
+    "coords": {
+      "x": 30.072,
+      "y": 13.7034,
+      "z": 37.5218
+    },
+    "mag": 3.59,
+    "color": "#ffd2a1",
+    "con": "And"
+  },
+  {
+    "id": 24614,
+    "name": "20Tau Ori",
+    "coords": {
+      "x": 9.1306,
+      "y": 48.7968,
+      "z": -5.9587
+    },
+    "mag": 3.59,
+    "color": "#aabfff",
+    "con": "Ori"
+  },
+  {
+    "id": 27006,
+    "name": "13Gam Lep",
+    "coords": {
+      "x": 3.1304,
+      "y": 46.105,
+      "z": -19.0925
+    },
+    "mag": 3.59,
+    "color": "#f8f7ff",
+    "con": "Lep"
+  },
+  {
+    "id": 57584,
+    "name": "Zavijava",
+    "coords": {
+      "x": -49.9351,
+      "y": 2.0284,
+      "z": 1.5398
+    },
+    "mag": 3.59,
+    "color": "#f8f7ff",
+    "con": "Vir"
+  },
+  {
+    "id": 60075,
+    "name": "Ginan",
+    "coords": {
+      "x": -24.589,
+      "y": -2.2984,
+      "z": -43.4752
+    },
+    "mag": 3.59,
+    "color": "#ffd2a1",
+    "con": "Cru"
+  },
+  {
+    "id": 6523,
+    "name": "45The Cet",
+    "coords": {
+      "x": 46.2019,
+      "y": 17.7407,
+      "z": -7.117
+    },
+    "mag": 3.6,
+    "color": "#ffd2a1",
+    "con": "Cet"
+  },
+  {
+    "id": 32932,
+    "name": "34The Gem",
+    "coords": {
+      "x": -9.4679,
+      "y": 40.3755,
+      "z": 27.9316
+    },
+    "mag": 3.6,
+    "color": "#e3e7ff",
+    "con": "Gem"
+  },
+  {
+    "id": 42416,
+    "name": "HR 3447",
+    "coords": {
+      "x": -19.4065,
+      "y": 23.0677,
+      "z": -39.8907
+    },
+    "mag": 3.6,
+    "color": "#aabfff",
+    "con": "Vel"
+  },
+  {
+    "id": 46518,
+    "name": "Psi Vel",
+    "coords": {
+      "x": -30.2491,
+      "y": 23.0645,
+      "z": -32.4503
+    },
+    "mag": 3.6,
+    "color": "#f8f7ff",
+    "con": "Vel"
+  },
+  {
+    "id": 76235,
+    "name": "39Ups Lib",
+    "coords": {
+      "x": -25.7569,
+      "y": -35.7866,
+      "z": -23.5776
+    },
+    "mag": 3.6,
+    "color": "#ffd2a1",
+    "con": "Lib"
+  },
+  {
+    "id": 85467,
+    "name": "Del Ara",
+    "coords": {
+      "x": -3.0791,
+      "y": -24.287,
+      "z": -43.5966
+    },
+    "mag": 3.6,
+    "color": "#aabfff",
+    "con": "Ara"
+  },
+  {
+    "id": 13176,
+    "name": "Bharani",
+    "coords": {
+      "x": 32.7716,
+      "y": 30.0254,
+      "z": 22.9018
+    },
+    "mag": 3.61,
+    "color": "#aabfff",
+    "con": "Ari"
+  },
+  {
+    "id": 15861,
+    "name": "1Omi Tau",
+    "coords": {
+      "x": 30.9398,
+      "y": 38.4859,
+      "z": 7.8466
+    },
+    "mag": 3.61,
+    "color": "#fff4ea",
+    "con": "Tau"
+  },
+  {
+    "id": 49700,
+    "name": "41Lam Hya",
+    "coords": {
+      "x": -43.3813,
+      "y": 22.4416,
+      "z": -10.6976
+    },
+    "mag": 3.61,
+    "color": "#ffd2a1",
+    "con": "Hya"
+  },
+  {
+    "id": 63411,
+    "name": "Del Mus",
+    "coords": {
+      "x": -15.2442,
+      "y": -4.247,
+      "z": -47.4297
+    },
+    "mag": 3.61,
+    "color": "#ffd2a1",
+    "con": "Mus"
+  },
+  {
+    "id": 86661,
+    "name": "Eta Pav",
+    "coords": {
+      "x": -1.3281,
+      "y": -21.3077,
+      "z": -45.213
+    },
+    "mag": 3.61,
+    "color": "#ffd2a1",
+    "con": "Pav"
+  },
+  {
+    "id": 7083,
+    "name": "Alpherg",
+    "coords": {
+      "x": 44.4266,
+      "y": 18.7399,
+      "z": 13.2322
+    },
+    "mag": 3.62,
+    "color": "#ffd2a1",
+    "con": "Psc"
+  },
+  {
+    "id": 17805,
+    "name": "Atlas",
+    "coords": {
+      "x": 24.6728,
+      "y": 38.4179,
+      "z": 20.3794
+    },
+    "mag": 3.62,
+    "color": "#aabfff",
+    "con": "Tau"
+  },
+  {
+    "id": 37711,
+    "name": "HR 3017",
+    "coords": {
+      "x": -17.4732,
+      "y": 35.333,
+      "z": -30.7615
+    },
+    "mag": 3.62,
+    "color": "#ff9e3a",
+    "con": "Pup"
+  },
+  {
+    "id": 82477,
+    "name": "Zet2Sco",
+    "coords": {
+      "x": -10.4029,
+      "y": -35.4507,
+      "z": -33.6902
+    },
+    "mag": 3.62,
+    "color": "#ffd2a1",
+    "con": "Sco"
+  },
+  {
+    "id": 113366,
+    "name": "1Omi And",
+    "coords": {
+      "x": 35.7856,
+      "y": -9.2679,
+      "z": 33.6674
+    },
+    "mag": 3.62,
+    "color": "#aabfff",
+    "con": "And"
+  },
+  {
+    "id": 57190,
+    "name": "Lam Mus",
+    "coords": {
+      "x": -19.7153,
+      "y": 1.2398,
+      "z": -45.9322
+    },
+    "mag": 3.63,
+    "color": "#e3e7ff",
+    "con": "Mus"
+  },
+  {
+    "id": 101442,
+    "name": "Rotanev",
+    "coords": {
+      "x": 30.7041,
+      "y": -37.3967,
+      "z": 12.5993
+    },
+    "mag": 3.64,
+    "color": "#f8f7ff",
+    "con": "Del"
+  },
+  {
+    "id": 20155,
+    "name": "Prima Hyadum",
+    "coords": {
+      "x": 20.3891,
+      "y": 43.6218,
+      "z": 13.4692
+    },
+    "mag": 3.65,
+    "color": "#ffd2a1",
+    "con": "Tau"
+  },
+  {
+    "id": 46600,
+    "name": "23    UMa",
+    "coords": {
+      "x": -18.0621,
+      "y": 13.6691,
+      "z": 44.5748
+    },
+    "mag": 3.65,
+    "color": "#f8f7ff",
+    "con": "UMa"
+  },
+  {
+    "id": 76997,
+    "name": "28Bet Ser",
+    "coords": {
+      "x": -26.5703,
+      "y": -40.2148,
+      "z": 13.2962
+    },
+    "mag": 3.65,
+    "color": "#e3e7ff",
+    "con": "Ser"
+  },
+  {
+    "id": 88439,
+    "name": "The Ara",
+    "coords": {
+      "x": 0.928,
+      "y": -32.0648,
+      "z": -38.3535
+    },
+    "mag": 3.65,
+    "color": "#aabfff",
+    "con": "Ara"
+  },
+  {
+    "id": 110614,
+    "name": "55Zet1Aqr",
+    "coords": {
+      "x": 46.0958,
+      "y": -19.3694,
+      "z": -0.0174
+    },
+    "mag": 3.65,
+    "color": "#f8f7ff",
+    "con": "Aqr"
+  },
+  {
+    "id": 75466,
+    "name": "Nusakan",
+    "coords": {
+      "x": -26.9216,
+      "y": -34.4051,
+      "z": 24.3211
+    },
+    "mag": 3.66,
+    "color": "#f8f7ff",
+    "con": "CrB"
+  },
+  {
+    "id": 76365,
+    "name": "40Tau Lib",
+    "coords": {
+      "x": -25.1,
+      "y": -35.4029,
+      "z": -24.8318
+    },
+    "mag": 3.66,
+    "color": "#aabfff",
+    "con": "Lib"
+  },
+  {
+    "id": 68537,
+    "name": "Thuban",
+    "coords": {
+      "x": -18.5158,
+      "y": -11.1683,
+      "z": 45.0825
+    },
+    "mag": 3.67,
+    "color": "#aabfff",
+    "con": "Dra"
+  },
+  {
+    "id": 102895,
+    "name": "Bet Ind",
+    "coords": {
+      "x": 18.0736,
+      "y": -18.9113,
+      "z": -42.6111
+    },
+    "mag": 3.67,
+    "color": "#ffd2a1",
+    "con": "Ind"
+  },
+  {
+    "id": 22496,
+    "name": "3Pi 4Ori",
+    "coords": {
+      "x": 14.7135,
+      "y": 47.5359,
+      "z": 4.8836
+    },
+    "mag": 3.68,
+    "color": "#aabfff",
+    "con": "Ori"
+  },
+  {
+    "id": 42709,
+    "name": "Alp Pyx",
+    "coords": {
+      "x": -27.3964,
+      "y": 31.6294,
+      "z": -27.3682
+    },
+    "mag": 3.68,
+    "color": "#aabfff",
+    "con": "Pyx"
+  },
+  {
+    "id": 97056,
+    "name": "7Del Sge",
+    "coords": {
+      "x": 21.4093,
+      "y": -42.297,
+      "z": 15.8936
+    },
+    "mag": 3.68,
+    "color": "#ffd2a1",
+    "con": "Sge"
+  },
+  {
+    "id": 113980,
+    "name": "88    Aqr",
+    "coords": {
+      "x": 45.4952,
+      "y": -10.2014,
+      "z": -18.0588
+    },
+    "mag": 3.68,
+    "color": "#ffd2a1",
+    "con": "Aqr"
+  },
+  {
+    "id": 2914,
+    "name": "Fulu",
+    "coords": {
+      "x": 29.0795,
+      "y": 4.7322,
+      "z": 40.3979
+    },
+    "mag": 3.69,
+    "color": "#aabfff",
+    "con": "Cas"
+  },
+  {
+    "id": 8989,
+    "name": "Chi Eri",
+    "coords": {
+      "x": 27.1608,
+      "y": 15.049,
+      "z": -39.1895
+    },
+    "mag": 3.69,
+    "color": "#fff4ea",
+    "con": "Eri"
+  },
+  {
+    "id": 23398,
+    "name": "Saclateni",
+    "coords": {
+      "x": 9.3612,
+      "y": 36.5111,
+      "z": 32.8529
+    },
+    "mag": 3.69,
+    "color": "#ffd2a1",
+    "con": "Aur"
+  },
+  {
+    "id": 47719,
+    "name": "HR 3884",
+    "coords": {
+      "x": -19.2052,
+      "y": 12.8026,
+      "z": -44.3537
+    },
+    "mag": 3.69,
+    "color": "#ffd2a1",
+    "con": "Car"
+  },
+  {
+    "id": 57226,
+    "name": "Taiyangshou",
+    "coords": {
+      "x": -33.5371,
+      "y": 2.0438,
+      "z": 37.0282
+    },
+    "mag": 3.69,
+    "color": "#ffd2a1",
+    "con": "UMa"
+  },
+  {
+    "id": 106642,
+    "name": "Nashira",
+    "coords": {
+      "x": 39.2487,
+      "y": -27.4591,
+      "z": -14.3365
+    },
+    "mag": 3.69,
+    "color": "#f8f7ff",
+    "con": "Cap"
+  },
+  {
+    "id": 15436,
+    "name": "16Tau4Eri",
+    "coords": {
+      "x": 29.9247,
+      "y": 35.5105,
+      "z": -18.5342
+    },
+    "mag": 3.7,
+    "color": "#ff9e3a",
+    "con": "Eri"
+  },
+  {
+    "id": 87661,
+    "name": "92Xi  Her",
+    "coords": {
+      "x": -0.4255,
+      "y": -43.6236,
+      "z": 24.4294
+    },
+    "mag": 3.7,
+    "color": "#ffd2a1",
+    "con": "Her"
+  },
+  {
+    "id": 114609,
+    "name": "6Gam Psc",
+    "coords": {
+      "x": 49.0487,
+      "y": -9.2755,
+      "z": 2.8628
+    },
+    "mag": 3.7,
+    "color": "#ffd2a1",
+    "con": "Psc"
+  },
+  {
+    "id": 22744,
+    "name": "8Pi 5Ori",
+    "coords": {
+      "x": 14.1353,
+      "y": 47.913,
+      "z": 2.1292
+    },
+    "mag": 3.71,
+    "color": "#aabfff",
+    "con": "Ori"
+  },
+  {
+    "id": 28032,
+    "name": "16Eta Lep",
+    "coords": {
+      "x": 0.7604,
+      "y": 48.4732,
+      "z": -12.238
+    },
+    "mag": 3.71,
+    "color": "#f8f7ff",
+    "con": "Lep"
+  },
+  {
+    "id": 38304,
+    "name": "HR 3080",
+    "coords": {
+      "x": -17.861,
+      "y": 33.5151,
+      "z": -32.5227
+    },
+    "mag": 3.71,
+    "color": "#ffd2a1",
+    "con": "Pup"
+  },
+  {
+    "id": 77386,
+    "name": "37Eps Ser",
+    "coords": {
+      "x": -26.6331,
+      "y": -42.136,
+      "z": 3.9036
+    },
+    "mag": 3.71,
+    "color": "#e3e7ff",
+    "con": "Ser"
+  },
+  {
+    "id": 88494,
+    "name": "72    Oph",
+    "coords": {
+      "x": 1.5809,
+      "y": -49.2797,
+      "z": 8.3073
+    },
+    "mag": 3.71,
+    "color": "#e3e7ff",
+    "con": "Oph"
+  },
+  {
+    "id": 97725,
+    "name": "Alshain",
+    "coords": {
+      "x": 23.9588,
+      "y": -43.5299,
+      "z": 5.5793
+    },
+    "mag": 3.71,
+    "color": "#fff4ea",
+    "con": "Aql"
+  },
+  {
+    "id": 16496,
+    "name": "Ran",
+    "coords": {
+      "x": 29.5215,
+      "y": 39.5091,
+      "z": -8.2164
+    },
+    "mag": 3.72,
+    "color": "#fff4ea",
+    "con": "Eri"
+  },
+  {
+    "id": 17457,
+    "name": "Electra",
+    "coords": {
+      "x": 25.3751,
+      "y": 37.932,
+      "z": 20.4271
+    },
+    "mag": 3.72,
+    "color": "#aabfff",
+    "con": "Tau"
+  },
+  {
+    "id": 28287,
+    "name": "33Del Aur",
+    "coords": {
+      "x": 0.0602,
+      "y": 29.1879,
+      "z": 40.5964
+    },
+    "mag": 3.72,
+    "color": "#ffd2a1",
+    "con": "Aur"
+  },
+  {
+    "id": 103725,
+    "name": "62Xi  Cyg",
+    "coords": {
+      "x": 26.0053,
+      "y": -24.9097,
+      "z": 34.6876
+    },
+    "mag": 3.72,
+    "color": "#ff9e3a",
+    "con": "Cyg"
+  },
+  {
+    "id": 16044,
+    "name": "2Xi  Tau",
+    "coords": {
+      "x": 30.4806,
+      "y": 38.7232,
+      "z": 8.4526
+    },
+    "mag": 3.73,
+    "color": "#aabfff",
+    "con": "Tau"
+  },
+  {
+    "id": 71994,
+    "name": "109    Vir",
+    "coords": {
+      "x": -37.3914,
+      "y": -33.1535,
+      "z": 1.6516
+    },
+    "mag": 3.73,
+    "color": "#aabfff",
+    "con": "Vir"
+  },
+  {
+    "id": 87314,
+    "name": "Grumium",
+    "coords": {
+      "x": -0.7714,
+      "y": -27.3142,
+      "z": 41.8729
+    },
+    "mag": 3.73,
+    "color": "#ffd2a1",
+    "con": "Dra"
+  },
+  {
+    "id": 106746,
+    "name": "Nu  Oct",
+    "coords": {
+      "x": 8.9817,
+      "y": -6.2032,
+      "z": -48.7939
+    },
+    "mag": 3.73,
+    "color": "#ffd2a1",
+    "con": "Oct"
+  },
+  {
+    "id": 112601,
+    "name": "73Lam Aqr",
+    "coords": {
+      "x": 47.4361,
+      "y": -14.3637,
+      "z": -6.5952
+    },
+    "mag": 3.73,
+    "color": "#ff9e3a",
+    "con": "Aqr"
+  },
+  {
+    "id": 8628,
+    "name": "Baten Kaitos",
+    "coords": {
+      "x": 43.4853,
+      "y": 22.9904,
+      "z": -8.9702
+    },
+    "mag": 3.74,
+    "color": "#ffd2a1",
+    "con": "Cet"
+  },
+  {
+    "id": 79928,
+    "name": "20Gam Her",
+    "coords": {
+      "x": -19.6019,
+      "y": -42.9727,
+      "z": 16.4047
+    },
+    "mag": 3.74,
+    "color": "#e3e7ff",
+    "con": "Her"
+  },
+  {
+    "id": 104549,
+    "name": "65Tau Cyg",
+    "coords": {
+      "x": 29.5809,
+      "y": -25.9894,
+      "z": 30.8142
+    },
+    "mag": 3.74,
+    "color": "#f8f7ff",
+    "con": "Cyg"
+  },
+  {
+    "id": 44383,
+    "name": "HR 3614",
+    "coords": {
+      "x": -24.5005,
+      "y": 23.6279,
+      "z": -36.6258
+    },
+    "mag": 3.75,
+    "color": "#ffd2a1",
+    "con": "Vel"
+  },
+  {
+    "id": 86839,
+    "name": "62Gam Oph",
+    "coords": {
+      "x": -2.6372,
+      "y": -49.8745,
+      "z": 2.3617
+    },
+    "mag": 3.75,
+    "color": "#e3e7ff",
+    "con": "Oph"
+  },
+  {
+    "id": 26004,
+    "name": "Bet Dor",
+    "coords": {
+      "x": 2.652,
+      "y": 22.9425,
+      "z": -44.3464
+    },
+    "mag": 3.76,
+    "color": "#fff4ea",
+    "con": "Dor"
+  },
+  {
+    "id": 27585,
+    "name": "15Del Lep",
+    "coords": {
+      "x": 1.7686,
+      "y": 46.6832,
+      "z": -17.8198
+    },
+    "mag": 3.76,
+    "color": "#ffd2a1",
+    "con": "Lep"
+  },
+  {
+    "id": 30794,
+    "name": "11Bet Mon",
+    "coords": {
+      "x": -6.2233,
+      "y": 49.232,
+      "z": -6.1221
+    },
+    "mag": 3.76,
+    "color": "#aabfff",
+    "con": "Mon"
+  },
+  {
+    "id": 93388,
+    "name": "39Omi Sgr",
+    "coords": {
+      "x": 12.9345,
+      "y": -44.6057,
+      "z": -18.521
+    },
+    "mag": 3.76,
+    "color": "#ffd2a1",
+    "con": "Sgr"
+  },
+  {
+    "id": 95554,
+    "name": "10Iot2Cyg",
+    "coords": {
+      "x": 11.8144,
+      "y": -28.6264,
+      "z": 39.2549
+    },
+    "mag": 3.76,
+    "color": "#e3e7ff",
+    "con": "Cyg"
+  },
+  {
+    "id": 110822,
+    "name": "7Alp Lac",
+    "coords": {
+      "x": 29.5865,
+      "y": -12.0602,
+      "z": 38.4602
+    },
+    "mag": 3.76,
+    "color": "#e3e7ff",
+    "con": "Lac"
+  },
+  {
+    "id": 13234,
+    "name": "Miram",
+    "coords": {
+      "x": 20.612,
+      "y": 19.0031,
+      "z": 41.4008
+    },
+    "mag": 3.77,
+    "color": "#ff9e3a",
+    "con": "Per"
+  },
+  {
+    "id": 17487,
+    "name": "41Nu  Per",
+    "coords": {
+      "x": 20.4288,
+      "y": 30.6299,
+      "z": 33.83
+    },
+    "mag": 3.77,
+    "color": "#f8f7ff",
+    "con": "Per"
+  },
+  {
+    "id": 20405,
+    "name": "Secunda Hyadum",
+    "coords": {
+      "x": 19.5932,
+      "y": 43.4624,
+      "z": 15.0707
+    },
+    "mag": 3.77,
+    "color": "#ffd2a1",
+    "con": "Tau"
+  },
+  {
+    "id": 26484,
+    "name": "48Sig Ori",
+    "coords": {
+      "x": 4.6255,
+      "y": 49.7339,
+      "z": -2.2682
+    },
+    "mag": 3.77,
+    "color": "#aabfff",
+    "con": "Ori"
+  },
+  {
+    "id": 41195,
+    "name": "Bet Vol",
+    "coords": {
+      "x": -12.0132,
+      "y": 16.2739,
+      "z": -45.7257
+    },
+    "mag": 3.77,
+    "color": "#ffd2a1",
+    "con": "Vol"
+  },
+  {
+    "id": 42452,
+    "name": "HR 3445",
+    "coords": {
+      "x": -22.1344,
+      "y": 26.2329,
+      "z": -36.3579
+    },
+    "mag": 3.77,
+    "color": "#fff4ea",
+    "con": "Vel"
+  },
+  {
+    "id": 82112,
+    "name": "Eta Ara",
+    "coords": {
+      "x": -7.7573,
+      "y": -24.5233,
+      "z": -42.877
+    },
+    "mag": 3.77,
+    "color": "#ff9e3a",
+    "con": "Ara"
+  },
+  {
+    "id": 101629,
+    "name": "Sualocin",
+    "coords": {
+      "x": 30.8497,
+      "y": -36.8834,
+      "z": 13.7081
+    },
+    "mag": 3.77,
+    "color": "#aabfff",
+    "con": "Del"
+  },
+  {
+    "id": 105540,
+    "name": "34Zet Cap",
+    "coords": {
+      "x": 36.2585,
+      "y": -28.6694,
+      "z": -19.0627
+    },
+    "mag": 3.77,
+    "color": "#ffd2a1",
+    "con": "Cap"
+  },
+  {
+    "id": 108830,
+    "name": "24Iot Peg",
+    "coords": {
+      "x": 39.8061,
+      "y": -21.3861,
+      "z": 21.4035
+    },
+    "mag": 3.77,
+    "color": "#f8f7ff",
+    "con": "Peg"
+  },
+  {
+    "id": 34389,
+    "name": "Gam2Vol",
+    "coords": {
+      "x": -4.9321,
+      "y": 15.9459,
+      "z": -47.1318
+    },
+    "mag": 3.78,
+    "color": "#ffd2a1",
+    "con": "Vol"
+  },
+  {
+    "id": 35946,
+    "name": "60Iot Gem",
+    "coords": {
+      "x": -16.1612,
+      "y": 41.1715,
+      "z": 23.3179
+    },
+    "mag": 3.78,
+    "color": "#ffd2a1",
+    "con": "Gem"
+  },
+  {
+    "id": 48182,
+    "name": "29Ups UMa",
+    "coords": {
+      "x": -21.7539,
+      "y": 13.7271,
+      "z": 42.8758
+    },
+    "mag": 3.78,
+    "color": "#e3e7ff",
+    "con": "UMa"
+  },
+  {
+    "id": 53099,
+    "name": "HR 4257",
+    "coords": {
+      "x": -24.7804,
+      "y": 7.3998,
+      "z": -42.7922
+    },
+    "mag": 3.78,
+    "color": "#ffd2a1",
+    "con": "Car"
+  },
+  {
+    "id": 71569,
+    "name": "30Zet Boo",
+    "coords": {
+      "x": -37.051,
+      "y": -31.4074,
+      "z": 11.8659
+    },
+    "mag": 3.78,
+    "color": "#e3e7ff",
+    "con": "Boo"
+  },
+  {
+    "id": 102287,
+    "name": "Albali",
+    "coords": {
+      "x": 32.9462,
+      "y": -36.6947,
+      "z": -8.2487
+    },
+    "mag": 3.78,
+    "color": "#e3e7ff",
+    "con": "Aqr"
+  },
+  {
+    "id": 14632,
+    "name": "Misam",
+    "coords": {
+      "x": 24.0024,
+      "y": 26.0787,
+      "z": 35.2673
+    },
+    "mag": 3.79,
+    "color": "#ffd2a1",
+    "con": "Per"
+  },
+  {
+    "id": 53075,
+    "name": "Praecipua",
+    "coords": {
+      "x": -39.6086,
+      "y": 11.8621,
+      "z": 28.1149
+    },
+    "mag": 3.79,
+    "color": "#ffd2a1",
+    "con": "LMi"
+  },
+  {
+    "id": 14843,
+    "name": "Dalim",
+    "coords": {
+      "x": 29.2545,
+      "y": 32.512,
+      "z": -24.231
+    },
+    "mag": 3.8,
+    "color": "#f8f7ff",
+    "con": "For"
+  },
+  {
+    "id": 37124,
+    "name": "HR 2948",
+    "coords": {
+      "x": -18.654,
+      "y": 40.5422,
+      "z": -22.5469
+    },
+    "mag": 3.8,
+    "color": "#aabfff",
+    "con": "Pup"
+  },
+  {
+    "id": 76044,
+    "name": "13Del Ser",
+    "coords": {
+      "x": -29.1009,
+      "y": -39.617,
+      "z": 9.1451
+    },
+    "mag": 3.8,
+    "color": "#e3e7ff",
+    "con": "Ser"
+  },
+  {
+    "id": 94484,
+    "name": "1Kap Cyg",
+    "coords": {
+      "x": 9.8484,
+      "y": -28.1609,
+      "z": 40.1245
+    },
+    "mag": 3.8,
+    "color": "#ffd2a1",
+    "con": "Cyg"
+  },
+  {
+    "id": 99356,
+    "name": "31    Cyg",
+    "coords": {
+      "x": 18.866,
+      "y": -28.6032,
+      "z": 36.4134
+    },
+    "mag": 3.8,
+    "color": "#ffd2a1",
+    "con": "Cyg"
+  }
+]

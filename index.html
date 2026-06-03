@@ -13,7 +13,28 @@
             box-shadow: 0 0 20px rgba(168, 196, 224, 0.2);
         }
         #interface-myth.visible { display: block; }
-        #myth-title { color: #a8c4e0; text-transform: uppercase; letter-spacing: 2px; }
+        #myth-badge {
+            display: none;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+            border-radius: 2px;
+            font-family: inherit;
+        }
+        .badge-real {
+            background: rgba(168, 196, 224, 0.15);
+            color: #a8c4e0;
+            border: 1px solid #a8c4e0;
+        }
+        .badge-custom {
+            background: rgba(201, 168, 76, 0.15);
+            color: #c9a84c;
+            border: 1px solid #c9a84c;
+        }
+        #myth-title { color: #a8c4e0; text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; }
         #forge-btn {
             position: absolute; top: 30px; right: 30px; padding: 15px 30px;
             background: #c9a84c; border: none; font-weight: bold; cursor: pointer;
@@ -21,12 +42,30 @@
         }
         #forge-btn:hover { background: #a8c4e0; transform: scale(1.05); }
         #hud { position: absolute; top: 30px; left: 30px; color: #c9a84c; pointer-events: none; }
+        #tooltip {
+            position: absolute;
+            display: none;
+            background: rgba(0, 0, 0, 0.85);
+            color: #a8c4e0;
+            padding: 8px 12px;
+            border: 1px solid rgba(168, 196, 224, 0.5);
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            pointer-events: none;
+            box-shadow: 0 0 15px rgba(168, 196, 224, 0.2);
+            transform: translate(-50%, -100%);
+            margin-top: -15px;
+            z-index: 100;
+        }
     </style>
 </head>
 <body>
     <div id="hud">MODO: OBSERVAÇÃO/DESENHO<br>ESTRELAS SELECIONADAS: <span id="star-count">0</span></div>
+    <div id="tooltip"></div>
     <button id="forge-btn" onclick="onForgeConstellation()">GERAR MITO</button>
     <div id="interface-myth">
+        <div id="myth-badge"></div>
         <h2 id="myth-title"></h2>
         <p id="myth-text"></p>
     </div>

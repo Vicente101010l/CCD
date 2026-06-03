@@ -19,31 +19,44 @@ controls.minDistance = 0.1;
 controls.maxDistance = 10;
 
 // --- ESTADO ---
+const starRadius = 50;
 let userSelectedStars = [];
 let userCreatedEdges = [];
 let tempLine = null;
 const starsGroup = new THREE.Group();
 scene.add(starsGroup);
 
-// --- CRIAR CÉU ESFÉRICO ---
-const starRadius = 50;
-for (let i = 0; i < 97; i++) {
-    const geometry = new THREE.SphereGeometry(0.15, 12, 12);
-    const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    const star = new THREE.Mesh(geometry, material);
-
-    // Distribuição esférica uniforme
-    const phi = Math.acos(1 - 2 * Math.random());
-    const theta = 2 * Math.PI * Math.random();
-    star.position.set(
-        starRadius * Math.sin(phi) * Math.cos(theta),
-        starRadius * Math.sin(phi) * Math.sin(theta),
-        starRadius * Math.cos(phi)
-    );
-
-    star.userData = { id: i, name: `Estrela ${i}` };
-    starsGroup.add(star);
+// --- CRIAR CÉU ESFÉRICO REAL ---
+async function loadStars() {
+    try {
+        const response = await fetch('http://127.0.0.1:5000/api/stars');
+        const starsData = await response.json();
+        
+        starsData.forEach(starData => {
+            // Mapeamos a magnitude para um tamanho de esfera (estrelas mais brilhantes são maiores)
+            // Magnitude aparente mínima no catálogo é -1.44 (Sirius), máxima é 3.80.
+            const size = Math.max(0.06, 0.25 - (starData.mag * 0.035));
+            
+            const geometry = new THREE.SphereGeometry(size, 8, 8); // 8x8 para excelente performance
+            const material = new THREE.MeshBasicMaterial({ color: starData.color });
+            const star = new THREE.Mesh(geometry, material);
+            
+            star.position.set(starData.coords.x, starData.coords.y, starData.coords.z);
+            star.userData = { 
+                id: starData.id, 
+                name: starData.name,
+                coords: starData.coords,
+                con: starData.con,
+                mag: starData.mag
+            };
+            starsGroup.add(star);
+        });
+        console.log(`Carregadas ${starsData.length} estrelas reais com sucesso.`);
+    } catch (err) {
+        console.error("Erro ao carregar o catálogo de estrelas:", err);
+    }
 }
+loadStars();
 
 // --- INTERAÇÃO: RAYCASTER E RATO ---
 const raycaster = new THREE.Raycaster();
@@ -60,17 +73,39 @@ window.addEventListener('click', (event) => {
         onStarClick({
             id: clickedStar.userData.id,
             name: clickedStar.userData.name,
-            coords: { x: clickedStar.position.x, y: clickedStar.position.y, z: clickedStar.position.z }
+            coords: { x: clickedStar.position.x, y: clickedStar.position.y, z: clickedStar.position.z },
+            con: clickedStar.userData.con
         });
     }
 });
 
-// LINHA ELÁSTICA (RUBBER-BANDING)
-window.addEventListener('mousemove', (event) => {
-    if (userSelectedStars.length === 0) return;
+// TOOLTIP E LINHA ELÁSTICA (MOUSEMOVE)
+const tooltip = document.getElementById('tooltip');
 
+window.addEventListener('mousemove', (event) => {
+    // Atualizar coordenadas do rato para o raycaster
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    // RAYCASTING PARA HOVER DE ESTRELAS
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(starsGroup.children);
+
+    if (intersects.length > 0) {
+        const hoveredStar = intersects[0].object;
+        // Exibir o tooltip premium
+        tooltip.innerText = `${hoveredStar.userData.name} (Mag: ${hoveredStar.userData.mag}, ${hoveredStar.userData.con})`;
+        tooltip.style.left = `${event.clientX}px`;
+        tooltip.style.top = `${event.clientY}px`;
+        tooltip.style.display = 'block';
+        document.body.style.cursor = 'pointer';
+    } else {
+        tooltip.style.display = 'none';
+        document.body.style.cursor = 'crosshair';
+    }
+
+    // LINHA ELÁSTICA (RUBBER-BANDING)
+    if (userSelectedStars.length === 0) return;
 
     const vector = new THREE.Vector3(mouse.x, mouse.y, 0.5).unproject(camera);
     const dir = vector.sub(camera.position).normalize();
@@ -137,11 +172,24 @@ window.onForgeConstellation = async function() {
         body: JSON.stringify({
             constellation_name: "Nova Constelação",
             star_names: userSelectedStars.map(s => s.name),
+            stars: userSelectedStars.map(s => ({ name: s.name, con: s.con })),
             properties: result.properties
         })
     });
 
     const myth = await mythRes.json();
+    
+    const badge = document.getElementById('myth-badge');
+    if (myth.is_real) {
+        badge.innerText = `Constelação Real: ${myth.real_name}`;
+        badge.className = 'badge-real';
+        badge.style.display = 'inline-block';
+    } else {
+        badge.innerText = `Constelação Criada: ${myth.real_name}`;
+        badge.className = 'badge-custom';
+        badge.style.display = 'inline-block';
+    }
+    
     document.getElementById('myth-title').innerText = myth.titulo;
     document.getElementById('myth-text').innerText = myth.texto;
     document.getElementById('interface-myth').classList.add('visible');

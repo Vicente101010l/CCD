@@ -23,12 +23,57 @@ def calculate_graph_properties(skeleton_stars, edges):
         adj[e['to']] += 1
     terminals = sum(1 for v in adj.values() if v == 1)
 
+    # LÓGICA ANCESTRAL 1: Silhueta Ancestral (Forma)
+    if elongation > 2.0 and terminals <= 2:
+        silhueta = "Serpente / Rio / Caminho Celeste"
+    elif num_edges >= num_nodes and elongation <= 1.8:
+        silhueta = "Coroa / Escudo / Cálice Sagrado"
+    elif terminals >= 3 or (num_nodes + num_edges) > 8:
+        silhueta = "Criatura / Humanoide / Besta Alada"
+    else:
+        silhueta = "Ferramenta / Seta / Balança de Julgamento"
+        
+    # LÓGICA ANCESTRAL 2: Temperamento Elemental (Cor/Espectro)
+    colors = [s.get('color', '#fff4ea') for s in skeleton_stars]
+    hot_count = sum(1 for c in colors if c in ['#9bb0ff', '#aabfff'])
+    cool_count = sum(1 for c in colors if c in ['#ffd2a1', '#ff9e3a'])
+    medium_count = len(colors) - hot_count - cool_count
+    
+    if hot_count > cool_count and hot_count > medium_count:
+        temperamento = "Espiritual (Gelo, Trovão, Energia Cósmica)"
+    elif cool_count > hot_count and cool_count > medium_count:
+        temperamento = "Terrestre (Fogo Cósmico, Sangue, Terra, Ancestrais)"
+    else:
+        temperamento = "Equilibrado (Luz Solar, Éter, Harmonia, Justiça)"
+        
+    # LÓGICA ANCESTRAL 3: Estatuto Divino/Nobreza (Brilho/Magnitude)
+    mags = [s.get('mag', 3.0) for s in skeleton_stars]
+    avg_mag = np.mean(mags) if mags else 3.0
+    if avg_mag < 1.8:
+        estatuto = "Divino (Deuses Supremos, Reis Celestiais, Símbolos Sagrados)"
+    elif avg_mag < 2.8:
+        estatuto = "Heroico (Heróis Lendários, Semideuses, Criaturas Protetoras)"
+    else:
+        estatuto = "Mortal (Mero Mortal, Animais Comuns, Ferramentas dos Deuses)"
+        
+    # LÓGICA ANCESTRAL 4: Zona Cósmica/Eternidade (Z médio - Circumpolar vs Equatorial)
+    z_coords = [abs(s['coords']['z']) for s in skeleton_stars]
+    avg_z = np.mean(z_coords) if z_coords else 0.0
+    if avg_z > 35:
+        zona = "Polar (Eternidade, Guardiões Eternos, Navegação, Vigilância)"
+    else:
+        zona = "Equatorial (Ciclos das Estações, Tempo, Agricultura, Transição Terrena)"
+
     return {
         "asymmetry": round(float(asymmetry), 3),
         "elongation": round(float(elongation), 3),
         "has_cycles": num_edges >= num_nodes,
         "terminal_nodes": terminals,
-        "complexity": num_nodes + num_edges
+        "complexity": num_nodes + num_edges,
+        "silhueta_ancestral": silhueta,
+        "temperamento_elemental": temperamento,
+        "estatuto_divino": estatuto,
+        "zona_cosmica": zona
     }
 
 def get_geometric_candidates(skeleton_stars, full_catalog, limit_per_node=3):
@@ -41,9 +86,10 @@ def get_geometric_candidates(skeleton_stars, full_catalog, limit_per_node=3):
         distances = []
         
         for cand in full_catalog:
-            if cand['id'] in skeleton_ids: continue
-            # No catálogo, as coords são uma lista [x, y, z]
-            cand_coords = np.array(cand['coords'])
+            if cand['id'] in skeleton_ids:
+                continue
+            # No catálogo, as coords são um dicionário {"x": x, "y": y, "z": z}
+            cand_coords = np.array([cand['coords']['x'], cand['coords']['y'], cand['coords']['z']])
             dist = np.linalg.norm(star_coords - cand_coords)
             distances.append({"id": cand['id'], "name": cand['name'], "dist": dist})
         
