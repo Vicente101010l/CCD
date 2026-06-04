@@ -6,532 +6,26 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            background-color: #030305;
-            font-family: 'Inter', sans-serif;
-        }
-
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw !important;
-            height: 100vh !important;
-            display: block;
-            z-index: 1;
-            cursor: crosshair;
-        }
-        
-        .pergaminho-scroll-zone::-webkit-scrollbar,
-        #library-list::-webkit-scrollbar {
-            width: 5px;
-        }
-        .pergaminho-scroll-zone::-webkit-scrollbar-track,
-        #library-list::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .pergaminho-scroll-zone::-webkit-scrollbar-thumb {
-            background: rgba(74, 48, 15, 0.25);
-            border-radius: 2px;
-        }
-        #library-list::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 2px;
-        }
-        
-        
-        #controls-panel {
-            position: absolute;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 5;
-            
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 24px;
-            padding: 12px 28px;
-            
-            background: rgba(10, 12, 18, 0.65);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            
-            border: 1px solid rgba(168, 196, 224, 0.2);
-            border-radius: 30px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
-            color: #ffffff;
-            font-family: 'Inter', sans-serif;
-            box-sizing: border-box;
-            
-            transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            will-change: left, transform;
-        }
-        
-        /*  quando o pergaminho abre: encosta suavemente à esquerda */
-        #controls-panel.shifted {
-            left: 30px;
-            transform: translateX(0);
-        }
-        
-        #hud { 
-            font-size: 10px;
-            line-height: 1.4;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.4);
-            text-transform: uppercase;
-            border-right: 1px solid rgba(255, 255, 255, 0.15);
-            padding-right: 20px;
-            white-space: nowrap;
-        }
-        #star-count {
-            color: #c9a84c; 
-            font-weight: 700;
-        }
-        
-        .action-buttons {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 10px;
-        }
-        .secondary-buttons {
-            display: flex;
-            gap: 8px;
-        }
-        
-        #forge-btn {
-            padding: 9px 18px;
-            background: #c9a84c; 
-            border: none;
-            font-weight: 700; 
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #05070f;
-            border-radius: 20px;
-            font-family: 'Inter', sans-serif;
-            font-size: 10.5px;
-            box-shadow: 0 0 12px rgba(201, 168, 76, 0.25);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        #forge-btn:hover { 
-            background: #ffffff;
-            transform: translateY(-1px);
-            box-shadow: 0 0 18px rgba(255, 255, 255, 0.4);
-        }
-        #forge-btn:active { transform: translateY(0); }
-        
-        #save-btn, #clear-btn {
-            padding: 8px 14px;
-            font-size: 10px;
-            font-weight: 600;
-            border-radius: 20px;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.2s;
-            background: transparent;
-            white-space: nowrap;
-        }
-        #save-btn {
-            color: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-        }
-        #save-btn:hover:not(:disabled) {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #ffffff;
-            color: #ffffff;
-        }
-        #save-btn:disabled {
-            opacity: 0.25;
-            cursor: not-allowed;
-            color: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-        #clear-btn {
-            color: #ff5555;
-            border: 1px solid rgba(255, 85, 85, 0.25);
-        }
-        #clear-btn:hover {
-            background: rgba(255, 85, 85, 0.1);
-            border-color: #ff5555;
-        }
-        
-        /* CONTAINER DO SLIDER DE ZOOM */
-        .zoom-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-left: 1px solid rgba(255, 255, 255, 0.15);
-            padding-left: 20px;
-        }
-        .zoom-label {
-            display: flex;
-            flex-direction: column;
-            font-size: 8px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.4);
-            white-space: nowrap;
-            line-height: 1.2;
-        }
-        #zoom-val {
-            color: #c9a84c;
-            font-weight: 600;
-            font-size: 9px;
-            margin-top: 1px;
-        }
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 80px;
-            background: transparent;
-        }
-        input[type=range]:focus { outline: none; }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 2px;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.15);
-        }
-        input[type=range]::-webkit-slider-thumb {
-            height: 10px;
-            width: 10px;
-            border-radius: 50%;
-            background: #c9a84c; 
-            cursor: pointer;
-            -webkit-appearance: none;
-            margin-top: -4px;
-            box-shadow: 0 0 6px #c9a84c;
-        }
-        
-        /* CONTAINER DA BIBLIOTECA */
-        .library-container {
-            position: relative;
-            border-left: 1px solid rgba(255, 255, 255, 0.15);
-            padding-left: 20px;
-            padding-bottom: 15px; 
-            margin-bottom: -15px;
-        }
-        .library-header {
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            user-select: none;
-        }
-        .library-header:hover { color: #c9a84c; }
-        
-        #library-list {
-            position: absolute;
-            top: 28px; 
-            right: 0;
-            width: 220px;
-            max-height: 180px;
-            background: rgba(12, 14, 22, 0.95);
-            border: 1px solid rgba(168, 196, 224, 0.2);
-            border-radius: 8px;
-            padding: 10px;
-            display: none; 
-            flex-direction: column;
-            gap: 6px;
-            overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .library-container:hover #library-list {
-            display: flex; 
-        }
-        .library-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 6px 10px;
-            border-radius: 4px;
-        }
-        .library-item-name {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.75);
-            cursor: pointer;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 150px;
-        }
-        .library-item-name:hover { color: #c9a84c; }
-        .library-item-delete {
-            background: none;
-            border: none;
-            color: rgba(255, 85, 85, 0.5);
-            font-size: 12px;
-            cursor: pointer;
-        }
-        .library-item-delete:hover { color: #ff5555; }
-        .library-empty {
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.35);
-            font-style: italic;
-            text-align: center;
-            padding: 8px 0;
-        }
-
-        /* PAINEL DO PERGAMINHO */
-        #interface-myth {
-            position: absolute; 
-            top: 40px;          
-            right: 40px;        
-            width: 480px; 
-            height: calc(100vh - 80px); 
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            transform: translateX(calc(100% + 50px)); 
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            perspective: 1000px;
-            background: transparent;
-        }
-        
-        #interface-myth.visible { 
-            transform: translateX(0); 
-        }
-
-        .pergaminho-scroll-zone {
-            width: 100%;
-            height: 100%;
-            overflow-y: auto;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            box-shadow: -20px 20px 50px rgba(0, 0, 0, 0.85);
-            position: relative;
-        }
-
-        .pergaminho-corpo {
-            position: relative;
-            width: 100%;
-            background-color: #e4d1a4;
-            background-image: 
-                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.075'/%3E%3C/svg%3E"),
-                linear-gradient(to right, rgba(46, 29, 6, 0.35) 0%, rgba(0, 0, 0, 0) 6%, rgba(0, 0, 0, 0) 94%, rgba(46, 29, 6, 0.25) 100%);
-            background-blend-mode: multiply;
-            
-            padding: 25px 45px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            
-            max-height: 190px;
-            overflow: hidden;
-            transition: max-height 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            
-            clip-path: polygon(
-                0% 0%, 100% 0%, 
-                99% 3%, 100% 6%, 98.5% 10%, 99.5% 15%, 98% 21%, 100% 26%, 99% 32%, 98.5% 38%, 100% 45%, 98% 52%, 99.5% 60%, 98.5% 68%, 100% 75%, 99% 83%, 98% 91%, 99.5% 97%, 100% 100%,
-                0% 100%, 
-                1% 97%, 0.5% 92%, 2% 85%, 1% 78%, 1.5% 71%, 0% 64%, 2% 57%, 0.5% 49%, 1.5% 41%, 0% 34%, 1% 27%, 2% 19%, 0.5% 12%, 1.5% 5%
-            );
-        }
-
-        .pergaminho-corpo.aberto {
-            max-height: 2500px; 
-            overflow: visible;
-        }
-
-        .rolo-topo {
-            width: 100%;
-            height: 42px;
-            flex-shrink: 0;
-            background: linear-gradient(to bottom, 
-                #3b250a 0%, #5c3d14 8%, #855d28 20%, #c2a269 40%, #ebd8b5 55%, #a8844d 75%, #543813 92%, #211504 100%
-            );
-            border-bottom: 1px solid rgba(43, 29, 12, 0.4);
-            box-shadow: 0 5px 10px rgba(0,0,0,0.35);
-            transform-style: preserve-3d;
-            will-change: transform;
-        }
-
-        .area-base-mecanica {
-            position: relative;
-            width: 100%;
-            flex-shrink: 0;
-        }
-
-        .rolo-base {
-            width: 100%;
-            height: 42px;
-            background: linear-gradient(to bottom, 
-                #211504 0%, #543813 8%, #a8844d 25%, #ebd8b5 45%, #c2a269 60%, #855d28 80%, #5c3d14 92%, #3b250a 100%
-            );
-            border-top: 1px solid rgba(43, 29, 12, 0.4);
-            box-shadow: 0 -5px 12px rgba(0,0,0,0.35);
-            transform-style: preserve-3d;
-            will-change: transform;
-            cursor: pointer; 
-        }
-
-        #puxador-aviso {
-            position: absolute;
-            top: -24px; 
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Inter', sans-serif;
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: #5c3d14;
-            background: linear-gradient(to bottom, #e3d0a1, #d9c28f);
-            padding: 4px 14px;
-            border: 1px solid #9c7b4c;
-            border-bottom: none;
-            border-radius: 4px 4px 0 0;
-            cursor: pointer;
-            box-shadow: 0 -3px 6px rgba(0,0,0,0.1);
-            animation: bounceAviso 2.2s infinite ease-in-out;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            z-index: 30;
-        }
-        @keyframes bounceAviso {
-            0%, 100% { transform: translate(-50%, 0); }
-            50% { transform: translate(-50%, -4px); }
-        }
-        
-        #close-myth-btn {
-            position: absolute;
-            top: 20px;
-            right: 25px;
-            background: none;
-            border: none;
-            color: rgba(43, 29, 12, 0.5);
-            font-size: 28px;
-            font-weight: 300;
-            cursor: pointer;
-            transition: all 0.2s;
-            line-height: 1;
-            z-index: 15;
-        }
-        #close-myth-btn:hover {
-            color: #4a310d;
-            transform: scale(1.15) rotate(90deg);
-        }
-        
-        #myth-badge {
-            align-self: center;
-            padding: 4px 12px;
-            font-size: 9px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 25px;
-            border-radius: 2px;
-            font-family: 'Inter', sans-serif;
-            margin-top: 15px;
-        }
-        .badge-real {
-            background: rgba(43, 75, 124, 0.08);
-            color: #2b4b7c;
-            border: 1px solid rgba(43, 75, 124, 0.25);
-        }
-        .badge-custom {
-            background: rgba(139, 94, 26, 0.08);
-            color: #704b12;
-            border: 1px solid rgba(139, 94, 26, 0.25);
-        }
-        
-        #myth-title { 
-            color: #1a0f02; 
-            font-family: Georgia, serif;
-            font-weight: normal;
-            text-shadow: 1px 1px 1px rgba(255,255,255,0.4);
-            text-align: center;
-            font-size: 24px;
-            line-height: 1.35;
-            border-bottom: 1px dashed rgba(92, 61, 15, 0.2);
-            padding-bottom: 22px;
-            margin-top: 0;
-            margin-bottom: 25px;
-        }
-        
-        .conteudo-ocultavel {
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
-            pointer-events: none;
-        }
-        .pergaminho-corpo.aberto .conteudo-ocultavel {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-
-        #myth-text {
-            font-family: Georgia, serif;
-            font-size: 15.5px;
-            line-height: 1.8;
-            color: #1f1407;
-            text-align: justify;
-        }
-        #myth-text p {
-            margin-top: 0;
-            margin-bottom: 22px;
-            text-indent: 25px;
-        }
-        
-        #myth-metadata {
-            font-family: Georgia, serif;
-            font-size: 13.5px;
-            line-height: 1.7;
-            color: #36240f;
-            text-align: left;
-            margin-top: 15px;
-            border-top: 1px dashed rgba(92, 61, 15, 0.2);
-            padding-top: 25px;
-            background: rgba(92, 61, 15, 0.025);
-            padding: 18px;
-            border-radius: 4px;
-        }
-        #myth-metadata p {
-            margin-top: 0;
-            margin-bottom: 16px;
-        }
-        #myth-metadata strong {
-            color: #1a0f02;
-            font-weight: bold;
-        }
-        #myth-metadata ul {
-            padding-left: 18px;
-            margin-top: 10px;
-            margin-bottom: 0;
-            list-style-type: square;
-        }
-        #myth-metadata li {
-            margin-bottom: 10px;
-            color: #36240f;
-        }
-        #myth-metadata li:last-child {
-            margin-bottom: 0;
-        }
-    </style>
+    <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
+    <div id="notificacao-sistema"></div>
+
+    <div id="sistema-modal-overlay">
+        <div id="sistema-modal">
+            <div id="modal-titulo">Aviso</div>
+            <p id="modal-mensagem"></p>
+            <input type="text" id="modal-input" autocomplete="off">
+            <div class="modal-botoes">
+                <button id="modal-btn-cancelar" class="btn-secundario">Cancelar</button>
+                <button id="modal-btn-confirmar" class="btn-primario">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
     <div id="controls-panel">
+        <div id="onboarding-msg">Clica nas estrelas para traçar o esqueleto</div>
         <div id="hud">Estrelas Unidas: <span id="star-count">0</span></div>
-        
         <div class="action-buttons">
             <button id="forge-btn" onclick="onForgeConstellation()">Gerar Mito</button>
             <div class="secondary-buttons">
@@ -539,7 +33,6 @@
                 <button id="clear-btn" onclick="onClearSky()">Limpar</button>
             </div>
         </div>
-
         <div class="zoom-container">
             <div class="zoom-label">
                 <span>Lente Lume</span>
@@ -547,11 +40,9 @@
             </div>
             <input type="range" id="zoom-slider" min="0.1" max="8.0" step="0.05" value="0.1">
         </div>
-
         <div class="library-container">
             <div class="library-header">Biblioteca ▼</div>
-            <div id="library-list">
-                </div>
+            <div id="library-list"></div>
         </div>
     </div>
     
@@ -560,8 +51,9 @@
     <div id="interface-myth">
         <div id="myth-loading">
             <div class="spinner"></div>
-            <p>A consultar os antigos<br>registos estelares...</p>
+            <p id="loading-text"></p>
         </div>
+
         
         <div id="scroll-container" class="pergaminho-scroll-zone">
             <div id="myth-content">
@@ -586,7 +78,89 @@
         </div>
     </div>
     
+    <div id="compass">
+    <div id="compass-needle"></div>
+</div>
+
     <script>
+        window.sfx = {
+            drone: new Audio('static/audio/drone.mp3'),
+            chime: new Audio('static/audio/chime.mp3'),
+            ui: new Audio('static/audio/mech.mp3'),
+            paper: new Audio('static/audio/paper.mp3')
+        };
+
+        window.sfx.drone.loop = true;
+        window.sfx.drone.volume = 0.15;
+        window.sfx.chime.volume = 0.5;
+        window.sfx.ui.volume = 0.3;
+        window.sfx.paper.volume = 0.8;
+
+        let audioUnlocked = false;
+        window.addEventListener('pointerdown', () => {
+            if (!audioUnlocked) {
+                window.sfx.drone.play().catch(() => console.warn("Autoplay bloqueado pelo browser"));
+                audioUnlocked = true;
+            }
+        }, { once: true });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName.toLowerCase() === 'button' || e.target.closest('button') || e.target.classList.contains('library-item-name')) {
+                if (audioUnlocked) {
+                    window.sfx.ui.currentTime = 0;
+                    window.sfx.ui.play().catch(() => {});
+                }
+            }
+        });
+
+        window.mostrarNotificacao = function(mensagem) {
+            const toast = document.getElementById('notificacao-sistema');
+            toast.innerText = mensagem;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        window.mostrarModalCustom = function(tipo, mensagem, valorDefeito = "") {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('sistema-modal-overlay');
+                const titulo = document.getElementById('modal-titulo');
+                const msg = document.getElementById('modal-mensagem');
+                const input = document.getElementById('modal-input');
+                const btnCancelar = document.getElementById('modal-btn-cancelar');
+                const btnConfirmar = document.getElementById('modal-btn-confirmar');
+
+                msg.innerText = mensagem;
+                if (tipo === 'prompt') {
+                    titulo.innerText = 'REGISTAR CONSTELAÇÃO';
+                    input.style.display = 'block';
+                    input.value = valorDefeito;
+                } else if (tipo === 'confirm') {
+                    titulo.innerText = 'AVISO DO SISTEMA';
+                    input.style.display = 'none';
+                    input.value = '';
+                }
+
+                overlay.classList.add('show');
+                if (tipo === 'prompt') input.focus();
+
+                const newBtnCancelar = btnCancelar.cloneNode(true);
+                btnCancelar.parentNode.replaceChild(newBtnCancelar, btnCancelar);
+                
+                const newBtnConfirmar = btnConfirmar.cloneNode(true);
+                btnConfirmar.parentNode.replaceChild(newBtnConfirmar, btnConfirmar);
+
+                newBtnCancelar.addEventListener('click', () => {
+                    overlay.classList.remove('show');
+                    resolve(null);
+                });
+
+                newBtnConfirmar.addEventListener('click', () => {
+                    overlay.classList.remove('show');
+                    resolve(tipo === 'prompt' ? input.value : true);
+                });
+            });
+        };
+
         const scrollZone = document.getElementById('scroll-container');
         const papiro = document.getElementById('mesh-papiro-corpo');
         const rTopo = document.getElementById('mesh-rolo-topo');
@@ -597,17 +171,19 @@
         function desenrolarPergaminho() {
             if (!papiro.classList.contains('aberto')) {
                 papiro.classList.add('aberto');
+                
+                if (window.sfx) {
+                    window.sfx.paper.currentTime = 0;
+                    window.sfx.paper.play().catch(() => {});
+                }
+
                 if (aviso) {
                     aviso.style.opacity = '0';
                     aviso.style.visibility = 'hidden';
                 }
-                
                 rTopo.style.transform = 'rotateX(720deg)';
                 rBase.style.transform = 'rotateX(720deg)';
-                
-                setTimeout(() => {
-                    sincronizarRotacaoMecanica();
-                }, 800);
+                setTimeout(() => { sincronizarRotacaoMecanica(); }, 800);
             }
         }
 
@@ -627,7 +203,6 @@
             mutations.forEach((mutation) => {
                 if (mutation.attributeName === 'class') {
                     const interfaceMyth = document.getElementById('interface-myth');
-                    
                     if (interfaceMyth.classList.contains('visible')) {
                         barraControlos.classList.add('shifted');
                     } else {
@@ -646,9 +221,7 @@
         });
         
         const interfaceMythEl = document.getElementById('interface-myth');
-        if (interfaceMythEl) {
-            observer.observe(interfaceMythEl, { attributes: true });
-        }
+        if (interfaceMythEl) { observer.observe(interfaceMythEl, { attributes: true }); }
     </script>
 
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/es-module-shims/1.6.3/es-module-shims.js"></script>
