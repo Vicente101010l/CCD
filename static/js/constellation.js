@@ -306,6 +306,17 @@ window.onForgeConstellation = async function() {
 
         const result = await response.json();
         aiCreatedEdges = result.ai_edges || [];
+
+        // Redesenhar as linhas do utilizador
+        userCreatedEdges.forEach(edge => {
+            const startStar = userSelectedStars.find(s => s.id === edge.from);
+            const endStar = userSelectedStars.find(s => s.id === edge.to);
+            if (startStar && endStar) {
+                drawVisualLine(startStar.coords, endStar.coords, 0xc9a84c);
+            }
+        });
+
+        // Desenhar as linhas sugeridas pela IA
         aiCreatedEdges.forEach(edge => {
             const fromStarObj = starsGroup.children.find(s => s.userData.id === edge.from);
             const toStarObj = starsGroup.children.find(s => s.userData.id === edge.to);
@@ -317,6 +328,15 @@ window.onForgeConstellation = async function() {
                 );
             }
         });
+
+        // Colorir todas as estrelas selecionadas de dourado (reset da estrela ativa)
+        userSelectedStars.forEach(s => {
+            const starObj = starsGroup.children.find(o => o.userData.id === s.id);
+            if (starObj) {
+                starObj.material.color.setHex(0xc9a84c);
+            }
+        });
+        activeStar = null;
 
         const mythRes = await fetch('http://127.0.0.1:5000/api/myth', {
             method: 'POST',
