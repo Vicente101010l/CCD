@@ -333,23 +333,13 @@ window.onForgeConstellation = async function() {
         currentMythData = myth;
         currentMythData.properties = result.properties;
         
-        const badge = document.getElementById('myth-badge');
-        if (myth.is_real) {
-            badge.innerText = `Constelação Real: ${myth.real_name}`;
-            badge.className = 'badge-real';
-            badge.style.display = 'inline-block';
-        } else {
-            badge.innerText = `Constelação Criada: ${myth.real_name}`;
-            badge.className = 'badge-custom';
-            badge.style.display = 'inline-block';
-        }
-        
-        document.getElementById('myth-title').innerText = myth.titulo;
-        document.getElementById('myth-text').innerText = myth.texto;
-        
-        // Esconder loading e mostrar conteúdo do mito
-        mythLoading.style.display = 'none';
-        mythContent.style.display = 'block';
+        displayMythAndMetadata(
+            myth.titulo,
+            myth.texto,
+            myth.is_real,
+            myth.is_real ? `Constelação Real: ${myth.real_name}` : `Constelação Criada: ${myth.real_name}`,
+            result.properties
+        );
 
         // Ativar o botão de guardar
         document.getElementById('save-btn').disabled = false;
@@ -388,6 +378,64 @@ controls.addEventListener('start', () => {
 });
 
 // --- BIBLIOTECA E ACÇÕES DO CÉU ---
+
+function displayMythAndMetadata(mythTitle, mythText, isReal, badgeText, properties) {
+    const badge = document.getElementById('myth-badge');
+    badge.innerText = badgeText;
+    badge.className = isReal ? 'badge-real' : 'badge-custom';
+    badge.style.display = 'inline-block';
+
+    document.getElementById('myth-title').innerText = mythTitle || "Mito Celestial";
+
+    const textDiv = document.getElementById('myth-text');
+    textDiv.innerHTML = '';
+    if (mythText) {
+        const paragraphs = mythText.split(/\n+/);
+        paragraphs.forEach(pText => {
+            if (pText.trim()) {
+                const p = document.createElement('p');
+                p.innerText = pText.trim();
+                textDiv.appendChild(p);
+            }
+        });
+    }
+
+    const metaDiv = document.getElementById('myth-metadata');
+    metaDiv.innerHTML = '';
+
+    if (properties) {
+        let metadataHTML = '';
+
+        // Secção 1: Informações do Catasterismo
+        const epoca = properties.epoca_visibilidade || 'Estação Indefinida';
+        const zona = properties.zona_cosmica || 'Zona Indefinida';
+        const proximidade = properties.via_lactea_proximidade || 'Relação Indefinida';
+        metadataHTML += `<p><strong>Visibilidade Celestial:</strong> Esta silhueta emerge predominantemente durante as noites de <em>${epoca}</em>, posicionando-se na <em>${zona}</em> do firmamento. A sua orientação cósmica relativamente ao plano galáctico indica que é uma <em>${proximidade}</em>.</p>`;
+
+        // Secção 2: Métricas Científicas
+        const elong = properties.elongation ? properties.elongation.toFixed(2) : '1.00';
+        const asym = properties.asymmetry ? properties.asymmetry.toFixed(2) : '0.00';
+        const hasCyclesStr = properties.has_cycles ? 'contém ciclos fechados (estrelas ligadas em anel)' : 'forma uma estrutura de árvore aberta e ramificada';
+        metadataHTML += `<p><strong>Métricas do Esqueleto:</strong> A análise geométrica do traçado revela um índice de alongamento de <strong>${elong}</strong> e um coeficiente de assimetria de <strong>${asym}</strong> em relação ao baricentro estelar. A conectividade da rede celeste <strong>${hasCyclesStr}</strong>.</p>`;
+
+        // Secção 3: Fontes e Arquétipos Ancestrais
+        const silhueta = properties.silhueta_ancestral || 'Forma Indefinida';
+        const temperamento = properties.temperamento_elemental || 'Elemento Indefinido';
+        const estatuto = properties.estatuto_divino || 'Estatuto Indefinido';
+
+        metadataHTML += `<p><strong>Arquétipos do Firmamento:</strong></p>`;
+        metadataHTML += `<ul>`;
+        metadataHTML += `<li><strong>Silhueta Ancestral:</strong> Reconhecida pelo arquétipo de <em>${silhueta}</em>.</li>`;
+        metadataHTML += `<li><strong>Temperamento Elemental:</strong> Resonância baseada na cor/espectro das suas estrelas com energia <em>${temperamento}</em>.</li>`;
+        metadataHTML += `<li><strong>Estatuto de Nobreza:</strong> Classificada sob o patamar <em>${estatuto}</em> baseado no brilho e magnitude aparente média das suas estrelas constituintes.</li>`;
+        metadataHTML += `</ul>`;
+
+        metaDiv.innerHTML = metadataHTML;
+    }
+
+    document.getElementById('myth-loading').style.display = 'none';
+    document.getElementById('myth-content').style.display = 'block';
+}
 
 function clearAllLines() {
     if (tempLine) {
@@ -509,22 +557,13 @@ window.loadConstellation = function(id) {
     });
 
     // 4. Atualizar barra lateral do mito
-    const badge = document.getElementById('myth-badge');
-    if (saved.myth_is_real) {
-        badge.innerText = `Constelação Real: ${saved.name}`;
-        badge.className = 'badge-real';
-        badge.style.display = 'inline-block';
-    } else {
-        badge.innerText = `Constelação Criada: ${saved.name}`;
-        badge.className = 'badge-custom';
-        badge.style.display = 'inline-block';
-    }
-
-    document.getElementById('myth-title').innerText = saved.myth_title;
-    document.getElementById('myth-text').innerText = saved.myth_text;
-    
-    document.getElementById('myth-loading').style.display = 'none';
-    document.getElementById('myth-content').style.display = 'block';
+    displayMythAndMetadata(
+        saved.myth_title,
+        saved.myth_text,
+        saved.myth_is_real,
+        saved.myth_is_real ? `Constelação Real: ${saved.name}` : `Constelação Criada: ${saved.name}`,
+        saved.properties
+    );
     document.getElementById('interface-myth').classList.add('visible');
 
     // Atualizar HUD
