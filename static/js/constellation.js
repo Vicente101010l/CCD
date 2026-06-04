@@ -51,12 +51,16 @@ controls.addEventListener('change', () => {
 const starRadius = 50;
 let userSelectedStars = [];
 let userCreatedEdges = [];
+let aiCreatedEdges = [];
 let tempLine = null;
 let activeStar = null;
 let targetCameraPosition = null;
 let isCentering = false;
+let currentMythData = null;
 const starsGroup = new THREE.Group();
+const linesGroup = new THREE.Group();
 scene.add(starsGroup);
+scene.add(linesGroup);
 
 // --- CRIAR CÉU ESFÉRICO REAL ---
 async function loadStars() {
@@ -79,7 +83,8 @@ async function loadStars() {
                 name: starData.name,
                 coords: starData.coords,
                 con: starData.con,
-                mag: starData.mag
+                mag: starData.mag,
+                color: starData.color
             };
             starsGroup.add(star);
         });
@@ -264,7 +269,8 @@ function drawVisualLine(start, end, colorHex) {
     const material = new THREE.LineBasicMaterial({ color: colorHex });
     const points = [new THREE.Vector3(start.x, start.y, start.z), new THREE.Vector3(end.x, end.y, end.z)];
     const geometry = new THREE.BufferGeometry().setFromPoints(points);
-    scene.add(new THREE.Line(geometry, material));
+    const line = new THREE.Line(geometry, material);
+    linesGroup.add(line);
 }
 
 window.onForgeConstellation = async function() {
@@ -272,7 +278,7 @@ window.onForgeConstellation = async function() {
         alert("Por favor, liga pelo menos 2 estrelas para forjar uma constelação!");
         return;
     }
-    if (tempLine) scene.remove(tempLine);
+    clearAllLines();
 
     // Obter referências dos elementos
     const forgeBtn = document.getElementById('forge-btn');
@@ -299,7 +305,8 @@ window.onForgeConstellation = async function() {
         });
 
         const result = await response.json();
-        result.ai_edges.forEach(edge => {
+        aiCreatedEdges = result.ai_edges || [];
+        aiCreatedEdges.forEach(edge => {
             const fromStarObj = starsGroup.children.find(s => s.userData.id === edge.from);
             const toStarObj = starsGroup.children.find(s => s.userData.id === edge.to);
             if (fromStarObj && toStarObj) {
@@ -323,6 +330,8 @@ window.onForgeConstellation = async function() {
         });
 
         const myth = await mythRes.json();
+        currentMythData = myth;
+        currentMythData.properties = result.properties;
         
         const badge = document.getElementById('myth-badge');
         if (myth.is_real) {
@@ -341,6 +350,9 @@ window.onForgeConstellation = async function() {
         // Esconder loading e mostrar conteúdo do mito
         mythLoading.style.display = 'none';
         mythContent.style.display = 'block';
+
+        // Ativar o botão de guardar
+        document.getElementById('save-btn').disabled = false;
 
         // ANIMAR E CENTRAR CÂMARA NA CONSTELAÇÃO (LOCK-IN)
         if (userSelectedStars.length > 0) {
@@ -374,6 +386,200 @@ window.closeMythSidebar = function() {
 controls.addEventListener('start', () => {
     isCentering = false;
 });
+
+// --- BIBLIOTECA E ACÇÕES DO CÉU ---
+
+function clearAllLines() {
+    if (tempLine) {
+        scene.remove(tempLine);
+        tempLine = null;
+    }
+    while (linesGroup.children.length > 0) {
+        const line = linesGroup.children[0];
+        linesGroup.remove(line);
+        line.geometry.dispose();
+        line.material.dispose();
+    }
+}
+
+window.onClearSky = function() {
+    clearAllLines();
+    
+    // Repor a cor original das estrelas selecionadas
+    userSelectedStars.forEach(s => {
+        const starObj = starsGroup.children.find(o => o.userData.id === s.id);
+        if (starObj) {
+            starObj.material.color.setHex(starObj.userData.color || 0xc9a84c);
+        }
+    });
+
+    // Reset de estado
+    userSelectedStars = [];
+    userCreatedEdges = [];
+    aiCreatedEdges = [];
+    activeStar = null;
+    isCentering = false;
+    targetCameraPosition = null;
+    currentMythData = null;
+
+    // Atualizar HUD
+    document.getElementById('star-count').innerText = '0';
+
+    // Desativar botão de guardar
+    document.getElementById('save-btn').disabled = true;
+
+    // Fechar sidebar de mito
+    window.closeMythSidebar();
+};
+
+window.onSaveConstellation = function() {
+    if (!currentMythData || userSelectedStars.length === 0) return;
+
+    const defaultName = currentMythData.real_name || currentMythData.nome_constelacao || "Nova Constelação";
+    const constName = prompt("Nome da tua Constelação:", defaultName);
+    if (!constName) return;
+
+    const savedItem = {
+        id: Date.now(),
+        name: constName,
+        myth_title: currentMythData.titulo,
+        myth_text: currentMythData.texto,
+        myth_is_real: currentMythData.is_real,
+        skeleton_stars: userSelectedStars,
+        user_edges: userCreatedEdges,
+        ai_edges: aiCreatedEdges,
+        properties: currentMythData.properties
+    };
+
+    let library = JSON.parse(localStorage.getItem('saved_constellations') || '[]');
+    library.push(savedItem);
+    localStorage.setItem('saved_constellations', JSON.stringify(library));
+
+    alert(`A constelação "${constName}" foi guardada na tua Biblioteca!`);
+    renderLibrary();
+};
+
+window.onDeleteConstellation = function(id) {
+    if (!confirm("Tens a certeza que queres apagar esta constelação da biblioteca?")) return;
+    let library = JSON.parse(localStorage.getItem('saved_constellations') || '[]');
+    library = library.filter(item => item.id !== id);
+    localStorage.setItem('saved_constellations', JSON.stringify(library));
+    renderLibrary();
+};
+
+window.loadConstellation = function(id) {
+    let library = JSON.parse(localStorage.getItem('saved_constellations') || '[]');
+    const saved = library.find(item => item.id === id);
+    if (!saved) return;
+
+    // 1. Limpar céu primeiro
+    window.onClearSky();
+
+    // 2. Preencher variáveis
+    userSelectedStars = saved.skeleton_stars;
+    userCreatedEdges = saved.user_edges;
+    aiCreatedEdges = saved.ai_edges;
+
+    // 3. Pintar estrelas e desenhar linhas
+    userSelectedStars.forEach(s => {
+        const starObj = starsGroup.children.find(o => o.userData.id === s.id);
+        if (starObj) {
+            starObj.material.color.setHex(0xc9a84c); // dourado da constelação
+        }
+    });
+
+    userCreatedEdges.forEach(edge => {
+        const startStar = userSelectedStars.find(s => s.id === edge.from);
+        const endStar = userSelectedStars.find(s => s.id === edge.to);
+        if (startStar && endStar) {
+            drawVisualLine(startStar.coords, endStar.coords, 0xc9a84c);
+        }
+    });
+
+    aiCreatedEdges.forEach(edge => {
+        const fromStarObj = starsGroup.children.find(s => s.userData.id === edge.from);
+        const toStarObj = starsGroup.children.find(s => s.userData.id === edge.to);
+        if (fromStarObj && toStarObj) {
+            drawVisualLine(
+                { x: fromStarObj.position.x, y: fromStarObj.position.y, z: fromStarObj.position.z },
+                { x: toStarObj.position.x, y: toStarObj.position.y, z: toStarObj.position.z },
+                0xa8c4e0
+            );
+        }
+    });
+
+    // 4. Atualizar barra lateral do mito
+    const badge = document.getElementById('myth-badge');
+    if (saved.myth_is_real) {
+        badge.innerText = `Constelação Real: ${saved.name}`;
+        badge.className = 'badge-real';
+        badge.style.display = 'inline-block';
+    } else {
+        badge.innerText = `Constelação Criada: ${saved.name}`;
+        badge.className = 'badge-custom';
+        badge.style.display = 'inline-block';
+    }
+
+    document.getElementById('myth-title').innerText = saved.myth_title;
+    document.getElementById('myth-text').innerText = saved.myth_text;
+    
+    document.getElementById('myth-loading').style.display = 'none';
+    document.getElementById('myth-content').style.display = 'block';
+    document.getElementById('interface-myth').classList.add('visible');
+
+    // Atualizar HUD
+    document.getElementById('star-count').innerText = userSelectedStars.length;
+
+    // Manter dados guardados como mito activo
+    currentMythData = {
+        real_name: saved.name,
+        titulo: saved.myth_title,
+        texto: saved.myth_text,
+        is_real: saved.myth_is_real,
+        properties: saved.properties
+    };
+    document.getElementById('save-btn').disabled = false;
+
+    // 5. Animar e focar
+    if (userSelectedStars.length > 0) {
+        const centroid = new THREE.Vector3();
+        userSelectedStars.forEach(s => {
+            centroid.add(new THREE.Vector3(s.coords.x, s.coords.y, s.coords.z));
+        });
+        centroid.divideScalar(userSelectedStars.length);
+        
+        const dir = centroid.clone().normalize();
+        targetCameraPosition = dir.clone().multiplyScalar(-camera.position.length());
+        isCentering = true;
+    }
+};
+
+function renderLibrary() {
+    const listEl = document.getElementById('library-list');
+    if (!listEl) return;
+
+    const library = JSON.parse(localStorage.getItem('saved_constellations') || '[]');
+    listEl.innerHTML = '';
+
+    if (library.length === 0) {
+        listEl.innerHTML = '<div class="library-empty">Sem constelações na biblioteca.</div>';
+        return;
+    }
+
+    library.forEach(item => {
+        const itemEl = document.createElement('div');
+        itemEl.className = 'library-item';
+        
+        itemEl.innerHTML = `
+            <span class="library-item-name" onclick="loadConstellation(${item.id})">${item.name}</span>
+            <button class="library-item-delete" onclick="onDeleteConstellation(${item.id})">&times;</button>
+        `;
+        listEl.appendChild(itemEl);
+    });
+}
+
+// Inicializar biblioteca
+renderLibrary();
 
 function animate() {
     requestAnimationFrame(animate);
