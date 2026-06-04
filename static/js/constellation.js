@@ -250,6 +250,7 @@ window.onForgeConstellation = async function() {
     const mythLoading = document.getElementById('myth-loading');
     const mythContent = document.getElementById('myth-content');
     const sidebar = document.getElementById('interface-myth');
+    const divider = document.getElementById('myth-divider');
 
     // Desativar o botão e iniciar estado de carregamento
     forgeBtn.disabled = true;
@@ -260,6 +261,7 @@ window.onForgeConstellation = async function() {
     mythContent.style.display = 'none';
     mythLoading.style.display = 'flex';
     sidebar.classList.add('visible');
+    if (divider) divider.style.display = 'block';
 
     try {
         const payload = { skeleton_stars: userSelectedStars, edges: userCreatedEdges };
@@ -328,6 +330,7 @@ window.onForgeConstellation = async function() {
     } catch (err) {
         console.error("Erro ao forjar constelação:", err);
         sidebar.classList.remove('visible');
+        if (divider) divider.style.display = 'none';
     } finally {
         // Restaurar estado do botão
         forgeBtn.disabled = false;
@@ -339,11 +342,61 @@ window.onForgeConstellation = async function() {
 // Fechar sidebar do mito
 window.closeMythSidebar = function() {
     document.getElementById('interface-myth').classList.remove('visible');
+    const divider = document.getElementById('myth-divider');
+    if (divider) divider.style.display = 'none';
 };
 
 // Se o utilizador começar a rodar manualmente, cancela a focagem automática para não disputar o controlo
 controls.addEventListener('start', () => {
     isCentering = false;
+});
+
+// --- CONTROLO DE ZOOM (SLIDER E BOTÕES) ---
+const zoomSlider = document.getElementById('zoom-slider');
+const zoomInBtn = document.getElementById('zoom-in-btn');
+const zoomOutBtn = document.getElementById('zoom-out-btn');
+
+function updateCameraZoom(distance) {
+    const clampedDist = Math.max(0.1, Math.min(10, distance));
+    const dir = camera.position.clone().normalize();
+    camera.position.copy(dir.multiplyScalar(clampedDist));
+    controls.update();
+    if (zoomSlider) {
+        zoomSlider.value = 10.1 - clampedDist;
+    }
+}
+
+if (zoomSlider) {
+    // Sincronizar o valor inicial do slider com a câmara
+    zoomSlider.value = 10.1 - camera.position.length();
+    
+    // Escutar mudanças no slider
+    zoomSlider.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        const distance = 10.1 - val;
+        updateCameraZoom(distance);
+    });
+}
+
+// Botões + e -
+if (zoomInBtn) {
+    zoomInBtn.addEventListener('click', () => {
+        const currentDist = camera.position.length();
+        updateCameraZoom(currentDist - 0.6); // Aproximar
+    });
+}
+if (zoomOutBtn) {
+    zoomOutBtn.addEventListener('click', () => {
+        const currentDist = camera.position.length();
+        updateCameraZoom(currentDist + 0.6); // Afastar
+    });
+}
+
+// Sincronizar o slider com o scroll do rato (roda de zoom) do OrbitControls
+controls.addEventListener('change', () => {
+    if (zoomSlider && !isCentering) {
+        zoomSlider.value = 10.1 - camera.position.length();
+    }
 });
 
 function animate() {
