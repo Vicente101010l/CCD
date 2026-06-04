@@ -5,484 +5,654 @@
     <title>Criação de Constelações</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { 
-            margin: 0; 
-            overflow: hidden; 
-            background: #000; 
-            font-family: 'Inter', sans-serif; 
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #030305;
+            font-family: 'Inter', sans-serif;
         }
-        canvas { display: block; cursor: crosshair; }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw !important;
+            height: 100vh !important;
+            display: block;
+            z-index: 1;
+            cursor: crosshair;
+        }
         
-        /* Custom scrollbar for modern browsers */
-        ::-webkit-scrollbar {
-            width: 6px;
+        .pergaminho-scroll-zone::-webkit-scrollbar,
+        #library-list::-webkit-scrollbar {
+            width: 5px;
         }
-        ::-webkit-scrollbar-track {
-            background: rgba(10, 10, 15, 0.5);
+        .pergaminho-scroll-zone::-webkit-scrollbar-track,
+        #library-list::-webkit-scrollbar-track {
+            background: transparent;
         }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(201, 168, 76, 0.3);
-            border-radius: 3px;
+        .pergaminho-scroll-zone::-webkit-scrollbar-thumb {
+            background: rgba(74, 48, 15, 0.25);
+            border-radius: 2px;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(201, 168, 76, 0.6);
+        #library-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 2px;
         }
+        
         
         #controls-panel {
             position: absolute;
             top: 30px;
-            left: 30px;
-            background: rgba(10, 10, 15, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 24px;
-            border-radius: 8px;
-            border: 1px solid rgba(168, 196, 224, 0.2);
-            color: #c9a84c;
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 5;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            width: 280px;
+            
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 24px;
+            padding: 12px 28px;
+            
+            background: rgba(10, 12, 18, 0.65);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            
+            border: 1px solid rgba(168, 196, 224, 0.2);
+            border-radius: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
             box-sizing: border-box;
+            
+            transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: left, transform;
+        }
+        
+        /*  quando o pergaminho abre: encosta suavemente à esquerda */
+        #controls-panel.shifted {
+            left: 30px;
+            transform: translateX(0);
         }
         
         #hud { 
-            font-size: 11px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            font-weight: 600;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-        }
-        
-        #forge-btn {
-            width: 100%;
-            padding: 14px 20px;
-            background: #c9a84c; 
-            border: none; 
-            font-weight: 700; 
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: #000;
-            border-radius: 4px;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            font-family: 'Inter', sans-serif;
-            font-size: 12px;
-        }
-        #forge-btn:hover { 
-            background: #a8c4e0; 
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(168, 196, 224, 0.4);
-        }
-        #forge-btn:active {
-            transform: translateY(0);
-        }
-        
-        /* Zoom slider container styling */
-        .zoom-container {
-            margin-top: 20px;
-            border-top: 1px solid rgba(168, 196, 224, 0.15);
-            padding-top: 20px;
-        }
-        .zoom-label {
-            font-size: 9px;
+            font-size: 10px;
+            line-height: 1.4;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: rgba(255, 255, 255, 0.5);
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: transparent;
-        }
-        input[type=range]:focus {
-            outline: none;
-        }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 3px;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 2px;
-            border: none;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            height: 12px;
-            width: 12px;
-            border-radius: 50%;
-            background: #c9a84c;
-            cursor: pointer;
-            -webkit-appearance: none;
-            margin-top: -4.5px;
-            box-shadow: 0 0 8px #c9a84c;
-            transition: transform 0.1s;
-        }
-        input[type=range]::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-            background: #a8c4e0;
-            box-shadow: 0 0 10px #a8c4e0;
-        }
-        
-        #interface-myth {
-            position: absolute; 
-            top: 0; 
-            right: 0; 
-            width: 460px; 
-            height: 100%;
-            background: rgba(4, 4, 6, 0.9); 
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            color: #ffffff; 
-            padding: 60px 40px;
-            box-sizing: border-box;
-            border-left: 1px solid rgba(255, 255, 255, 0.15); 
-            display: flex;
-            flex-direction: column;
-            transform: translateX(100%);
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 10;
-            overflow-y: auto;
-            box-shadow: -15px 0 40px rgba(0, 0, 0, 0.85);
-            font-family: Georgia, serif;
-        }
-        #interface-myth.visible { 
-            transform: translateX(0); 
-        }
-        
-        #close-myth-btn {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            background: none;
-            border: none;
+            letter-spacing: 1px;
             color: rgba(255, 255, 255, 0.4);
-            font-size: 32px;
-            font-weight: 300;
-            cursor: pointer;
-            transition: color 0.2s, transform 0.2s;
-            line-height: 1;
-        }
-        #close-myth-btn:hover {
-            color: #c9a84c;
-            transform: scale(1.1);
-        }
-        
-        #myth-badge {
-            align-self: flex-start;
-            padding: 4px 10px;
-            font-size: 10px;
-            font-weight: normal;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 25px;
-            border-radius: 2px;
-            font-family: 'Inter', sans-serif;
+            border-right: 1px solid rgba(255, 255, 255, 0.15);
+            padding-right: 20px;
+            white-space: nowrap;
         }
-        .badge-real {
-            background: rgba(168, 196, 224, 0.12);
-            color: #a8c4e0;
-            border: 1px solid rgba(168, 196, 224, 0.4);
-        }
-        .badge-custom {
-            background: rgba(201, 168, 76, 0.12);
-            color: #c9a84c;
-            border: 1px solid rgba(201, 168, 76, 0.4);
-        }
-        
-        #myth-title { 
-            color: #ffffff; 
-            font-family: Georgia, serif;
-            font-weight: normal;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 30px rgba(168, 196, 224, 0.35);
-            text-transform: none; 
-            letter-spacing: normal; 
-            margin-top: 5px; 
-            font-size: 32px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-            padding-bottom: 25px;
-            margin-bottom: 30px;
-        }
-        #myth-text {
-            font-family: Georgia, serif;
-            font-size: 14px;
-            line-height: 1.65;
-            color: rgba(255, 255, 255, 0.95);
-            text-align: left;
-            margin: 0;
-        }
-        #myth-text p {
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
-        #myth-metadata {
-            font-family: Georgia, serif;
-            font-size: 14px;
-            line-height: 1.65;
-            color: rgba(255, 255, 255, 0.95);
-            text-align: left;
-            margin-top: 25px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 25px;
-        }
-        #myth-metadata p {
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
-        #myth-metadata strong {
-            color: #ffffff;
-            font-weight: bold;
-        }
-        #myth-metadata ul {
-            padding-left: 20px;
-            margin-top: 10px;
-            margin-bottom: 20px;
-            list-style-type: disc;
-        }
-        #myth-metadata li {
-            margin-bottom: 10px;
-            color: rgba(255, 255, 255, 0.9);
-        }
-        #myth-metadata li strong {
-            color: #ffffff;
-        }
-        #myth-metadata a {
-            color: #a8c4e0;
-            text-decoration: underline;
-            transition: color 0.2s;
-        }
-        #myth-metadata a:hover {
-            color: #c9a84c;
-        }
-        
-        #tooltip {
-            position: absolute;
-            display: none;
-            background: rgba(5, 5, 8, 0.95);
-            color: #a8c4e0;
-            padding: 8px 14px;
-            border: 1px solid rgba(168, 196, 224, 0.35);
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-            pointer-events: none;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
-            transform: translate(-50%, -100%);
-            margin-top: -15px;
-            z-index: 100;
-            font-family: 'Inter', sans-serif;
-            letter-spacing: 0.5px;
-        }
-        #myth-loading {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 80%;
-            color: #a8c4e0;
-            text-align: center;
-        }
-        #myth-loading p {
-            font-size: 10px;
-            letter-spacing: 1.5px;
-            margin-top: 25px;
-            line-height: 1.8;
-            text-transform: uppercase;
-            animation: pulse 1.8s infinite ease-in-out;
-            color: #c9a84c;
-            font-weight: 600;
-        }
-        .spinner {
-            width: 45px;
-            height: 45px;
-            border: 2px solid rgba(168, 196, 224, 0.1);
-            border-radius: 50%;
-            border-top-color: #c9a84c;
-            animation: spin 0.8s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
-            box-shadow: 0 0 20px rgba(201, 168, 76, 0.2);
-        }
-        #myth-content {
-            display: block;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 1; }
+        #star-count {
+            color: #c9a84c; 
+            font-weight: 700;
         }
         
         .action-buttons {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            align-items: center;
             gap: 10px;
         }
         .secondary-buttons {
             display: flex;
-            gap: 10px;
-            width: 100%;
+            gap: 8px;
         }
-        #save-btn, #clear-btn {
-            flex: 1;
-            padding: 10px;
-            font-size: 10px;
-            font-weight: 700;
-            border: 1px solid rgba(168, 196, 224, 0.3);
-            border-radius: 4px;
+        
+        #forge-btn {
+            padding: 9px 18px;
+            background: #c9a84c; 
+            border: none;
+            font-weight: 700; 
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-family: inherit;
-            transition: all 0.3s;
+            color: #05070f;
+            border-radius: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 10.5px;
+            box-shadow: 0 0 12px rgba(201, 168, 76, 0.25);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #forge-btn:hover { 
+            background: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 0 18px rgba(255, 255, 255, 0.4);
+        }
+        #forge-btn:active { transform: translateY(0); }
+        
+        #save-btn, #clear-btn {
+            padding: 8px 14px;
+            font-size: 10px;
+            font-weight: 600;
+            border-radius: 20px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+            background: transparent;
+            white-space: nowrap;
         }
         #save-btn {
-            background: transparent;
-            color: #c9a84c;
-            border-color: rgba(201, 168, 76, 0.4);
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.25);
         }
         #save-btn:hover:not(:disabled) {
-            background: rgba(201, 168, 76, 0.15);
-            box-shadow: 0 0 10px rgba(201, 168, 76, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #ffffff;
+            color: #ffffff;
         }
         #save-btn:disabled {
-            opacity: 0.3;
+            opacity: 0.25;
             cursor: not-allowed;
-            color: rgba(255, 255, 255, 0.4);
-            border-color: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.1);
         }
         #clear-btn {
-            background: transparent;
             color: #ff5555;
-            border-color: rgba(255, 85, 85, 0.4);
+            border: 1px solid rgba(255, 85, 85, 0.25);
         }
         #clear-btn:hover {
-            background: rgba(255, 85, 85, 0.12);
-            box-shadow: 0 0 10px rgba(255, 85, 85, 0.2);
+            background: rgba(255, 85, 85, 0.1);
+            border-color: #ff5555;
         }
         
-        .library-container {
-            margin-top: 20px;
-            border-top: 1px solid rgba(168, 196, 224, 0.15);
-            padding-top: 20px;
+        /* CONTAINER DO SLIDER DE ZOOM */
+        .zoom-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 1px solid rgba(255, 255, 255, 0.15);
+            padding-left: 20px;
+        }
+        .zoom-label {
             display: flex;
             flex-direction: column;
-            max-height: 250px;
-        }
-        .library-header {
-            font-size: 9px;
+            font-size: 8px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: rgba(255, 255, 255, 0.5);
-            margin-bottom: 12px;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.4);
+            white-space: nowrap;
+            line-height: 1.2;
         }
-        #library-list {
-            overflow-y: auto;
-            max-height: 180px;
+        #zoom-val {
+            color: #c9a84c;
+            font-weight: 600;
+            font-size: 9px;
+            margin-top: 1px;
+        }
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 80px;
+            background: transparent;
+        }
+        input[type=range]:focus { outline: none; }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 2px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.15);
+        }
+        input[type=range]::-webkit-slider-thumb {
+            height: 10px;
+            width: 10px;
+            border-radius: 50%;
+            background: #c9a84c; 
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -4px;
+            box-shadow: 0 0 6px #c9a84c;
+        }
+        
+        /* CONTAINER DA BIBLIOTECA */
+        .library-container {
+            position: relative;
+            border-left: 1px solid rgba(255, 255, 255, 0.15);
+            padding-left: 20px;
+            padding-bottom: 15px; 
+            margin-bottom: -15px;
+        }
+        .library-header {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
             display: flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+        }
+        .library-header:hover { color: #c9a84c; }
+        
+        #library-list {
+            position: absolute;
+            top: 28px; 
+            right: 0;
+            width: 220px;
+            max-height: 180px;
+            background: rgba(12, 14, 22, 0.95);
+            border: 1px solid rgba(168, 196, 224, 0.2);
+            border-radius: 8px;
+            padding: 10px;
+            display: none; 
             flex-direction: column;
-            gap: 8px;
-            padding-right: 5px;
+            gap: 6px;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .library-container:hover #library-list {
+            display: flex; 
         }
         .library-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
             background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 6px 10px;
             border-radius: 4px;
-            padding: 8px 12px;
-            transition: all 0.2s;
-        }
-        .library-item:hover {
-            background: rgba(168, 196, 224, 0.08);
-            border-color: rgba(168, 196, 224, 0.2);
         }
         .library-item-name {
             font-size: 11px;
-            color: #a8c4e0;
+            color: rgba(255, 255, 255, 0.75);
             cursor: pointer;
-            font-weight: 600;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            max-width: 170px;
-            transition: color 0.2s;
+            max-width: 150px;
         }
-        .library-item-name:hover {
-            color: #c9a84c;
-        }
+        .library-item-name:hover { color: #c9a84c; }
         .library-item-delete {
             background: none;
             border: none;
             color: rgba(255, 85, 85, 0.5);
-            font-size: 14px;
+            font-size: 12px;
             cursor: pointer;
-            transition: color 0.2s, transform 0.2s;
-            line-height: 1;
-            padding: 0 4px;
         }
-        .library-item-delete:hover {
-            color: #ff3333;
-            transform: scale(1.2);
-        }
+        .library-item-delete:hover { color: #ff5555; }
         .library-empty {
             font-size: 10px;
             color: rgba(255, 255, 255, 0.35);
             font-style: italic;
             text-align: center;
-            padding: 15px 0;
+            padding: 8px 0;
+        }
+
+        /* PAINEL DO PERGAMINHO */
+        #interface-myth {
+            position: absolute; 
+            top: 40px;          
+            right: 40px;        
+            width: 480px; 
+            height: calc(100vh - 80px); 
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(calc(100% + 50px)); 
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            perspective: 1000px;
+            background: transparent;
+        }
+        
+        #interface-myth.visible { 
+            transform: translateX(0); 
+        }
+
+        .pergaminho-scroll-zone {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -20px 20px 50px rgba(0, 0, 0, 0.85);
+            position: relative;
+        }
+
+        .pergaminho-corpo {
+            position: relative;
+            width: 100%;
+            background-color: #e4d1a4;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.075'/%3E%3C/svg%3E"),
+                linear-gradient(to right, rgba(46, 29, 6, 0.35) 0%, rgba(0, 0, 0, 0) 6%, rgba(0, 0, 0, 0) 94%, rgba(46, 29, 6, 0.25) 100%);
+            background-blend-mode: multiply;
+            
+            padding: 25px 45px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            
+            max-height: 190px;
+            overflow: hidden;
+            transition: max-height 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            
+            clip-path: polygon(
+                0% 0%, 100% 0%, 
+                99% 3%, 100% 6%, 98.5% 10%, 99.5% 15%, 98% 21%, 100% 26%, 99% 32%, 98.5% 38%, 100% 45%, 98% 52%, 99.5% 60%, 98.5% 68%, 100% 75%, 99% 83%, 98% 91%, 99.5% 97%, 100% 100%,
+                0% 100%, 
+                1% 97%, 0.5% 92%, 2% 85%, 1% 78%, 1.5% 71%, 0% 64%, 2% 57%, 0.5% 49%, 1.5% 41%, 0% 34%, 1% 27%, 2% 19%, 0.5% 12%, 1.5% 5%
+            );
+        }
+
+        .pergaminho-corpo.aberto {
+            max-height: 2500px; 
+            overflow: visible;
+        }
+
+        .rolo-topo {
+            width: 100%;
+            height: 42px;
+            flex-shrink: 0;
+            background: linear-gradient(to bottom, 
+                #3b250a 0%, #5c3d14 8%, #855d28 20%, #c2a269 40%, #ebd8b5 55%, #a8844d 75%, #543813 92%, #211504 100%
+            );
+            border-bottom: 1px solid rgba(43, 29, 12, 0.4);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.35);
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        .area-base-mecanica {
+            position: relative;
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        .rolo-base {
+            width: 100%;
+            height: 42px;
+            background: linear-gradient(to bottom, 
+                #211504 0%, #543813 8%, #a8844d 25%, #ebd8b5 45%, #c2a269 60%, #855d28 80%, #5c3d14 92%, #3b250a 100%
+            );
+            border-top: 1px solid rgba(43, 29, 12, 0.4);
+            box-shadow: 0 -5px 12px rgba(0,0,0,0.35);
+            transform-style: preserve-3d;
+            will-change: transform;
+            cursor: pointer; 
+        }
+
+        #puxador-aviso {
+            position: absolute;
+            top: -24px; 
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Inter', sans-serif;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #5c3d14;
+            background: linear-gradient(to bottom, #e3d0a1, #d9c28f);
+            padding: 4px 14px;
+            border: 1px solid #9c7b4c;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
+            box-shadow: 0 -3px 6px rgba(0,0,0,0.1);
+            animation: bounceAviso 2.2s infinite ease-in-out;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 30;
+        }
+        @keyframes bounceAviso {
+            0%, 100% { transform: translate(-50%, 0); }
+            50% { transform: translate(-50%, -4px); }
+        }
+        
+        #close-myth-btn {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: none;
+            border: none;
+            color: rgba(43, 29, 12, 0.5);
+            font-size: 28px;
+            font-weight: 300;
+            cursor: pointer;
+            transition: all 0.2s;
+            line-height: 1;
+            z-index: 15;
+        }
+        #close-myth-btn:hover {
+            color: #4a310d;
+            transform: scale(1.15) rotate(90deg);
+        }
+        
+        #myth-badge {
+            align-self: center;
+            padding: 4px 12px;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            border-radius: 2px;
+            font-family: 'Inter', sans-serif;
+            margin-top: 15px;
+        }
+        .badge-real {
+            background: rgba(43, 75, 124, 0.08);
+            color: #2b4b7c;
+            border: 1px solid rgba(43, 75, 124, 0.25);
+        }
+        .badge-custom {
+            background: rgba(139, 94, 26, 0.08);
+            color: #704b12;
+            border: 1px solid rgba(139, 94, 26, 0.25);
+        }
+        
+        #myth-title { 
+            color: #1a0f02; 
+            font-family: Georgia, serif;
+            font-weight: normal;
+            text-shadow: 1px 1px 1px rgba(255,255,255,0.4);
+            text-align: center;
+            font-size: 24px;
+            line-height: 1.35;
+            border-bottom: 1px dashed rgba(92, 61, 15, 0.2);
+            padding-bottom: 22px;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+        
+        .conteudo-ocultavel {
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+            pointer-events: none;
+        }
+        .pergaminho-corpo.aberto .conteudo-ocultavel {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        #myth-text {
+            font-family: Georgia, serif;
+            font-size: 15.5px;
+            line-height: 1.8;
+            color: #1f1407;
+            text-align: justify;
+        }
+        #myth-text p {
+            margin-top: 0;
+            margin-bottom: 22px;
+            text-indent: 25px;
+        }
+        
+        #myth-metadata {
+            font-family: Georgia, serif;
+            font-size: 13.5px;
+            line-height: 1.7;
+            color: #36240f;
+            text-align: left;
+            margin-top: 15px;
+            border-top: 1px dashed rgba(92, 61, 15, 0.2);
+            padding-top: 25px;
+            background: rgba(92, 61, 15, 0.025);
+            padding: 18px;
+            border-radius: 4px;
+        }
+        #myth-metadata p {
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+        #myth-metadata strong {
+            color: #1a0f02;
+            font-weight: bold;
+        }
+        #myth-metadata ul {
+            padding-left: 18px;
+            margin-top: 10px;
+            margin-bottom: 0;
+            list-style-type: square;
+        }
+        #myth-metadata li {
+            margin-bottom: 10px;
+            color: #36240f;
+        }
+        #myth-metadata li:last-child {
+            margin-bottom: 0;
         }
     </style>
 </head>
 <body>
     <div id="controls-panel">
-        <div id="hud">MODO: OBSERVAÇÃO/DESENHO<br>ESTRELAS SELECIONADAS: <span id="star-count">0</span></div>
+        <div id="hud">Estrelas Unidas: <span id="star-count">0</span></div>
         
         <div class="action-buttons">
-            <button id="forge-btn" onclick="onForgeConstellation()">GERAR MITO</button>
+            <button id="forge-btn" onclick="onForgeConstellation()">Gerar Mito</button>
             <div class="secondary-buttons">
-                <button id="save-btn" onclick="onSaveConstellation()" disabled>GUARDAR</button>
-                <button id="clear-btn" onclick="onClearSky()">LIMPAR</button>
+                <button id="save-btn" onclick="onSaveConstellation()" disabled>Guardar Constelação</button>
+                <button id="clear-btn" onclick="onClearSky()">Limpar</button>
             </div>
         </div>
 
         <div class="zoom-container">
             <div class="zoom-label">
-                <span>Zoom Céu</span>
+                <span>Lente Lume</span>
                 <span id="zoom-val">100%</span>
             </div>
             <input type="range" id="zoom-slider" min="0.1" max="8.0" step="0.05" value="0.1">
         </div>
 
         <div class="library-container">
-            <div class="library-header">Biblioteca</div>
+            <div class="library-header">Biblioteca ▼</div>
             <div id="library-list">
-                <!-- Constelações guardadas serão listadas aqui -->
-            </div>
+                </div>
         </div>
     </div>
+    
     <div id="tooltip"></div>
+    
     <div id="interface-myth">
-        <button id="close-myth-btn" onclick="closeMythSidebar()">&times;</button>
         <div id="myth-loading">
             <div class="spinner"></div>
             <p>A consultar os antigos<br>registos estelares...</p>
         </div>
-        <div id="myth-content">
-            <div id="myth-badge"></div>
-            <h2 id="myth-title"></h2>
-            <div id="myth-text"></div>
-            <div id="myth-metadata"></div>
+        
+        <div id="scroll-container" class="pergaminho-scroll-zone">
+            <div id="myth-content">
+                <div class="rolo-topo" id="mesh-rolo-topo"></div>
+                
+                <div class="pergaminho-corpo" id="mesh-papiro-corpo">
+                    <button id="close-myth-btn" onclick="closeMythSidebar()">&times;</button>
+                    <div id="myth-badge"></div>
+                    <h2 id="myth-title"></h2>
+                    
+                    <div class="conteudo-ocultavel" id="bloco-lenda">
+                        <div id="myth-text"></div>
+                        <div id="myth-metadata"></div>
+                    </div>
+                </div>
+                
+                <div class="area-base-mecanica">
+                    <div id="puxador-aviso" onclick="desenrolarPergaminho()">Puxar para ler mito ↓</div>
+                    <div class="rolo-base" id="mesh-rolo-base" onclick="desenrolarPergaminho()"></div>
+                </div>
+            </div>
         </div>
     </div>
-    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
-    <script type="importmap"> { "imports": { "three": "https://unpkg.com/three@0.154.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.154.0/examples/jsm/" } } </script>
+    
+    <script>
+        const scrollZone = document.getElementById('scroll-container');
+        const papiro = document.getElementById('mesh-papiro-corpo');
+        const rTopo = document.getElementById('mesh-rolo-topo');
+        const rBase = document.getElementById('mesh-rolo-base');
+        const aviso = document.getElementById('puxador-aviso');
+        const barraControlos = document.getElementById('controls-panel');
+
+        function desenrolarPergaminho() {
+            if (!papiro.classList.contains('aberto')) {
+                papiro.classList.add('aberto');
+                if (aviso) {
+                    aviso.style.opacity = '0';
+                    aviso.style.visibility = 'hidden';
+                }
+                
+                rTopo.style.transform = 'rotateX(720deg)';
+                rBase.style.transform = 'rotateX(720deg)';
+                
+                setTimeout(() => {
+                    sincronizarRotacaoMecanica();
+                }, 800);
+            }
+        }
+
+        function sincronizarRotacaoMecanica() {
+            if (!scrollZone || !rTopo || !rBase || !papiro.classList.contains('aberto')) return;
+            const st = scrollZone.scrollTop;
+            const degrees = (st * 1.35) % 360;
+            rTopo.style.transform = `rotateX(${degrees}deg)`;
+            rBase.style.transform = `rotateX(${degrees}deg)`;
+        }
+
+        if (scrollZone) {
+            scrollZone.addEventListener('scroll', sincronizarRotacaoMecanica);
+        }
+
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'class') {
+                    const interfaceMyth = document.getElementById('interface-myth');
+                    
+                    if (interfaceMyth.classList.contains('visible')) {
+                        barraControlos.classList.add('shifted');
+                    } else {
+                        barraControlos.classList.remove('shifted');
+                        papiro.classList.remove('aberto');
+                        if (aviso) {
+                            aviso.style.opacity = '1';
+                            aviso.style.visibility = 'visible';
+                        }
+                        rTopo.style.transform = 'rotateX(0deg)';
+                        rBase.style.transform = 'rotateX(0deg)';
+                        if (scrollZone) scrollZone.scrollTop = 0;
+                    }
+                }
+            });
+        });
+        
+        const interfaceMythEl = document.getElementById('interface-myth');
+        if (interfaceMythEl) {
+            observer.observe(interfaceMythEl, { attributes: true });
+        }
+    </script>
+
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/es-module-shims/1.6.3/es-module-shims.js"></script>
+    <script type="importmap"> { "imports": { "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js", "three/addons/": "https://unpkg.com/three@0.154.0/examples/jsm/" } } </script>
     <script type="module" src="static/js/constellation.js"></script>
 </body>
 </html>

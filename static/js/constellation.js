@@ -5,7 +5,16 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
+
+
+renderer.domElement.style.position = 'absolute';
+renderer.domElement.style.top = '0';
+renderer.domElement.style.left = '0';
+renderer.domElement.style.width = '100vw';
+renderer.domElement.style.height = '100vh';
+
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
 document.body.appendChild(renderer.domElement);
 
 // --- NAVEGAÇÃO ESTILO PLANETÁRIO ---
@@ -14,9 +23,68 @@ camera.position.set(0, 0, 0.1);
 controls.target.set(0, 0, 0);
 controls.enablePan = false;
 controls.enableZoom = true;
-controls.rotateSpeed = -0.3; // Invertido para parecer rotação natural do pescoço
+controls.rotateSpeed = -0.3; 
 controls.minDistance = 0.1;
 controls.maxDistance = 8.0;
+
+// --- GERADOR DE TEXTURA DE ESTRELA ORGÂNICA ---
+function createStarTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 16;
+    canvas.height = 16;
+    const ctx = canvas.getContext('2d');
+    
+    const gradient = ctx.createRadialGradient(8, 8, 0, 8, 8, 8);
+    gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+    gradient.addColorStop(0.2, 'rgba(255, 255, 255, 0.8)');
+    gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.2)');
+    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 16, 16);
+    return new THREE.CanvasTexture(canvas);
+}
+const starTexture = createStarTexture();
+
+// --- ADICIONA ESTRELAS DE FUNDO ---
+function createCosmicDust() {
+    const dustGeometry = new THREE.BufferGeometry();
+    const dustCount = 6000; // Mantido em 6000 para densidade premium em monitores grandes
+    const positions = new Float32Array(dustCount * 3);
+    const colors = new Float32Array(dustCount * 3);
+    
+    for (let i = 0; i < dustCount * 3; i += 3) {
+        const u = Math.random();
+        const v = Math.random();
+        const theta = u * 2.0 * Math.PI;
+        const phi = Math.acos(2.0 * v - 1.0);
+        const r = 65.0; 
+        
+        positions[i] = r * Math.sin(phi) * Math.cos(theta);
+        positions[i+1] = r * Math.sin(phi) * Math.sin(theta);
+        positions[i+2] = r * Math.cos(phi);
+        
+        colors[i] = 0.6 + Math.random() * 0.2;
+        colors[i+1] = 0.7 + Math.random() * 0.2;
+        colors[i+2] = 0.9 + Math.random() * 0.1;
+    }
+    
+    dustGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    dustGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    
+    // CORREÇÃO DE CORPO: 
+    const dustMaterial = new THREE.PointsMaterial({
+        size: 0.12,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.4,
+        sizeAttenuation: true
+    });
+    
+    const dustPoints = new THREE.Points(dustGeometry, dustMaterial);
+    scene.add(dustPoints);
+}
+createCosmicDust();
 
 // --- ZOOM SLIDER INTEGRATION ---
 const zoomSlider = document.getElementById('zoom-slider');
@@ -29,19 +97,16 @@ if (zoomSlider && zoomVal) {
         camera.position.copy(dir.multiplyScalar(val));
         controls.update();
         
-        // Mapear min=0.1 a 100% e max=8.0 a 800%
         const percent = Math.round(((val - 0.1) / (8.0 - 0.1)) * 700 + 100);
         zoomVal.innerText = `${percent}%`;
     });
 }
 
 controls.addEventListener('change', () => {
-    // Manter o slider de zoom e a percentagem sincronizados com a rotação/scroll do rato
     if (zoomSlider && zoomVal) {
         const currentDist = camera.position.length();
         zoomSlider.value = currentDist;
         
-        // Mapear min=0.1 a 100% e max=8.0 a 800%
         const percent = Math.round(((currentDist - 0.1) / (8.0 - 0.1)) * 700 + 100);
         zoomVal.innerText = `${percent}%`;
     }
@@ -69,13 +134,16 @@ async function loadStars() {
         const starsData = await response.json();
         
         starsData.forEach(starData => {
-            // Mapeamos a magnitude para um tamanho de esfera (estrelas mais brilhantes são maiores)
-            // Magnitude aparente mínima no catálogo é -1.44 (Sirius), máxima é 3.80.
-            const size = Math.max(0.06, 0.25 - (starData.mag * 0.035));
+            const size = Math.max(0.12, 0.7 - (starData.mag * 0.11));
             
-            const geometry = new THREE.SphereGeometry(size, 8, 8); // 8x8 para excelente performance
-            const material = new THREE.MeshBasicMaterial({ color: starData.color });
-            const star = new THREE.Mesh(geometry, material);
+            const material = new THREE.SpriteMaterial({ 
+                map: starTexture,
+                color: new THREE.Color(starData.color),
+                transparent: true,
+                blending: THREE.AdditiveBlending 
+            });
+            const star = new THREE.Sprite(material);
+            star.scale.set(size, size, 1);
             
             star.position.set(starData.coords.x, starData.coords.y, starData.coords.z);
             star.userData = { 
@@ -100,7 +168,6 @@ const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
 window.addEventListener('click', (event) => {
-    // Apenas responde a cliques no canvas (ignora cliques nos botões/UI)
     if (event.target !== renderer.domElement) {
         return;
     }
@@ -109,15 +176,13 @@ window.addEventListener('click', (event) => {
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     raycaster.setFromCamera(mouse, camera);
     
-    // 1. Tentar interseção exata primeiro
     const intersects = raycaster.intersectObjects(starsGroup.children);
     let clickedStar = null;
     
     if (intersects.length > 0) {
         clickedStar = intersects[0].object;
     } else {
-        // 2. Procurar a estrela mais próxima do raio de clique dentro de um limiar
-        const threshold = 1.2; // Tolerância em unidades 3D
+        const threshold = 1.2; 
         const thresholdSq = threshold * threshold;
         let minDistanceSq = Infinity;
         
@@ -143,22 +208,19 @@ window.addEventListener('click', (event) => {
     }
 });
 
-// TOOLTIP E LINHA ELÁSTICA (MOUSEMOVE)
+// TOOLTIP E LINHA ELÁSTICA 
 const tooltip = document.getElementById('tooltip');
 
 window.addEventListener('mousemove', (event) => {
-    // Esconder tooltip se passarmos o rato por cima da UI
     if (event.target !== renderer.domElement) {
         tooltip.style.display = 'none';
         document.body.style.cursor = 'default';
         return;
     }
 
-    // Atualizar coordenadas do rato para o raycaster
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-    // RAYCASTING PARA HOVER DE ESTRELAS
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(starsGroup.children);
     let hoveredStar = null;
@@ -166,7 +228,6 @@ window.addEventListener('mousemove', (event) => {
     if (intersects.length > 0) {
         hoveredStar = intersects[0].object;
     } else {
-        // Procurar a estrela mais próxima dentro do limiar para mostrar o tooltip
         const threshold = 1.2;
         const thresholdSq = threshold * threshold;
         let minDistanceSq = Infinity;
@@ -181,7 +242,6 @@ window.addEventListener('mousemove', (event) => {
     }
 
     if (hoveredStar) {
-        // Exibir o tooltip premium
         tooltip.innerText = `${hoveredStar.userData.name} (Mag: ${hoveredStar.userData.mag}, ${hoveredStar.userData.con})`;
         tooltip.style.left = `${event.clientX}px`;
         tooltip.style.top = `${event.clientY}px`;
@@ -192,7 +252,6 @@ window.addEventListener('mousemove', (event) => {
         document.body.style.cursor = 'crosshair';
     }
 
-    // LINHA ELÁSTICA (RUBBER-BANDING)
     if (!activeStar) return;
 
     const vector = new THREE.Vector3(mouse.x, mouse.y, 0.5).unproject(camera);
@@ -204,17 +263,16 @@ window.addEventListener('mousemove', (event) => {
         new THREE.Vector3(activeStar.coords.x, activeStar.coords.y, activeStar.coords.z),
         pos
     ]);
-    tempLine = new THREE.Line(geometry, new THREE.LineDashedMaterial({ color: 0xc9a84c, dashSize: 1, gapSize: 0.5 }));
+    tempLine = new THREE.Line(geometry, new THREE.LineDashedMaterial({ color: 0xc9a84c, dashSize: 0.8, gapSize: 0.4 }));
     tempLine.computeLineDistances();
     scene.add(tempLine);
 });
 
-// --- LÓGICA DE NEGÓCIO ---
 function deselectActiveStar() {
     if (activeStar) {
         const starObj = starsGroup.children.find(s => s.userData.id === activeStar.id);
         if (starObj) {
-            starObj.material.color.setHex(0xc9a84c); // Devolve à cor dourada da constelação
+            starObj.material.color.setHex(0xc9a84c); 
         }
         activeStar = null;
         if (tempLine) {
@@ -232,10 +290,8 @@ function onStarClick(starData) {
 
     if (activeStar) {
         if (activeStar.id === starData.id) {
-            // Clicar na estrela ativa cancela a seleção
             deselectActiveStar();
         } else {
-            // Criar ligação
             userCreatedEdges.push({ from: activeStar.id, to: starData.id });
             drawVisualLine(activeStar.coords, starData.coords, 0xc9a84c);
 
@@ -244,18 +300,15 @@ function onStarClick(starData) {
                 document.getElementById('star-count').innerText = userSelectedStars.length;
             }
 
-            // Repor a cor da estrela ativa anterior para dourado
             const prevActiveStarObj = starsGroup.children.find(s => s.userData.id === activeStar.id);
             if (prevActiveStarObj) {
                 prevActiveStarObj.material.color.setHex(0xc9a84c);
             }
 
-            // Definir a nova estrela ativa e pintá-la a ciano
             activeStar = starData;
-            starObj.material.color.setHex(0x00ffff);
+            starObj.material.color.setHex(0x00ffff); 
         }
     } else {
-        // Iniciar nova linha
         if (!alreadySelected) {
             userSelectedStars.push(starData);
             document.getElementById('star-count').innerText = userSelectedStars.length;
@@ -266,7 +319,12 @@ function onStarClick(starData) {
 }
 
 function drawVisualLine(start, end, colorHex) {
-    const material = new THREE.LineBasicMaterial({ color: colorHex });
+    const material = new THREE.LineBasicMaterial({ 
+        color: colorHex,
+        transparent: true,
+        opacity: 0.45,
+        linewidth: 1
+    });
     const points = [new THREE.Vector3(start.x, start.y, start.z), new THREE.Vector3(end.x, end.y, end.z)];
     const geometry = new THREE.BufferGeometry().setFromPoints(points);
     const line = new THREE.Line(geometry, material);
@@ -275,29 +333,44 @@ function drawVisualLine(start, end, colorHex) {
 
 window.onForgeConstellation = async function() {
     if (userSelectedStars.length < 2) {
-        alert("Por favor, liga pelo menos 2 estrelas para forjar uma constelação!");
+        alert("Por favor, liga pelo menos 2 estrelas para gerar uma constelação!");
         return;
     }
     clearAllLines();
 
-    // Obter referências dos elementos
     const forgeBtn = document.getElementById('forge-btn');
     const mythLoading = document.getElementById('myth-loading');
     const mythContent = document.getElementById('myth-content');
     const sidebar = document.getElementById('interface-myth');
 
-    // Desativar o botão e iniciar estado de carregamento
     forgeBtn.disabled = true;
-    forgeBtn.innerText = 'A FORJAR...';
+    forgeBtn.innerText = 'A GERAR...';
     forgeBtn.style.opacity = '0.6';
 
-    // Abrir imediatamente a sidebar com o loading spinner visível
     mythContent.style.display = 'none';
     mythLoading.style.display = 'flex';
     sidebar.classList.add('visible');
 
     try {
-        const payload = { skeleton_stars: userSelectedStars, edges: userCreatedEdges };
+        const frustum = new THREE.Frustum();
+        const projScreenMatrix = new THREE.Matrix4();
+        camera.updateMatrixWorld();
+        projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+        frustum.setFromProjectionMatrix(projScreenMatrix);
+
+        const visibleIds = [];
+        starsGroup.children.forEach(star => {
+            if (frustum.containsPoint(star.position)) {
+                visibleIds.push(star.userData.id);
+            }
+        });
+
+        const payload = { 
+            skeleton_stars: userSelectedStars, 
+            edges: userCreatedEdges,
+            visible_stars: visibleIds 
+        };
+
         const response = await fetch('http://127.0.0.1:5000/api/complete', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -307,7 +380,6 @@ window.onForgeConstellation = async function() {
         const result = await response.json();
         aiCreatedEdges = result.ai_edges || [];
 
-        // Redesenhar as linhas do utilizador
         userCreatedEdges.forEach(edge => {
             const startStar = userSelectedStars.find(s => s.id === edge.from);
             const endStar = userSelectedStars.find(s => s.id === edge.to);
@@ -316,7 +388,6 @@ window.onForgeConstellation = async function() {
             }
         });
 
-        // Desenhar as linhas sugeridas pela IA
         aiCreatedEdges.forEach(edge => {
             const fromStarObj = starsGroup.children.find(s => s.userData.id === edge.from);
             const toStarObj = starsGroup.children.find(s => s.userData.id === edge.to);
@@ -329,7 +400,6 @@ window.onForgeConstellation = async function() {
             }
         });
 
-        // Colorir todas as estrelas selecionadas de dourado (reset da estrela ativa)
         userSelectedStars.forEach(s => {
             const starObj = starsGroup.children.find(o => o.userData.id === s.id);
             if (starObj) {
@@ -361,10 +431,8 @@ window.onForgeConstellation = async function() {
             result.properties
         );
 
-        // Ativar o botão de guardar
         document.getElementById('save-btn').disabled = false;
 
-        // ANIMAR E CENTRAR CÂMARA NA CONSTELAÇÃO (LOCK-IN)
         if (userSelectedStars.length > 0) {
             const centroid = new THREE.Vector3();
             userSelectedStars.forEach(s => {
@@ -380,25 +448,21 @@ window.onForgeConstellation = async function() {
         console.error("Erro ao forjar constelação:", err);
         sidebar.classList.remove('visible');
     } finally {
-        // Restaurar estado do botão
         forgeBtn.disabled = false;
         forgeBtn.innerText = 'GERAR MITO';
         forgeBtn.style.opacity = '1';
     }
 }
 
-// Fechar sidebar do mito
 window.closeMythSidebar = function() {
     document.getElementById('interface-myth').classList.remove('visible');
 };
 
-// Se o utilizador começar a rodar manualmente, cancela a focagem automática para não disputar o controlo
 controls.addEventListener('start', () => {
     isCentering = false;
 });
 
-// --- BIBLIOTECA E ACÇÕES DO CÉU ---
-
+// --- BIBLIOTECA E ACÇÕES ---
 function displayMythAndMetadata(mythTitle, mythText, isReal, badgeText, properties) {
     const badge = document.getElementById('myth-badge');
     badge.innerText = badgeText;
@@ -425,30 +489,24 @@ function displayMythAndMetadata(mythTitle, mythText, isReal, badgeText, properti
 
     if (properties) {
         let metadataHTML = '';
-
-        // Secção 1: Informações do Catasterismo
         const epoca = properties.epoca_visibilidade || 'Estação Indefinida';
         const zona = properties.zona_cosmica || 'Zona Indefinida';
         const proximidade = properties.via_lactea_proximidade || 'Relação Indefinida';
-        metadataHTML += `<p><strong>Visibilidade Celestial:</strong> Esta silhueta emerge predominantemente durante as noites de <em>${epoca}</em>, posicionando-se na <em>${zona}</em> do firmamento. A sua orientação cósmica relativamente ao plano galáctico indica que é uma <em>${proximidade}</em>.</p>`;
+        metadataHTML += `<p><strong>Visibilidade Celestial:</strong> Esta silhueta emerge predominantemente durante as noites de <em>${epoca}</em>, posicionando-se na <em>${zona}</em> do firmamento. É uma <em>${proximidade}</em>.</p>`;
 
-        // Secção 2: Métricas Científicas
         const elong = properties.elongation ? properties.elongation.toFixed(2) : '1.00';
         const asym = properties.asymmetry ? properties.asymmetry.toFixed(2) : '0.00';
-        const hasCyclesStr = properties.has_cycles ? 'contém ciclos fechados (estrelas ligadas em anel)' : 'forma uma estrutura de árvore aberta e ramificada';
-        metadataHTML += `<p><strong>Métricas do Esqueleto:</strong> A análise geométrica do traçado revela um índice de alongamento de <strong>${elong}</strong> e um coeficiente de assimetria de <strong>${asym}</strong> em relação ao baricentro estelar. A conectividade da rede celeste <strong>${hasCyclesStr}</strong>.</p>`;
+        const hasCyclesStr = properties.has_cycles ? 'contem ciclos fechados (ligações em anel)' : 'forma uma estrutura de árvore aberta e ramificada';
+        metadataHTML += `<p><strong>Métricas do Esqueleto:</strong> O traçado reveals um índice de alongamento de <strong>${elong}</strong> e um coeficiente de assimetria de <strong>${asym}</strong> em relação ao baricentro estelar. A rede <strong>${hasCyclesStr}</strong>.</p>`;
 
-        // Secção 3: Fontes e Arquétipos Ancestrais
         const silhueta = properties.silhueta_ancestral || 'Forma Indefinida';
         const temperamento = properties.temperamento_elemental || 'Elemento Indefinido';
         const estatuto = properties.estatuto_divino || 'Estatuto Indefinido';
 
-        metadataHTML += `<p><strong>Arquétipos do Firmamento:</strong></p>`;
-        metadataHTML += `<ul>`;
-        metadataHTML += `<li><strong>Silhueta Ancestral:</strong> Reconhecida pelo arquétipo de <em>${silhueta}</em>.</li>`;
-        metadataHTML += `<li><strong>Temperamento Elemental:</strong> Resonância baseada na cor/espectro das suas estrelas com energia <em>${temperamento}</em>.</li>`;
-        metadataHTML += `<li><strong>Estatuto de Nobreza:</strong> Classificada sob o patamar <em>${estatuto}</em> baseado no brilho e magnitude aparente média das suas estrelas constituintes.</li>`;
-        metadataHTML += `</ul>`;
+        metadataHTML += `<p><strong>Arquétipos do Firmamento:</strong></p><ul>`;
+        metadataHTML += `<li><strong>Silhueta Ancestral:</strong> Mapeada sob o arquétipo de <em>${silhueta}</em>.</li>`;
+        metadataHTML += `<li><strong>Temperamento Elemental:</strong> Resonância baseada espectralmente em energia <em>${temperamento}</em>.</li>`;
+        metadataHTML += `<li><strong>Estatuto de Nobreza:</strong> Classificada no patamar <em>${estatuto}</em>.</li></ul>`;
 
         metaDiv.innerHTML = metadataHTML;
     }
@@ -472,16 +530,13 @@ function clearAllLines() {
 
 window.onClearSky = function() {
     clearAllLines();
-    
-    // Repor a cor original das estrelas selecionadas
     userSelectedStars.forEach(s => {
         const starObj = starsGroup.children.find(o => o.userData.id === s.id);
         if (starObj) {
-            starObj.material.color.setHex(starObj.userData.color || 0xc9a84c);
+            starObj.material.color.setHex(0xffffff); 
         }
     });
 
-    // Reset de estado
     userSelectedStars = [];
     userCreatedEdges = [];
     aiCreatedEdges = [];
@@ -490,13 +545,8 @@ window.onClearSky = function() {
     targetCameraPosition = null;
     currentMythData = null;
 
-    // Atualizar HUD
     document.getElementById('star-count').innerText = '0';
-
-    // Desativar botão de guardar
     document.getElementById('save-btn').disabled = true;
-
-    // Fechar sidebar de mito
     window.closeMythSidebar();
 };
 
@@ -540,19 +590,16 @@ window.loadConstellation = function(id) {
     const saved = library.find(item => item.id === id);
     if (!saved) return;
 
-    // 1. Limpar céu primeiro
     window.onClearSky();
 
-    // 2. Preencher variáveis
     userSelectedStars = saved.skeleton_stars;
     userCreatedEdges = saved.user_edges;
     aiCreatedEdges = saved.ai_edges;
 
-    // 3. Pintar estrelas e desenhar linhas
     userSelectedStars.forEach(s => {
         const starObj = starsGroup.children.find(o => o.userData.id === s.id);
         if (starObj) {
-            starObj.material.color.setHex(0xc9a84c); // dourado da constelação
+            starObj.material.color.setHex(0xc9a84c);
         }
     });
 
@@ -576,7 +623,6 @@ window.loadConstellation = function(id) {
         }
     });
 
-    // 4. Atualizar barra lateral do mito
     displayMythAndMetadata(
         saved.myth_title,
         saved.myth_text,
@@ -585,11 +631,8 @@ window.loadConstellation = function(id) {
         saved.properties
     );
     document.getElementById('interface-myth').classList.add('visible');
-
-    // Atualizar HUD
     document.getElementById('star-count').innerText = userSelectedStars.length;
 
-    // Manter dados guardados como mito activo
     currentMythData = {
         real_name: saved.name,
         titulo: saved.myth_title,
@@ -599,7 +642,6 @@ window.loadConstellation = function(id) {
     };
     document.getElementById('save-btn').disabled = false;
 
-    // 5. Animar e focar
     if (userSelectedStars.length > 0) {
         const centroid = new THREE.Vector3();
         userSelectedStars.forEach(s => {
@@ -628,7 +670,6 @@ function renderLibrary() {
     library.forEach(item => {
         const itemEl = document.createElement('div');
         itemEl.className = 'library-item';
-        
         itemEl.innerHTML = `
             <span class="library-item-name" onclick="loadConstellation(${item.id})">${item.name}</span>
             <button class="library-item-delete" onclick="onDeleteConstellation(${item.id})">&times;</button>
@@ -636,9 +677,16 @@ function renderLibrary() {
         listEl.appendChild(itemEl);
     });
 }
-
-// Inicializar biblioteca
 renderLibrary();
+
+// --- CORREÇÃO DE RESOLUÇÃO DINÂMICA (ESCUTA O REDIMENSIONAMENTO) ---
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+});
 
 function animate() {
     requestAnimationFrame(animate);
