@@ -3,7 +3,7 @@ import json
 import math
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-from services.geometry import calculate_graph_properties, get_extended_candidates_and_pairs
+from services.geometry import calculate_graph_properties, get_extended_candidates_and_pairs, arcs_intersect
 from services.llm_service import generate_myth
 from groq import Groq
 from dotenv import load_dotenv
@@ -78,7 +78,38 @@ def complete():
         if p['from_id'] in id_to_idx and p['to_id'] in id_to_idx:
             pairs_formatted.append(f"- Conectar Índice {id_to_idx[p['from_id']]} ao Índice {id_to_idx[p['to_id']]} [Dist: {p['dist']}]")
 
-    num_connections = max(3, min(5, len(enriched_skeleton) + 1))
+    num_connections = max(4, min(10, len(enriched_skeleton) * 2 - 1))
+
+    # Obter o estilo de silhueta e as formas geométricas já desenhadas
+    silhueta_style = props.get('silhueta_ancestral', 'Criatura / Humanoide / Besta Alada')
+    shapes_detected = props.get('shapes_detected', 'Estrutura Aberta (Árvore/Linha)')
+    
+    style_instructions = ""
+    if "Serpente" in silhueta_style or "Rio" in silhueta_style or "Caminho" in silhueta_style:
+        style_instructions = """
+    ESTILO DE DESENHO REQUERIDO: CAMINHO LINEAR ABERTO
+    - Mantenha a estrutura aberta e linear em forma de cauda ou rio.
+    - Evite fechar novos ciclos (triângulos ou quadriláteros). Desenhe ligando candidatos em série.
+    """
+    elif "Coroa" in silhueta_style or "Escudo" in silhueta_style or "Cálice" in silhueta_style:
+        style_instructions = f"""
+    ESTILO DE DESENHO REQUERIDO: ESTRUTURA FECHADA (ANEL / CÍCLICA)
+    - O utilizador já tem as seguintes formas desenhadas: {shapes_detected}.
+    - Proponha deliberadamente ligações que fechem novas formas geométricas (como Triângulos ou Quadriláteros) ligando nós do esqueleto a candidatos próximos.
+    - Isto ajudará a preencher a coroa, o cálice ou o escudo com polígonos fechados.
+    """
+    elif "Criatura" in silhueta_style or "Humanoide" in silhueta_style or "Besta" in silhueta_style:
+        style_instructions = f"""
+    ESTILO DE DESENHO REQUERIDO: RAMIFICAÇÃO SIMÉTRICA (CRIATURA)
+    - O utilizador tem as seguintes formas desenhadas: {shapes_detected}.
+    - Pode fechar triângulos ou quadriláteros em pontos-chave (como o 'tronco' ou 'coração' da criatura), mas as extremidades (asas/pernas) devem ser estendidas como ramos abertos.
+    """
+    else: # Ferramenta / Seta / Balança
+        style_instructions = f"""
+    ESTILO DE DESENHO REQUERIDO: GEOMETRIA RÍGIDA
+    - O utilizador tem as seguintes formas desenhadas: {shapes_detected}.
+    - Tente criar formas fechadas retangulares (quadriláteros) ou triangulares para delinear pontas de seta ou balanças.
+    """
 
     prompt_ai = f"""
     CONTEXTO: Auxílio computacional na criação e extensão de grafos geométricos de constelações celestes.
@@ -86,14 +117,22 @@ def complete():
     NÓS DO ESQUELETO ATUAL (Desenhados pelo utilizador humano):
     {', '.join(skeleton_formatted)}
     
+    FORMAS GEOMÉTRICAS JÁ DETETADAS NO ESQUELETO:
+    {shapes_detected}
+    
     NÓS CANDIDATOS VIZINHOS DISPONÍVEIS (Estrelas que estão estritamente no ecrã ativo e campo de visão do observador):
     {', '.join(candidates_formatted)}
     
     LIGAÇÕES PLANARES RECOMENDADAS PELO SISTEMA:
     {chr(10).join(pairs_formatted)}
+    
+    {style_instructions}
 
     TAREFA: Proponha exatamente {num_connections} novas linhas (new_edges) para estender a silhueta de forma complexa e harmoniosa.
-    Restrições: Proponha ligações unindo nós do esqueleto a nós candidatos disponíveis, ou candidatos entre si. Nunca deixe nós isolados ou flutuantes.
+    Restrições:
+    - Proponha ligações unindo nós do esqueleto a nós candidatos disponíveis, ou candidatos entre si.
+    - CADEIAS LONGAS OBRIGATÓRIAS: Tente propor caminhos e cadeias contínuas de 2 a 3 saltos consecutivos ligando candidatos entre si (ex: ligar o Esqueleto à candidata A, depois a candidata A à candidata B, depois B à candidata C) para criar "membros, asas ou caudas" longas que aumentam a complexidade visual. Evite ligar apenas todos os candidatos diretamente ao esqueleto principal.
+    - Nunca deixe nós isolados ou flutuantes.
     
     Responda RIGOROSAMENTE no formato JSON estruturado:
     {{ "new_edges": [ {{"from": Índice, "to": Índice, "reason": "motivo poético"}} ] }}
@@ -122,6 +161,44 @@ def complete():
         if enriched_skeleton and candidate_stars_list:
             ai_edges.append({"from": enriched_skeleton[-1]['id'], "to": candidate_stars_list[0]['id']})
 
+    # FILTRAGEM ANTI-CRUZAMENTOS (PROJECÇÃO ESFÉRICA 3D)
+    accepted_ai_edges = []
+    for e in ai_edges:
+        u_id = e['from']
+        v_id = e['to']
+        if u_id not in stars_by_id or v_id not in stars_by_id:
+            continue
+            
+        u_coords = stars_by_id[u_id]['coords']
+        v_coords = stars_by_id[v_id]['coords']
+        
+        crosses = False
+        
+        # 1. Verificar cruzamentos com ligações desenhadas pelo utilizador
+        for ue in edges:
+            ue_from = ue.get('from')
+            ue_to = ue.get('to')
+            if ue_from in stars_by_id and ue_to in stars_by_id:
+                if arcs_intersect(u_coords, v_coords, stars_by_id[ue_from]['coords'], stars_by_id[ue_to]['coords']):
+                    crosses = True
+                    break
+        
+        if crosses:
+            continue
+            
+        # 2. Verificar cruzamentos com ligações aceites anteriormente da própria IA
+        for ae in accepted_ai_edges:
+            ae_from = ae['from']
+            ae_to = ae['to']
+            if ae_from in stars_by_id and ae_to in stars_by_id:
+                if arcs_intersect(u_coords, v_coords, stars_by_id[ae_from]['coords'], stars_by_id[ae_to]['coords']):
+                    crosses = True
+                    break
+                    
+        if not crosses:
+            accepted_ai_edges.append(e)
+            
+    ai_edges = accepted_ai_edges
    
     skeleton_ids = {s['id'] for s in enriched_skeleton}
     adj = {}
@@ -152,10 +229,11 @@ def complete():
 def myth():
     data = request.json
     properties = data['properties']
+    stars = data.get('stars', [])
     
     myth_data = generate_myth(
         data['constellation_name'], 
-        data['star_names'], 
+        stars, 
         properties
     )
     

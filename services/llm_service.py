@@ -61,10 +61,30 @@ def get_ai_completion(properties, skeleton_stars, candidate_stars, recommended_p
     )
     return completion.choices[0].message.content
 
-def generate_myth(constellation_name, full_star_names, properties):
+def generate_myth(constellation_name, stars, properties):
+    color_map = {
+        "#9bb0ff": "Super Azul (Gélida / Energia Espiritual)",
+        "#aabfff": "Azul-Branco (Energia Elétrica / Céu Alto)",
+        "#e3e7ff": "Branco Puro (Éter / Equilíbrio Sagrado)",
+        "#f8f7ff": "Amarelo-Branco (Luz Estelar / Navegação)",
+        "#fff4ea": "Amarelo Solar (Fecundidade / Justiça)",
+        "#ffd2a1": "Laranja (Fogo Cósmico / Paixão / Lenda)",
+        "#ff9e3a": "Vermelho-Laranja (Sangue Cósmico / Guerreiro / Terra)"
+    }
+    
+    stars_formatted = []
+    for s in stars:
+        color_desc = color_map.get(s.get('color', ''), "Amarela/Branca")
+        stars_formatted.append(
+            f"- {s['name']} (Magnitude/Brilho: {s.get('mag', 3.0)}, Cor Espectral: {color_desc})"
+        )
+    
+    star_list_str = "\n".join(stars_formatted)
+    
     prompt = f"""
-    CONTEXTO: Sistema de co-criação e simulação de constelações.
-    O utilizador desenhou uma nova constelação unindo as estrelas: {', '.join(full_star_names)}.
+    CONTEXTO: Sistema de co-criação e simulação de constelações celestes.
+    O utilizador desenhou uma nova constelação unindo as seguintes estrelas reais:
+    {star_list_str}
     
     MÉTRICAS CIENTÍFICAS E ARQUÉTIPOS ANCESTRAIS CALCULADOS:
     1. Silhueta Ancestral (Forma física): '{properties.get('silhueta_ancestral', 'Indefinida')}'
@@ -82,14 +102,13 @@ def generate_myth(constellation_name, full_star_names, properties):
     TAREFA:
     1. Inventa um nome poético, clássico e evocativo em português para esta nova constelação (ex: "Serpente das Águas Prateadas", "O Escudo do Rei Caído", "A Besta de Gelo Celeste"). O nome deve estar diretamente alinhado com a 'Silhueta Ancestral' e o 'Temperamento Elemental' obtidos.
     2. Cria um mito grego/clássico original que narre a história desta constelação. O mito deve justificar a sua colocação no céu (catasterismo) de acordo com:
+       - As estrelas utilizadas: Deves atribuir um papel narrativo dramático a cada uma das estrelas listadas acima na história de acordo com o seu brilho (magnitude) e cor. A estrela mais brilhante (menor magnitude) deve ser o herói principal, o artefato supremo, ou o coração da besta. Estrelas vermelhas/laranjas devem estar ligadas a fogo, sangue, guerra ou terra; azuis a gelo, divindade, oráculo ou magia; brancas a éter e justiça.
        - A 'Época de Visibilidade': Deves referir no início do mito em que estação do ano esta constelação surge de forma dominante no céu noturno (ex: noites frias de Inverno, renascimento da Primavera, calor do Verão ou sobriedade do Outono).
        - A 'Relação com a Via Láctea': Se for 'Cruzadora do Rio Celeste', integra na lenda o papel do "Rio de Estrelas" ou "Caminho das Almas" (Via Láctea). Se for 'Céu Profundo', foca na solidão, nos vazios cósmicos e nos segredos guardados longe da poeira estelar.
        - O 'Temperamento Elemental': Se Espiritual (magia, raios, gelo, deuses), se Terrestre (fogo, sacrifício, terra, antepassados), se Equilibrado (luz solar, éter, harmonia, justiça).
        - O 'Estatuto Divino': Se Divino (deuses supremos), se Heroico (semideuses, monstros protetores), se Mortal (morte de mortais, ferramentas, animais vulgares).
        - A 'Zona Cósmica': Se Polar (imortalidade, tempo infinito, sentinelas que nunca se põem), se Equatorial (ciclos das estações, colheitas, mortalidade e renovação).
     
-    Deves usar os nomes das estrelas selecionadas ({', '.join(full_star_names)}) como personagens principais, deuses ou objetos sagrados na tua lenda.
-
     REGRAS DE ESCRITA:
     - 3 a 5 parágrafos narrativos.
     - Escreve em Português Europeu corrido e natural.

@@ -111,10 +111,15 @@ def calculate_graph_properties(skeleton_stars, edges):
     else:
         via_lactea = "Céu Profundo (Afastada da Via Láctea, localizada no vazio do cosmos, ligada a mistérios solitários e abismos celestes)"
 
+    cycle_info = detect_cycles_and_shapes(skeleton_stars, edges)
+
     return {
         "asymmetry": round(float(asymmetry), 3),
         "elongation": round(float(elongation), 3),
-        "has_cycles": num_edges >= num_nodes,
+        "has_cycles": cycle_info["has_cycles"],
+        "shapes_detected": cycle_info["shapes_detected"],
+        "num_triangles": cycle_info["num_triangles"],
+        "num_quadrilaterals": cycle_info["num_quadrilaterals"],
         "terminal_nodes": terminals,
         "complexity": num_nodes + num_edges,
         "silhueta_ancestral": silhueta,
@@ -155,7 +160,7 @@ def get_extended_candidates_and_pairs(skeleton_stars, full_catalog, existing_edg
     skeleton_ids = {s['id'] for s in skeleton_stars}
     stars_by_id = {s['id']: s for s in full_catalog}
     
-    # 1. 1-hop candidates
+    # 1. 1-hop candidates (Expandir busca de 4 para 6 vizinhos mais próximos de cada estrela do esqueleto)
     one_hop_ids = set()
     for star in skeleton_stars:
         star_coords = np.array([star['coords']['x'], star['coords']['y'], star['coords']['z']])
@@ -167,10 +172,10 @@ def get_extended_candidates_and_pairs(skeleton_stars, full_catalog, existing_edg
             dist = np.linalg.norm(star_coords - cand_coords)
             distances.append((cand['id'], dist))
         distances.sort(key=lambda x: x[1])
-        for cid, d in distances[:4]:
+        for cid, d in distances[:6]:
             one_hop_ids.add(cid)
             
-    # 2. 2-hop candidates
+    # 2. 2-hop candidates (Expandir busca de 2 para 3 vizinhos de cada candidato de 1-hop)
     two_hop_ids = set()
     for cid in one_hop_ids:
         cand_star = stars_by_id.get(cid)
@@ -185,7 +190,7 @@ def get_extended_candidates_and_pairs(skeleton_stars, full_catalog, existing_edg
             dist = np.linalg.norm(star_coords - cand_coords)
             distances.append((cand['id'], dist))
         distances.sort(key=lambda x: x[1])
-        for ccid, d in distances[:2]:
+        for ccid, d in distances[:3]:
             two_hop_ids.add(ccid)
             
     all_candidate_ids = one_hop_ids | two_hop_ids
@@ -233,4 +238,125 @@ def get_extended_candidates_and_pairs(skeleton_stars, full_catalog, existing_edg
                 })
                 
     recommended_pairs.sort(key=lambda x: x['dist'])
-    return candidate_stars, recommended_pairs[:25]
+    return candidate_stars, recommended_pairs[:40]
+
+def point_on_arc(pt, s1, s2):
+    # Verifica se o ponto 'pt' se encontra no arco menor entre 's1' e 's2' na esfera unitária.
+    # Isto é verdade se os produtos cruzados de s1 x pt e pt x s2 apontarem na mesma direção de s1 x s2.
+    cross1 = np.cross(s1, pt)
+    cross2 = np.cross(pt, s2)
+    cross_ref = np.cross(s1, s2)
+    
+    # Se os produtos escalares com o vetor de referência forem positivos, o ponto está no arco menor.
+    return np.dot(cross1, cross_ref) > 0.0 and np.dot(cross2, cross_ref) > 0.0
+
+def arcs_intersect(a_coords, b_coords, c_coords, d_coords):
+    # Converte coordenadas em dicionários ou listas para arrays numpy 3D
+    a = np.array([a_coords['x'], a_coords['y'], a_coords['z']]) if isinstance(a_coords, dict) else np.array(a_coords)
+    b = np.array([b_coords['x'], b_coords['y'], b_coords['z']]) if isinstance(b_coords, dict) else np.array(b_coords)
+    c = np.array([c_coords['x'], c_coords['y'], c_coords['z']]) if isinstance(c_coords, dict) else np.array(c_coords)
+    d = np.array([d_coords['x'], d_coords['y'], d_coords['z']]) if isinstance(d_coords, dict) else np.array(d_coords)
+    
+    a_len = np.linalg.norm(a)
+    b_len = np.linalg.norm(b)
+    c_len = np.linalg.norm(c)
+    d_len = np.linalg.norm(d)
+    
+    if a_len < 1e-5 or b_len < 1e-5 or c_len < 1e-5 or d_len < 1e-5:
+        return False
+        
+    # Normalizar para obter vetores unitários na esfera
+    a = a / a_len
+    b = b / b_len
+    c = c / c_len
+    d = d / d_len
+    
+    # Se partilharem um vértice (uma estrela em comum), os traços tocam-se mas não se cruzam
+    if np.allclose(a, c) or np.allclose(a, d) or np.allclose(b, c) or np.allclose(b, d):
+        return False
+        
+    n1 = np.cross(a, b)
+    n2 = np.cross(c, d)
+    
+    n1_len = np.linalg.norm(n1)
+    n2_len = np.linalg.norm(n2)
+    
+    if n1_len < 1e-5 or n2_len < 1e-5:
+        return False # Pontos colineares
+        
+    n1 = n1 / n1_len
+    n2 = n2 / n2_len
+    
+    # Linha de interseção dos planos
+    L = np.cross(n1, n2)
+    L_len = np.linalg.norm(L)
+    if L_len < 1e-5:
+        return False # Planos paralelos ou co-planares
+        
+    p = L / L_len
+    
+    # Os arcos cruzam-se se a linha de interseção (p ou -p) intersectar ambos os arcos na esfera
+    if (point_on_arc(p, a, b) and point_on_arc(p, c, d)) or \
+       (point_on_arc(-p, a, b) and point_on_arc(-p, c, d)):
+        return True
+        
+    return False
+
+def detect_cycles_and_shapes(skeleton_stars, edges):
+    # Criar lista de adjacências
+    adj = {}
+    for s in skeleton_stars:
+        adj[s['id']] = set()
+    for e in edges:
+        u, v = e['from'], e['to']
+        if u in adj and v in adj:
+            adj[u].add(v)
+            adj[v].add(u)
+            
+    # Detetar Triângulos (3-ciclos)
+    triangles = []
+    nodes = list(adj.keys())
+    for i in range(len(nodes)):
+        for j in range(i+1, len(nodes)):
+            for k in range(j+1, len(nodes)):
+                u, v, w = nodes[i], nodes[j], nodes[k]
+                if v in adj[u] and w in adj[v] and u in adj[w]:
+                    triangles.append((u, v, w))
+                    
+    # Detetar Quadriláteros (4-ciclos)
+    quads = []
+    for i in range(len(nodes)):
+        for j in range(i+1, len(nodes)):
+            for k in range(j+1, len(nodes)):
+                for l in range(k+1, len(nodes)):
+                    subset = [nodes[i], nodes[j], nodes[k], nodes[l]]
+                    perms = [
+                        (subset[0], subset[1], subset[2], subset[3]),
+                        (subset[0], subset[1], subset[3], subset[2]),
+                        (subset[0], subset[2], subset[1], subset[3])
+                    ]
+                    for p in perms:
+                        u, v, w, z = p
+                        if v in adj[u] and w in adj[v] and z in adj[w] and u in adj[z]:
+                            quads.append(p)
+                            break
+                            
+    has_cycles = len(triangles) > 0 or len(quads) > 0
+    shapes = []
+    if triangles:
+        shapes.append(f"{len(triangles)} Triângulo(s)")
+    if quads:
+        shapes.append(f"{len(quads)} Quadrilátero(s)")
+        
+    if not shapes:
+        if len(edges) >= len(skeleton_stars) and len(skeleton_stars) > 2:
+            shapes.append("Ciclo(s) Complexo(s)")
+        else:
+            shapes.append("Estrutura Aberta (Árvore/Linha)")
+            
+    return {
+        "has_cycles": has_cycles,
+        "shapes_detected": ", ".join(shapes),
+        "num_triangles": len(triangles),
+        "num_quadrilaterals": len(quads)
+    }

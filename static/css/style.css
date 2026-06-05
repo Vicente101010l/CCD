@@ -254,6 +254,7 @@ canvas {
 }
 
 #save-btn, 
+#undo-btn,
 #clear-btn { 
     padding: 8px 14px; 
     font-size: 10px; 
@@ -267,18 +268,21 @@ canvas {
     font-family: 'Inter', sans-serif;
 }
 
-#save-btn { 
+#save-btn,
+#undo-btn { 
     color: rgba(255, 255, 255, 0.8); 
     border: 1px solid rgba(255, 255, 255, 0.25); 
 }
 
-#save-btn:hover:not(:disabled) { 
+#save-btn:hover:not(:disabled),
+#undo-btn:hover:not(:disabled) { 
     background: rgba(255, 255, 255, 0.1); 
     border-color: #ffffff; 
     color: #ffffff; 
 }
 
-#save-btn:disabled { 
+#save-btn:disabled,
+#undo-btn:disabled { 
     opacity: 0.25; 
     cursor: not-allowed; 
     color: rgba(255, 255, 255, 0.3); 

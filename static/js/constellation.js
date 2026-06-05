@@ -116,8 +116,30 @@ let isCentering = false;
 let currentMythData = null;
 const starsGroup = new THREE.Group();
 const linesGroup = new THREE.Group();
+const guidesGroup = new THREE.Group();
 scene.add(starsGroup);
 scene.add(linesGroup);
+scene.add(guidesGroup);
+
+// --- HISTÓRICO E DESENHO ---
+let drawingHistory = [];
+
+function saveHistoryState() {
+    drawingHistory.push({
+        userSelectedStars: JSON.parse(JSON.stringify(userSelectedStars)),
+        userCreatedEdges: JSON.parse(JSON.stringify(userCreatedEdges)),
+        activeStar: activeStar ? JSON.parse(JSON.stringify(activeStar)) : null
+    });
+    if (drawingHistory.length > 50) drawingHistory.shift();
+    updateUndoButtonState();
+}
+
+function updateUndoButtonState() {
+    const undoBtn = document.getElementById('undo-btn');
+    if (undoBtn) {
+        undoBtn.disabled = drawingHistory.length === 0;
+    }
+}
 
 async function loadStars() {
     try {
@@ -189,7 +211,8 @@ window.addEventListener('click', (event) => {
             name: clickedStar.userData.name,
             coords: { x: clickedStar.position.x, y: clickedStar.position.y, z: clickedStar.position.z },
             con: clickedStar.userData.con,
-            mag: clickedStar.userData.mag
+            mag: clickedStar.userData.mag,
+            color: clickedStar.userData.color
         });
     } else {
         deselectActiveStar();
@@ -267,12 +290,140 @@ window.addEventListener('mousemove', (event) => {
 
 function deselectActiveStar() {
     if (activeStar) {
+        saveHistoryState();
         const starObj = starsGroup.children.find(s => s.userData.id === activeStar.id);
         if (starObj) starObj.material.color.setHex(0xc9a84c); 
         activeStar = null;
         if (tempLine) { scene.remove(tempLine); tempLine = null; }
+        clearProximityGuides();
     }
 }
+
+function cleanOrphanStars() {
+    const activeIdsInEdges = new Set();
+    userCreatedEdges.forEach(e => {
+        activeIdsInEdges.add(e.from);
+        activeIdsInEdges.add(e.to);
+    });
+    userSelectedStars = userSelectedStars.filter(s => 
+        activeIdsInEdges.has(s.id) || (activeStar && s.id === activeStar.id)
+    );
+    document.getElementById('star-count').innerText = userSelectedStars.length;
+}
+
+function drawVisualLineInstant(start, end, colorHex) {
+    const material = new THREE.LineBasicMaterial({ 
+        color: colorHex, 
+        transparent: true, 
+        opacity: 0.8 
+    });
+    const points = [new THREE.Vector3(start.x, start.y, start.z), new THREE.Vector3(end.x, end.y, end.z)];
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+    const line = new THREE.Line(geometry, material);
+    linesGroup.add(line);
+}
+
+function redrawCurrentConstellation() {
+    clearAllLines();
+    
+    // Repor cores originais de todas as estrelas
+    starsGroup.children.forEach(starObj => {
+        starObj.material.color.set(starObj.userData.color || "#ffffff");
+    });
+    
+    // Pintar de dourado as selecionadas
+    userSelectedStars.forEach(s => {
+        const starObj = starsGroup.children.find(o => o.userData.id === s.id);
+        if (starObj) starObj.material.color.setHex(0xc9a84c);
+    });
+    
+    // Pintar de ciano a ativa
+    if (activeStar) {
+        const starObj = starsGroup.children.find(o => o.userData.id === activeStar.id);
+        if (starObj) starObj.material.color.setHex(0x00ffff);
+    }
+    
+    // Redesenhar linhas do utilizador
+    userCreatedEdges.forEach(edge => {
+        const startStar = userSelectedStars.find(s => s.id === edge.from);
+        const endStar = userSelectedStars.find(s => s.id === edge.to);
+        if (startStar && endStar) {
+            drawVisualLineInstant(startStar.coords, endStar.coords, 0xc9a84c);
+        }
+    });
+
+    // Redesenhar linhas sugeridas pela IA se existirem
+    aiCreatedEdges.forEach(edge => {
+        const f = starsGroup.children.find(s => s.userData.id === edge.from);
+        const t = starsGroup.children.find(s => s.userData.id === edge.to);
+        if (f && t) {
+            drawVisualLineInstant(f.position, t.position, 0xa8c4e0);
+        }
+    });
+}
+
+function drawProximityGuides(activeStarData) {
+    clearProximityGuides();
+    if (!activeStarData) return;
+    
+    const activeCoords = new THREE.Vector3(activeStarData.coords.x, activeStarData.coords.y, activeStarData.coords.z);
+    
+    starsGroup.children.forEach(star => {
+        if (star.userData.id === activeStarData.id) return;
+        
+        const dist = activeCoords.distanceTo(star.position);
+        if (dist < 18.0) {
+            const material = new THREE.LineDashedMaterial({ 
+                color: 0xc9a84c, 
+                dashSize: 0.5, 
+                gapSize: 0.5, 
+                transparent: true, 
+                opacity: 0.20 
+            });
+            const points = [activeCoords, star.position.clone()];
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const line = new THREE.Line(geometry, material);
+            line.computeLineDistances();
+            guidesGroup.add(line);
+        }
+    });
+}
+
+function clearProximityGuides() {
+    while (guidesGroup.children.length > 0) {
+        const line = guidesGroup.children[0];
+        guidesGroup.remove(line);
+        line.geometry.dispose();
+        line.material.dispose();
+    }
+}
+
+window.onUndo = function() {
+    if (drawingHistory.length === 0) {
+        if (typeof window.mostrarNotificacao === 'function') {
+            window.mostrarNotificacao("Nada para desfazer.");
+        }
+        return;
+    }
+    
+    const previousState = drawingHistory.pop();
+    
+    userSelectedStars = previousState.userSelectedStars;
+    userCreatedEdges = previousState.userCreatedEdges;
+    activeStar = previousState.activeStar;
+    aiCreatedEdges = []; // Limpa sugestões da IA quando o traçado muda
+    
+    redrawCurrentConstellation();
+    drawProximityGuides(activeStar);
+    updateUndoButtonState();
+    
+    // Desativar guardar já que o estado mudou
+    document.getElementById('save-btn').disabled = true;
+    
+    if (typeof window.mostrarNotificacao === 'function') {
+        window.mostrarNotificacao("Última ação desfeita.");
+    }
+};
 
 function onStarClick(starData) {
     const onboarding = document.getElementById('onboarding-msg');
@@ -289,26 +440,49 @@ function onStarClick(starData) {
     const alreadySelected = userSelectedStars.find(s => s.id === starData.id);
 
     if (activeStar) {
-        if (activeStar.id === starData.id) { deselectActiveStar(); } 
+        if (activeStar.id === starData.id) { 
+            deselectActiveStar(); 
+        } 
         else {
-            userCreatedEdges.push({ from: activeStar.id, to: starData.id });
-            drawVisualLine(activeStar.coords, starData.coords, 0xc9a84c);
-            if (!alreadySelected) {
-                userSelectedStars.push(starData);
+            // Verificar se a ligação já existe (Toggle/Delete)
+            const edgeIdx = userCreatedEdges.findIndex(e => 
+                (e.from === activeStar.id && e.to === starData.id) ||
+                (e.from === starData.id && e.to === activeStar.id)
+            );
+            
+            saveHistoryState();
+            
+            if (edgeIdx !== -1) {
+                userCreatedEdges.splice(edgeIdx, 1);
+                cleanOrphanStars();
+                redrawCurrentConstellation();
+                if (typeof window.mostrarNotificacao === 'function') {
+                    window.mostrarNotificacao("Ligação removida.");
+                }
+            } else {
+                userCreatedEdges.push({ from: activeStar.id, to: starData.id });
+                drawVisualLine(activeStar.coords, starData.coords, 0xc9a84c);
+                if (!alreadySelected) {
+                    userSelectedStars.push(starData);
+                }
+                const prevActiveStarObj = starsGroup.children.find(s => s.userData.id === activeStar.id);
+                if (prevActiveStarObj) prevActiveStarObj.material.color.setHex(0xc9a84c);
+                activeStar = starData;
+                starObj.material.color.setHex(0x00ffff);
                 document.getElementById('star-count').innerText = userSelectedStars.length;
             }
-            const prevActiveStarObj = starsGroup.children.find(s => s.userData.id === activeStar.id);
-            if (prevActiveStarObj) prevActiveStarObj.material.color.setHex(0xc9a84c);
-            activeStar = starData;
-            starObj.material.color.setHex(0x00ffff); 
+            
+            drawProximityGuides(activeStar);
         }
     } else {
+        saveHistoryState();
         if (!alreadySelected) {
             userSelectedStars.push(starData);
             document.getElementById('star-count').innerText = userSelectedStars.length;
         }
         activeStar = starData;
         starObj.material.color.setHex(0x00ffff);
+        drawProximityGuides(activeStar);
     }
 }
 
@@ -382,6 +556,22 @@ window.onForgeConstellation = async function() {
         return;
     }
     clearAllLines();
+    
+    // CALCULAR ESTRELAS NO CAMPO DE VISÃO (FRUSTUM FRONTAL)
+    const frustum = new THREE.Frustum();
+    const cameraViewProjectionMatrix = new THREE.Matrix4();
+    camera.updateMatrixWorld();
+    camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
+    cameraViewProjectionMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+    frustum.setFromProjectionMatrix(cameraViewProjectionMatrix);
+    
+    const visibleStars = [];
+    starsGroup.children.forEach(star => {
+        if (frustum.containsPoint(star.position)) {
+            visibleStars.push(star.userData.id);
+        }
+    });
+
     const forgeBtn = document.getElementById('forge-btn');
     const mythLoading = document.getElementById('myth-loading');
     const mythContent = document.getElementById('myth-content');
@@ -390,7 +580,11 @@ window.onForgeConstellation = async function() {
     mythContent.style.display = 'none'; mythLoading.style.display = 'flex'; sidebar.classList.add('visible');
     const animacaoPromise = animarFasesCarregamento();
     try {
-        const payload = { skeleton_stars: userSelectedStars, edges: userCreatedEdges };
+        const payload = { 
+            skeleton_stars: userSelectedStars, 
+            edges: userCreatedEdges, 
+            visible_stars: visibleStars 
+        };
         const responseCompleta = await fetch('http://127.0.0.1:5000/api/complete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         const result = await responseCompleta.json();
         aiCreatedEdges = result.ai_edges || [];
@@ -402,7 +596,17 @@ window.onForgeConstellation = async function() {
         });
         userSelectedStars.forEach(s => { const starObj = starsGroup.children.find(o => o.userData.id === s.id); if (starObj) starObj.material.color.setHex(0xc9a84c); });
         activeStar = null;
-        const responseMyth = await fetch('http://127.0.0.1:5000/api/myth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ constellation_name: "Nova Constelação", star_names: userSelectedStars.map(s => s.name), stars: userSelectedStars.map(s => ({ name: s.name, con: s.con })), properties: result.properties }) });
+        
+        const responseMyth = await fetch('http://127.0.0.1:5000/api/myth', { 
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify({ 
+                constellation_name: "Nova Constelação", 
+                star_names: userSelectedStars.map(s => s.name), 
+                stars: userSelectedStars.map(s => ({ name: s.name, con: s.con, mag: s.mag, color: s.color })), 
+                properties: result.properties 
+            }) 
+        });
         const myth = await responseMyth.json();
         currentMythData = myth;
         currentMythData.properties = result.properties;
@@ -452,11 +656,16 @@ function clearAllLines() {
     }
 }
 
-window.onClearSky = function() {
+window.onClearSky = function(bypassHistory = false) {
+    if (!bypassHistory) {
+        saveHistoryState();
+    }
     clearAllLines();
-    userSelectedStars.forEach(s => { const starObj = starsGroup.children.find(o => o.userData.id === s.id); if (starObj) starObj.material.color.setHex(0xffffff); });
+    clearProximityGuides();
+    userSelectedStars.forEach(s => { const starObj = starsGroup.children.find(o => o.userData.id === s.id); if (starObj) starObj.material.color.set(starObj.userData.color || "#ffffff"); });
     userSelectedStars = []; userCreatedEdges = []; activeStar = null; isCentering = false; targetCameraPosition = null; currentMythData = null;
     document.getElementById('star-count').innerText = '0'; document.getElementById('save-btn').disabled = true; window.closeMythSidebar();
+    updateUndoButtonState();
 };
 
 window.onSaveConstellation = async function() {
@@ -483,7 +692,12 @@ window.loadConstellation = function(id) {
     const lib = JSON.parse(localStorage.getItem('saved_constellations') || '[]');
     const saved = lib.find(i => i.id === id);
     if (!saved) return;
-    window.onClearSky();
+    
+    // Limpar o histórico ao carregar nova constelação da biblioteca
+    drawingHistory = [];
+    updateUndoButtonState();
+    
+    window.onClearSky(true); // Bypass history
     userSelectedStars = saved.skeleton_stars;
     userCreatedEdges = saved.user_edges;
     aiCreatedEdges = saved.ai_edges;
@@ -531,16 +745,25 @@ window.addEventListener('resize', () => {
 
 function animate() {
     requestAnimationFrame(animate);
+    
     if (isCentering && targetCameraPosition) {
+        controls.enabled = false; // Desativa os controlos para não chocarem com o lerp manual
         camera.position.lerp(targetCameraPosition, 0.05);
-        if (camera.position.distanceTo(targetCameraPosition) < 0.001) { camera.position.copy(targetCameraPosition); isCentering = false; }
+        camera.lookAt(0, 0, 0); // Mantém o foco no centro
+        
+        if (camera.position.distanceTo(targetCameraPosition) < 0.005) { 
+            camera.position.copy(targetCameraPosition); 
+            controls.enabled = true; // Reativa os controlos
+            controls.update(); // Sincroniza os ângulos esféricos internos com a nova posição
+            isCentering = false; 
+        }
+    } else {
+        controls.update();
     }
-    controls.update();
 
     const compassNeedle = document.getElementById('compass-needle');
     if (compassNeedle) {
         const azimuth = controls.getAzimuthalAngle();
-
         compassNeedle.style.transform = `rotate(${-azimuth}rad)`;
     }
 
