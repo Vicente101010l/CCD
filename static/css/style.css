@@ -770,20 +770,71 @@ input[type=range]::-webkit-slider-thumb {
     position: absolute;
     bottom: 30px;
     left: 30px;
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     z-index: 2;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: rgba(10, 12, 18, 0.4);
+    backdrop-filter: blur(4px);
+}
+
+#compass-label {
+    position: absolute;
+    top: -18px;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #c9a84c;
 }
 
 #compass-needle {
+    position: absolute;
+    bottom: 50%; /* Tranca a agulha exatamente no centro */
+    left: calc(50% - 1px);
     width: 2px;
-    height: 20px;
+    height: 25px;
     background: #c9a84c;
     transform-origin: bottom center;
     box-shadow: 0 0 8px #c9a84c;
+}
+
+
+.star-label { 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    color: rgba(255, 255, 255, 0.6); 
+    font-size: 9px; 
+    pointer-events: none; 
+    font-family: 'Inter', sans-serif; 
+    text-transform: uppercase; 
+    z-index: 2; 
+    transition: opacity 0.3s;
+}
+
+
+.star-label-fixed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #ffffff; 
+    font-size: 10px;
+    font-weight: 700;
+    pointer-events: none;
+    font-family: 'Inter', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 3;
+    animation: cintilar 1.5s infinite alternate; 
+}
+
+/* A magia do cintilar */
+@keyframes cintilar {
+    0% { opacity: 0.6; text-shadow: 0 0 4px rgba(255, 255, 255, 0.4); }
+    100% { opacity: 1; text-shadow: 0 0 12px #ffffff, 0 0 20px #a8c4e0; }
 }

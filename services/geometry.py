@@ -1,7 +1,6 @@
 import numpy as np
 
 def calculate_graph_properties(skeleton_stars, edges):
-    # Extrair apenas os valores [x, y, z] de cada dicionário de estrela
     coords_list = [[s['coords']['x'], s['coords']['y'], s['coords']['z']] for s in skeleton_stars]
     coords = np.array(coords_list)
     
@@ -23,7 +22,6 @@ def calculate_graph_properties(skeleton_stars, edges):
         adj[e['to']] += 1
     terminals = sum(1 for v in adj.values() if v == 1)
 
-    # LÓGICA ANCESTRAL 1: Silhueta Ancestral (Forma)
     if elongation > 2.0 and terminals <= 2:
         silhueta = "Serpente / Rio / Caminho Celeste"
     elif num_edges >= num_nodes and elongation <= 1.8:
@@ -33,7 +31,6 @@ def calculate_graph_properties(skeleton_stars, edges):
     else:
         silhueta = "Ferramenta / Seta / Balança de Julgamento"
         
-    # LÓGICA ANCESTRAL 2: Temperamento Elemental (Cor/Espectro)
     colors = [s.get('color', '#fff4ea') for s in skeleton_stars]
     hot_count = sum(1 for c in colors if c in ['#9bb0ff', '#aabfff'])
     cool_count = sum(1 for c in colors if c in ['#ffd2a1', '#ff9e3a'])
@@ -46,7 +43,6 @@ def calculate_graph_properties(skeleton_stars, edges):
     else:
         temperamento = "Equilibrado (Luz Solar, Éter, Harmonia, Justiça)"
         
-    # LÓGICA ANCESTRAL 3: Estatuto Divino/Nobreza (Brilho/Magnitude)
     mags = [s.get('mag', 3.0) for s in skeleton_stars]
     avg_mag = np.mean(mags) if mags else 3.0
     if avg_mag < 1.8:
@@ -56,7 +52,6 @@ def calculate_graph_properties(skeleton_stars, edges):
     else:
         estatuto = "Mortal (Mero Mortal, Animais Comuns, Ferramentas dos Deuses)"
         
-    # LÓGICA ANCESTRAL 4: Zona Cósmica/Eternidade (Z médio - Circumpolar vs Equatorial)
     z_coords = [abs(s['coords']['z']) for s in skeleton_stars]
     avg_z = np.mean(z_coords) if z_coords else 0.0
     if avg_z > 35:
@@ -64,7 +59,6 @@ def calculate_graph_properties(skeleton_stars, edges):
     else:
         zona = "Equatorial (Ciclos das Estações, Tempo, Agricultura, Transição Terrena)"
 
-    # LÓGICA ANCESTRAL 5: Época de Visibilidade (Estação do Ano baseada em Ascensão Reta - RA)
     import math
     ra_angles = []
     for s in skeleton_stars:
@@ -95,8 +89,6 @@ def calculate_graph_properties(skeleton_stars, edges):
     else:
         estacao = "Outono (Transição, queda das folhas, preparação, sobriedade)"
 
-    # LÓGICA ANCESTRAL 6: Proximidade da Via Láctea (Latitude Galáctica b)
-    # Direção do Polo Norte Galáctico: n_ngp = [-0.8676, -0.1980, 0.4560]
     sin_b_list = []
     for s in skeleton_stars:
         ux = s['coords']['x'] / 50.0
@@ -135,14 +127,11 @@ def get_geometric_candidates(skeleton_stars, full_catalog, limit_per_node=3):
     skeleton_ids = {s['id'] for s in skeleton_stars}
     
     for star in skeleton_stars:
-        # Extrair coords da estrela do esqueleto
         star_coords = np.array([star['coords']['x'], star['coords']['y'], star['coords']['z']])
         distances = []
-        
         for cand in full_catalog:
             if cand['id'] in skeleton_ids:
                 continue
-            # No catálogo, as coords são um dicionário {"x": x, "y": y, "z": z}
             cand_coords = np.array([cand['coords']['x'], cand['coords']['y'], cand['coords']['z']])
             dist = np.linalg.norm(star_coords - cand_coords)
             distances.append({"id": cand['id'], "name": cand['name'], "dist": dist})
@@ -160,7 +149,6 @@ def get_extended_candidates_and_pairs(skeleton_stars, full_catalog, existing_edg
     skeleton_ids = {s['id'] for s in skeleton_stars}
     stars_by_id = {s['id']: s for s in full_catalog}
     
-    # 1. 1-hop candidates (Expandir busca de 4 para 6 vizinhos mais próximos de cada estrela do esqueleto)
     one_hop_ids = set()
     for star in skeleton_stars:
         star_coords = np.array([star['coords']['x'], star['coords']['y'], star['coords']['z']])
@@ -175,7 +163,6 @@ def get_extended_candidates_and_pairs(skeleton_stars, full_catalog, existing_edg
         for cid, d in distances[:6]:
             one_hop_ids.add(cid)
             
-    # 2. 2-hop candidates (Expandir busca de 2 para 3 vizinhos de cada candidato de 1-hop)
     two_hop_ids = set()
     for cid in one_hop_ids:
         cand_star = stars_by_id.get(cid)
@@ -241,17 +228,13 @@ def get_extended_candidates_and_pairs(skeleton_stars, full_catalog, existing_edg
     return candidate_stars, recommended_pairs[:40]
 
 def point_on_arc(pt, s1, s2):
-    # Verifica se o ponto 'pt' se encontra no arco menor entre 's1' e 's2' na esfera unitária.
-    # Isto é verdade se os produtos cruzados de s1 x pt e pt x s2 apontarem na mesma direção de s1 x s2.
     cross1 = np.cross(s1, pt)
     cross2 = np.cross(pt, s2)
     cross_ref = np.cross(s1, s2)
-    
-    # Se os produtos escalares com o vetor de referência forem positivos, o ponto está no arco menor.
-    return np.dot(cross1, cross_ref) > 0.0 and np.dot(cross2, cross_ref) > 0.0
+    # CORREÇÃO: Tolerância -1e-5 protege contra falsos bloqueios na matemática de floats
+    return np.dot(cross1, cross_ref) > -1e-5 and np.dot(cross2, cross_ref) > -1e-5
 
 def arcs_intersect(a_coords, b_coords, c_coords, d_coords):
-    # Converte coordenadas em dicionários ou listas para arrays numpy 3D
     a = np.array([a_coords['x'], a_coords['y'], a_coords['z']]) if isinstance(a_coords, dict) else np.array(a_coords)
     b = np.array([b_coords['x'], b_coords['y'], b_coords['z']]) if isinstance(b_coords, dict) else np.array(b_coords)
     c = np.array([c_coords['x'], c_coords['y'], c_coords['z']]) if isinstance(c_coords, dict) else np.array(c_coords)
@@ -265,13 +248,11 @@ def arcs_intersect(a_coords, b_coords, c_coords, d_coords):
     if a_len < 1e-5 or b_len < 1e-5 or c_len < 1e-5 or d_len < 1e-5:
         return False
         
-    # Normalizar para obter vetores unitários na esfera
     a = a / a_len
     b = b / b_len
     c = c / c_len
     d = d / d_len
     
-    # Se partilharem um vértice (uma estrela em comum), os traços tocam-se mas não se cruzam
     if np.allclose(a, c) or np.allclose(a, d) or np.allclose(b, c) or np.allclose(b, d):
         return False
         
@@ -282,20 +263,18 @@ def arcs_intersect(a_coords, b_coords, c_coords, d_coords):
     n2_len = np.linalg.norm(n2)
     
     if n1_len < 1e-5 or n2_len < 1e-5:
-        return False # Pontos colineares
+        return False 
         
     n1 = n1 / n1_len
     n2 = n2 / n2_len
     
-    # Linha de interseção dos planos
     L = np.cross(n1, n2)
     L_len = np.linalg.norm(L)
     if L_len < 1e-5:
-        return False # Planos paralelos ou co-planares
+        return False 
         
     p = L / L_len
     
-    # Os arcos cruzam-se se a linha de interseção (p ou -p) intersectar ambos os arcos na esfera
     if (point_on_arc(p, a, b) and point_on_arc(p, c, d)) or \
        (point_on_arc(-p, a, b) and point_on_arc(-p, c, d)):
         return True
@@ -303,7 +282,6 @@ def arcs_intersect(a_coords, b_coords, c_coords, d_coords):
     return False
 
 def detect_cycles_and_shapes(skeleton_stars, edges):
-    # Criar lista de adjacências
     adj = {}
     for s in skeleton_stars:
         adj[s['id']] = set()
@@ -313,7 +291,6 @@ def detect_cycles_and_shapes(skeleton_stars, edges):
             adj[u].add(v)
             adj[v].add(u)
             
-    # Detetar Triângulos (3-ciclos)
     triangles = []
     nodes = list(adj.keys())
     for i in range(len(nodes)):
@@ -323,7 +300,6 @@ def detect_cycles_and_shapes(skeleton_stars, edges):
                 if v in adj[u] and w in adj[v] and u in adj[w]:
                     triangles.append((u, v, w))
                     
-    # Detetar Quadriláteros (4-ciclos)
     quads = []
     for i in range(len(nodes)):
         for j in range(i+1, len(nodes)):

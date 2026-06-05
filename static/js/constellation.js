@@ -121,7 +121,6 @@ scene.add(starsGroup);
 scene.add(linesGroup);
 scene.add(guidesGroup);
 
-// --- HISTÓRICO E DESENHO ---
 let drawingHistory = [];
 
 function saveHistoryState() {
@@ -166,8 +165,17 @@ async function loadStars() {
                 con: starData.con,
                 mag: starData.mag,
                 color: starData.color,
-                originalScale: size // Guardamos o tamanho original para o efeito hover
+                originalScale: size
             };
+
+            if (starData.mag < 1.8 || (starData.name && starData.name.includes("Polaris"))) {
+                const label = document.createElement('div');
+                label.className = (starData.name && starData.name.includes("Polaris")) ? 'star-label-fixed' : 'star-label';
+                label.innerText = starData.name;
+                document.body.appendChild(label);
+                star.userData.label = label;
+            }
+
             starsGroup.add(star);
         });
     } catch (err) {
@@ -253,7 +261,6 @@ window.addEventListener('mousemove', (event) => {
         });
     }
 
-    // EFEITO HOVER MAGNÉTICO
     if (hoveredStar) {
         hoveredStar.scale.set(hoveredStar.userData.originalScale * 1.6, hoveredStar.userData.originalScale * 1.6, 1);
         
@@ -326,24 +333,20 @@ function drawVisualLineInstant(start, end, colorHex) {
 function redrawCurrentConstellation() {
     clearAllLines();
     
-    // Repor cores originais de todas as estrelas
     starsGroup.children.forEach(starObj => {
         starObj.material.color.set(starObj.userData.color || "#ffffff");
     });
     
-    // Pintar de dourado as selecionadas
     userSelectedStars.forEach(s => {
         const starObj = starsGroup.children.find(o => o.userData.id === s.id);
         if (starObj) starObj.material.color.setHex(0xc9a84c);
     });
     
-    // Pintar de ciano a ativa
     if (activeStar) {
         const starObj = starsGroup.children.find(o => o.userData.id === activeStar.id);
         if (starObj) starObj.material.color.setHex(0x00ffff);
     }
     
-    // Redesenhar linhas do utilizador
     userCreatedEdges.forEach(edge => {
         const startStar = userSelectedStars.find(s => s.id === edge.from);
         const endStar = userSelectedStars.find(s => s.id === edge.to);
@@ -352,7 +355,6 @@ function redrawCurrentConstellation() {
         }
     });
 
-    // Redesenhar linhas sugeridas pela IA se existirem
     aiCreatedEdges.forEach(edge => {
         const f = starsGroup.children.find(s => s.userData.id === edge.from);
         const t = starsGroup.children.find(s => s.userData.id === edge.to);
@@ -411,14 +413,14 @@ window.onUndo = function() {
     userSelectedStars = previousState.userSelectedStars;
     userCreatedEdges = previousState.userCreatedEdges;
     activeStar = previousState.activeStar;
-    aiCreatedEdges = []; // Limpa sugestões da IA quando o traçado muda
+    aiCreatedEdges = []; 
     
     redrawCurrentConstellation();
     drawProximityGuides(activeStar);
     updateUndoButtonState();
     
-    // Desativar guardar já que o estado mudou
     document.getElementById('save-btn').disabled = true;
+    document.getElementById('star-count').innerText = userSelectedStars.length;
     
     if (typeof window.mostrarNotificacao === 'function') {
         window.mostrarNotificacao("Última ação desfeita.");
@@ -444,7 +446,6 @@ function onStarClick(starData) {
             deselectActiveStar(); 
         } 
         else {
-            // Verificar se a ligação já existe (Toggle/Delete)
             const edgeIdx = userCreatedEdges.findIndex(e => 
                 (e.from === activeStar.id && e.to === starData.id) ||
                 (e.from === starData.id && e.to === activeStar.id)
@@ -461,7 +462,7 @@ function onStarClick(starData) {
                 }
             } else {
                 userCreatedEdges.push({ from: activeStar.id, to: starData.id });
-                drawVisualLine(activeStar.coords, starData.coords, 0xc9a84c);
+                drawVisualLineInstant(activeStar.coords, starData.coords, 0xc9a84c);
                 if (!alreadySelected) {
                     userSelectedStars.push(starData);
                 }
@@ -486,46 +487,6 @@ function onStarClick(starData) {
     }
 }
 
-function drawVisualLine(start, end, colorHex) {
-    const material = new THREE.LineBasicMaterial({ 
-        color: colorHex, 
-        transparent: true, 
-        opacity: 0.8 
-    });
-    
-    // Criamos a geometria inicial com apenas o ponto de partida
-    const geometry = new THREE.BufferGeometry();
-    const positions = new Float32Array(6); // 2 pontos * 3 coordenadas
-    positions[0] = start.x; positions[1] = start.y; positions[2] = start.z;
-    positions[3] = start.x; positions[4] = start.y; positions[5] = start.z; // Ponto final começa igual ao inicial
-    
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    const line = new THREE.Line(geometry, material);
-    linesGroup.add(line);
-
-    // Animação manual do traço
-    const duration = 400; // 400ms para desenhar
-    const startTime = performance.now();
-
-    function animateLine(time) {
-        const elapsed = time - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-
-        // Interpola a posição do ponto final em direção ao destino
-        const currentEnd = new THREE.Vector3().lerpVectors(start, end, progress);
-        
-        const pos = line.geometry.attributes.position.array;
-        pos[3] = currentEnd.x;
-        pos[4] = currentEnd.y;
-        pos[5] = currentEnd.z;
-        line.geometry.attributes.position.needsUpdate = true;
-
-        if (progress < 1) {
-            requestAnimationFrame(animateLine);
-        }
-    }
-    requestAnimationFrame(animateLine);
-}
 async function animarFasesCarregamento() {
     const textEl = document.getElementById('loading-text');
     const loadingScreen = document.getElementById('myth-loading');
@@ -557,7 +518,6 @@ window.onForgeConstellation = async function() {
     }
     clearAllLines();
     
-    // CALCULAR ESTRELAS NO CAMPO DE VISÃO (FRUSTUM FRONTAL)
     const frustum = new THREE.Frustum();
     const cameraViewProjectionMatrix = new THREE.Matrix4();
     camera.updateMatrixWorld();
@@ -579,6 +539,7 @@ window.onForgeConstellation = async function() {
     forgeBtn.disabled = true; forgeBtn.innerText = 'A FORJAR...'; forgeBtn.style.opacity = '0.6';
     mythContent.style.display = 'none'; mythLoading.style.display = 'flex'; sidebar.classList.add('visible');
     const animacaoPromise = animarFasesCarregamento();
+    
     try {
         const payload = { 
             skeleton_stars: userSelectedStars, 
@@ -588,12 +549,15 @@ window.onForgeConstellation = async function() {
         const responseCompleta = await fetch('http://127.0.0.1:5000/api/complete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         const result = await responseCompleta.json();
         aiCreatedEdges = result.ai_edges || [];
-        userCreatedEdges.forEach(edge => { drawVisualLine(userSelectedStars.find(s=>s.id===edge.from).coords, userSelectedStars.find(s=>s.id===edge.to).coords, 0xc9a84c); });
+        
+        userCreatedEdges.forEach(edge => { drawVisualLineInstant(userSelectedStars.find(s=>s.id===edge.from).coords, userSelectedStars.find(s=>s.id===edge.to).coords, 0xc9a84c); });
+        
         aiCreatedEdges.forEach(edge => {
-            const f = starsGroup.children.find(s => s.userData.id === edge.from);
-            const t = starsGroup.children.find(s => s.userData.id === edge.to);
-            if (f && t) drawVisualLine(f.position, t.position, 0xa8c4e0);
+            const f = starsGroup.children.find(s => String(s.userData.id) === String(edge.from));
+            const t = starsGroup.children.find(s => String(s.userData.id) === String(edge.to));
+            if (f && t) drawVisualLineInstant(f.position, t.position, 0xa8c4e0);
         });
+        
         userSelectedStars.forEach(s => { const starObj = starsGroup.children.find(o => o.userData.id === s.id); if (starObj) starObj.material.color.setHex(0xc9a84c); });
         activeStar = null;
         
@@ -613,6 +577,7 @@ window.onForgeConstellation = async function() {
         await animacaoPromise;
         displayMythAndMetadata(myth.titulo, myth.texto, myth.is_real, myth.is_real ? `Constelação Real: ${myth.real_name}` : `Constelação Criada: ${myth.real_name}`, result.properties);
         document.getElementById('save-btn').disabled = false;
+        
         if (userSelectedStars.length > 0) {
             const centroid = new THREE.Vector3();
             userSelectedStars.forEach(s => centroid.add(new THREE.Vector3(s.coords.x, s.coords.y, s.coords.z)));
@@ -657,9 +622,7 @@ function clearAllLines() {
 }
 
 window.onClearSky = function(bypassHistory = false) {
-    if (!bypassHistory) {
-        saveHistoryState();
-    }
+    if (!bypassHistory) { saveHistoryState(); }
     clearAllLines();
     clearProximityGuides();
     userSelectedStars.forEach(s => { const starObj = starsGroup.children.find(o => o.userData.id === s.id); if (starObj) starObj.material.color.set(starObj.userData.color || "#ffffff"); });
@@ -693,20 +656,19 @@ window.loadConstellation = function(id) {
     const saved = lib.find(i => i.id === id);
     if (!saved) return;
     
-    // Limpar o histórico ao carregar nova constelação da biblioteca
     drawingHistory = [];
     updateUndoButtonState();
     
-    window.onClearSky(true); // Bypass history
+    window.onClearSky(true);
     userSelectedStars = saved.skeleton_stars;
     userCreatedEdges = saved.user_edges;
     aiCreatedEdges = saved.ai_edges;
     userSelectedStars.forEach(s => { const so = starsGroup.children.find(o => o.userData.id === s.id); if (so) so.material.color.setHex(0xc9a84c); });
-    userCreatedEdges.forEach(e => drawVisualLine(userSelectedStars.find(s=>s.id===e.from).coords, userSelectedStars.find(s=>s.id===e.to).coords, 0xc9a84c));
+    userCreatedEdges.forEach(e => drawVisualLineInstant(userSelectedStars.find(s=>s.id===e.from).coords, userSelectedStars.find(s=>s.id===e.to).coords, 0xc9a84c));
     aiCreatedEdges.forEach(e => {
-        const f = starsGroup.children.find(s => s.userData.id === e.from);
-        const t = starsGroup.children.find(s => s.userData.id === e.to);
-        if (f && t) drawVisualLine(f.position, t.position, 0xa8c4e0);
+        const f = starsGroup.children.find(s => String(s.userData.id) === String(e.from));
+        const t = starsGroup.children.find(s => String(s.userData.id) === String(e.to));
+        if (f && t) drawVisualLineInstant(f.position, t.position, 0xa8c4e0);
     });
     displayMythAndMetadata(saved.myth_title, saved.myth_text, saved.myth_is_real, saved.name, saved.properties);
     document.getElementById('interface-myth').classList.add('visible');
@@ -747,24 +709,38 @@ function animate() {
     requestAnimationFrame(animate);
     
     if (isCentering && targetCameraPosition) {
-        controls.enabled = false; // Desativa os controlos para não chocarem com o lerp manual
+        controls.enabled = false;
         camera.position.lerp(targetCameraPosition, 0.05);
-        camera.lookAt(0, 0, 0); // Mantém o foco no centro
+        camera.lookAt(0, 0, 0); 
         
         if (camera.position.distanceTo(targetCameraPosition) < 0.005) { 
             camera.position.copy(targetCameraPosition); 
-            controls.enabled = true; // Reativa os controlos
-            controls.update(); // Sincroniza os ângulos esféricos internos com a nova posição
+            controls.enabled = true; 
+            controls.update(); 
             isCentering = false; 
         }
     } else {
         controls.update();
     }
 
+    starsGroup.children.forEach(star => {
+        if (star.userData.label) {
+            const v = star.position.clone().project(camera);
+            if (v.z < 1) { 
+                const x = (v.x * 0.5 + 0.5) * window.innerWidth;
+                const y = (-v.y * 0.5 + 0.5) * window.innerHeight;
+                star.userData.label.style.transform = `translate(${x + 8}px, ${y - 8}px)`; 
+                star.userData.label.style.display = 'block'; 
+            } else {
+                star.userData.label.style.display = 'none';
+            }
+        }
+    });
+
     const compassNeedle = document.getElementById('compass-needle');
     if (compassNeedle) {
         const azimuth = controls.getAzimuthalAngle();
-        compassNeedle.style.transform = `rotate(${-azimuth}rad)`;
+        compassNeedle.style.transform = `rotate(${-azimuth + Math.PI}rad)`;
     }
 
     renderer.render(scene, camera);

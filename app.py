@@ -33,12 +33,11 @@ def complete():
     data = request.json
     skeleton = data.get('skeleton_stars', [])
     edges = data.get('edges', [])
-    visible_stars_ids = data.get('visible_stars', [])  # Filtro de visão recuperado
+    visible_stars_ids = data.get('visible_stars', [])
 
     if not skeleton:
         return jsonify({"ai_edges": [], "properties": {}})
 
-    # Enriquecer o esqueleto com os dados do catálogo local (mag, color, con)
     enriched_skeleton = []
     stars_by_id = {s['id']: s for s in ALL_STARS_DATABASE}
     for s in skeleton:
@@ -50,13 +49,10 @@ def complete():
         else:
             enriched_skeleton.append(s)
 
-    # Calcular propriedades métricas e lógicas ancestrais
     props = calculate_graph_properties(enriched_skeleton, edges)
     
-    # Obter os candidatos estendidos 1-hop e 2-hop baseados na topologia geométrica
     candidate_stars_list, recommended_pairs = get_extended_candidates_and_pairs(enriched_skeleton, ALL_STARS_DATABASE, edges)
     
-    # --- FILTRO ANTI-COSTAS: Restringir estritamente ao que está no ecrã do utilizador ---
     if visible_stars_ids:
         visible_set = set(visible_stars_ids)
         candidate_stars_list = [c for c in candidate_stars_list if c['id'] in visible_set]
@@ -65,7 +61,6 @@ def complete():
             if p['from_id'] in visible_set and p['to_id'] in visible_set
         ]
 
-    # Mapeamento para índices sequenciais simples (Impede falhas de parsing de IDs gigantes no Llama)
     all_available_nodes = enriched_skeleton + candidate_stars_list
     id_to_idx = {node['id']: idx for idx, node in enumerate(all_available_nodes)}
     idx_to_id = {idx: node['id'] for idx, node in enumerate(all_available_nodes)}
@@ -80,7 +75,6 @@ def complete():
 
     num_connections = max(4, min(10, len(enriched_skeleton) * 2 - 1))
 
-    # Obter o estilo de silhueta e as formas geométricas já desenhadas
     silhueta_style = props.get('silhueta_ancestral', 'Criatura / Humanoide / Besta Alada')
     shapes_detected = props.get('shapes_detected', 'Estrutura Aberta (Árvore/Linha)')
     
@@ -95,20 +89,19 @@ def complete():
         style_instructions = f"""
     ESTILO DE DESENHO REQUERIDO: ESTRUTURA FECHADA (ANEL / CÍCLICA)
     - O utilizador já tem as seguintes formas desenhadas: {shapes_detected}.
-    - Proponha deliberadamente ligações que fechem novas formas geométricas (como Triângulos ou Quadriláteros) ligando nós do esqueleto a candidatos próximos.
-    - Isto ajudará a preencher a coroa, o cálice ou o escudo com polígonos fechados.
+    - Proponha deliberadamente ligações que fechem novas formas geométricas (como Triângulos ou Quadriláteros).
     """
     elif "Criatura" in silhueta_style or "Humanoide" in silhueta_style or "Besta" in silhueta_style:
         style_instructions = f"""
     ESTILO DE DESENHO REQUERIDO: RAMIFICAÇÃO SIMÉTRICA (CRIATURA)
     - O utilizador tem as seguintes formas desenhadas: {shapes_detected}.
-    - Pode fechar triângulos ou quadriláteros em pontos-chave (como o 'tronco' ou 'coração' da criatura), mas as extremidades (asas/pernas) devem ser estendidas como ramos abertos.
+    - Pode fechar triângulos ou quadriláteros no tronco, mas as extremidades devem ser ramos abertos.
     """
-    else: # Ferramenta / Seta / Balança
+    else:
         style_instructions = f"""
     ESTILO DE DESENHO REQUERIDO: GEOMETRIA RÍGIDA
     - O utilizador tem as seguintes formas desenhadas: {shapes_detected}.
-    - Tente criar formas fechadas retangulares (quadriláteros) ou triangulares para delinear pontas de seta ou balanças.
+    - Tente criar formas fechadas retangulares ou triangulares para delinear pontas de seta.
     """
 
     prompt_ai = f"""
@@ -120,7 +113,7 @@ def complete():
     FORMAS GEOMÉTRICAS JÁ DETETADAS NO ESQUELETO:
     {shapes_detected}
     
-    NÓS CANDIDATOS VIZINHOS DISPONÍVEIS (Estrelas que estão estritamente no ecrã ativo e campo de visão do observador):
+    NÓS CANDIDATOS VIZINHOS DISPONÍVEIS:
     {', '.join(candidates_formatted)}
     
     LIGAÇÕES PLANARES RECOMENDADAS PELO SISTEMA:
@@ -128,11 +121,7 @@ def complete():
     
     {style_instructions}
 
-    TAREFA: Proponha exatamente {num_connections} novas linhas (new_edges) para estender a silhueta de forma complexa e harmoniosa.
-    Restrições:
-    - Proponha ligações unindo nós do esqueleto a nós candidatos disponíveis, ou candidatos entre si.
-    - CADEIAS LONGAS OBRIGATÓRIAS: Tente propor caminhos e cadeias contínuas de 2 a 3 saltos consecutivos ligando candidatos entre si (ex: ligar o Esqueleto à candidata A, depois a candidata A à candidata B, depois B à candidata C) para criar "membros, asas ou caudas" longas que aumentam a complexidade visual. Evite ligar apenas todos os candidatos diretamente ao esqueleto principal.
-    - Nunca deixe nós isolados ou flutuantes.
+    TAREFA: Proponha exatamente {num_connections} novas linhas (new_edges) para estender a silhueta.
     
     Responda RIGOROSAMENTE no formato JSON estruturado:
     {{ "new_edges": [ {{"from": Índice, "to": Índice, "reason": "motivo poético"}} ] }}
@@ -150,6 +139,14 @@ def complete():
         
         for e in ai_data.get('new_edges', []):
             u_idx, v_idx = e.get('from'), e.get('to')
+            
+            # CORREÇÃO CRÍTICA: LLaMa pode devolver Strings ("1") em vez de Inteiros (1)
+            try:
+                u_idx = int(u_idx)
+                v_idx = int(v_idx)
+            except (TypeError, ValueError):
+                continue
+                
             if u_idx in idx_to_id and v_idx in idx_to_id:
                 u_id = idx_to_id[u_idx]
                 v_id = idx_to_id[v_idx]
@@ -157,11 +154,10 @@ def complete():
                     ai_edges.append({"from": int(u_id), "to": int(v_id)})
                     
     except Exception as err:
-        print("Aviso: Falha de parsing na LLM, a aplicar rota de salvaguarda geométrica local:", err)
+        print("Falha de parsing na LLM:", err)
         if enriched_skeleton and candidate_stars_list:
             ai_edges.append({"from": enriched_skeleton[-1]['id'], "to": candidate_stars_list[0]['id']})
 
-    # FILTRAGEM ANTI-CRUZAMENTOS (PROJECÇÃO ESFÉRICA 3D)
     accepted_ai_edges = []
     for e in ai_edges:
         u_id = e['from']
@@ -171,10 +167,8 @@ def complete():
             
         u_coords = stars_by_id[u_id]['coords']
         v_coords = stars_by_id[v_id]['coords']
-        
         crosses = False
         
-        # 1. Verificar cruzamentos com ligações desenhadas pelo utilizador
         for ue in edges:
             ue_from = ue.get('from')
             ue_to = ue.get('to')
@@ -183,10 +177,8 @@ def complete():
                     crosses = True
                     break
         
-        if crosses:
-            continue
+        if crosses: continue
             
-        # 2. Verificar cruzamentos com ligações aceites anteriormente da própria IA
         for ae in accepted_ai_edges:
             ae_from = ae['from']
             ae_to = ae['to']
