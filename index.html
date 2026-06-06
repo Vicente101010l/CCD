@@ -23,13 +23,16 @@
         </div>
     </div>
 
+    <button id="toggle-saved-btn" onclick="toggleSavedConstellations()" title="Ocultar/Mostrar Histórico">
+        👁️
+    </button>
+
     <div id="controls-panel">
         <div id="onboarding-msg">Clica nas estrelas para traçar o esqueleto</div>
         <div id="hud">Estrelas Unidas: <span id="star-count">0</span></div>
         <div class="action-buttons">
             <button id="forge-btn" onclick="onForgeConstellation()">Gerar Mito</button>
             <div class="secondary-buttons">
-                <button id="save-btn" onclick="onSaveConstellation()" disabled>Guardar Constelação</button>
                 <button id="undo-btn" onclick="onUndo()" disabled>Desfazer</button>
                 <button id="clear-btn" onclick="onClearSky()">Limpar</button>
             </div>
@@ -54,14 +57,14 @@
             <div class="spinner"></div>
             <p id="loading-text"></p>
         </div>
-
         
         <div id="scroll-container" class="pergaminho-scroll-zone">
-            <div id="myth-content">
-                <div class="rolo-topo" id="mesh-rolo-topo"></div>
+            <div class="rolo-topo" id="mesh-rolo-topo"></div>
+            
+            <div class="pergaminho-corpo" id="mesh-papiro-corpo">
+                <button id="close-myth-btn" onclick="closeMythSidebar()">&times;</button>
                 
-                <div class="pergaminho-corpo" id="mesh-papiro-corpo">
-                    <button id="close-myth-btn" onclick="closeMythSidebar()">&times;</button>
+                <div id="myth-content" style="display: none;">
                     <div id="myth-badge"></div>
                     <h2 id="myth-title"></h2>
                     
@@ -70,11 +73,11 @@
                         <div id="myth-metadata"></div>
                     </div>
                 </div>
-                
-                <div class="area-base-mecanica">
-                    <div id="puxador-aviso" onclick="desenrolarPergaminho()">Puxar para ler mito ↓</div>
-                    <div class="rolo-base" id="mesh-rolo-base" onclick="desenrolarPergaminho()"></div>
-                </div>
+            </div>
+            
+            <div class="area-base-mecanica">
+                <div id="puxador-aviso" onclick="desenrolarPergaminho()">Puxar para ler mito ↓</div>
+                <div class="rolo-base" id="mesh-rolo-base" onclick="desenrolarPergaminho()"></div>
             </div>
         </div>
     </div>
@@ -83,7 +86,8 @@
         <div id="compass-label">Polaris</div>
         <div id="compass-needle"></div>
     </div>
-</div>
+
+    <button id="save-btn-floating" onclick="onSaveConstellation()" style="display: none;">GUARDAR CONSTELAÇÃO</button>
 
     <script>
         window.sfx = {

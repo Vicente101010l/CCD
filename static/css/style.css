@@ -253,7 +253,6 @@ canvas {
     box-shadow: 0 0 18px rgba(255, 255, 255, 0.4); 
 }
 
-#save-btn, 
 #undo-btn,
 #clear-btn { 
     padding: 8px 14px; 
@@ -268,20 +267,17 @@ canvas {
     font-family: 'Inter', sans-serif;
 }
 
-#save-btn,
 #undo-btn { 
     color: rgba(255, 255, 255, 0.8); 
     border: 1px solid rgba(255, 255, 255, 0.25); 
 }
 
-#save-btn:hover:not(:disabled),
 #undo-btn:hover:not(:disabled) { 
     background: rgba(255, 255, 255, 0.1); 
     border-color: #ffffff; 
     color: #ffffff; 
 }
 
-#save-btn:disabled,
 #undo-btn:disabled { 
     opacity: 0.25; 
     cursor: not-allowed; 
@@ -794,7 +790,7 @@ input[type=range]::-webkit-slider-thumb {
 
 #compass-needle {
     position: absolute;
-    bottom: 50%; /* Tranca a agulha exatamente no centro */
+    bottom: 50%;
     left: calc(50% - 1px);
     width: 2px;
     height: 25px;
@@ -802,7 +798,6 @@ input[type=range]::-webkit-slider-thumb {
     transform-origin: bottom center;
     box-shadow: 0 0 8px #c9a84c;
 }
-
 
 .star-label { 
     position: absolute; 
@@ -816,7 +811,6 @@ input[type=range]::-webkit-slider-thumb {
     z-index: 2; 
     transition: opacity 0.3s;
 }
-
 
 .star-label-fixed {
     position: absolute;
@@ -833,8 +827,77 @@ input[type=range]::-webkit-slider-thumb {
     animation: cintilar 1.5s infinite alternate; 
 }
 
-/* A magia do cintilar */
 @keyframes cintilar {
     0% { opacity: 0.6; text-shadow: 0 0 4px rgba(255, 255, 255, 0.4); }
     100% { opacity: 1; text-shadow: 0 0 12px #ffffff, 0 0 20px #a8c4e0; }
+}
+
+#toggle-saved-btn {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    z-index: 1000; /* Aumentado para ficar acima do painel */
+    background: rgba(10, 12, 18, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#toggle-saved-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.constellation-label-fixed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #ffffff; 
+    font-size: 9px;
+    font-weight: 700;
+    pointer-events: none;
+    font-family: 'Inter', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    z-index: 1;
+    text-shadow: 0 0 10px rgba(0,0,0,1), 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+#save-btn-floating {
+    position: absolute;
+    bottom: 40px; 
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 90;
+    padding: 10px 20px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    border-radius: 20px;
+    font-size: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+#save-btn-floating:hover {
+    background: rgba(255, 255, 255);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #000000;
+}
+
+@keyframes cintilar-btn {
+    0% { box-shadow: 0 0 10px rgba(255,255,255,0.5); background: #f0f0f0; }
+    100% { box-shadow: 0 0 25px rgba(255,255,255,1), 0 0 40px rgba(168,196,224,0.6); background: #ffffff; }
 }

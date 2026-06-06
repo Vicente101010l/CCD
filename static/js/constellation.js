@@ -89,7 +89,6 @@ if (zoomSlider && zoomVal) {
         const dir = camera.position.clone().normalize();
         camera.position.copy(dir.multiplyScalar(val));
         controls.update();
-        
         const percent = Math.round(((val - 0.1) / (8.0 - 0.1)) * 700 + 100);
         zoomVal.innerText = `${percent}%`;
     });
@@ -99,7 +98,6 @@ controls.addEventListener('change', () => {
     if (zoomSlider && zoomVal) {
         const currentDist = camera.position.length();
         zoomSlider.value = currentDist;
-        
         const percent = Math.round(((currentDist - 0.1) / (8.0 - 0.1)) * 700 + 100);
         zoomVal.innerText = `${percent}%`;
     }
@@ -114,14 +112,78 @@ let activeStar = null;
 let targetCameraPosition = null;
 let isCentering = false;
 let currentMythData = null;
+
 const starsGroup = new THREE.Group();
 const linesGroup = new THREE.Group();
 const guidesGroup = new THREE.Group();
-scene.add(starsGroup);
-scene.add(linesGroup);
-scene.add(guidesGroup);
+const savedLinesGroup = new THREE.Group(); 
+scene.add(starsGroup, linesGroup, guidesGroup, savedLinesGroup);
 
 let drawingHistory = [];
+let constellationLabels = []; 
+let showSavedConstellations = true; 
+let polarisStar = null;
+
+function renderSavedConstellations() {
+    while(savedLinesGroup.children.length > 0) {
+        const child = savedLinesGroup.children[0];
+        savedLinesGroup.remove(child);
+        if(child.geometry) child.geometry.dispose();
+        if(child.material) child.material.dispose();
+    }
+    
+    constellationLabels.forEach(obj => {
+        if(obj.element && obj.element.parentNode) obj.element.parentNode.removeChild(obj.element);
+    });
+    constellationLabels = [];
+
+    const lib = JSON.parse(localStorage.getItem('saved_constellations') || '[]');
+    
+    lib.forEach(constellation => {
+        let centroid = new THREE.Vector3();
+        let starCount = 0;
+
+        constellation.skeleton_stars.forEach(s => {
+            centroid.add(new THREE.Vector3(s.coords.x, s.coords.y, s.coords.z));
+            starCount++;
+        });
+
+        const allEdges = [...constellation.user_edges, ...(constellation.ai_edges || [])];
+        allEdges.forEach(edge => {
+            const fromStar = starsGroup.children.find(s => String(s.userData.id) === String(edge.from));
+            const toStar = starsGroup.children.find(s => String(s.userData.id) === String(edge.to));
+            
+            if(fromStar && toStar) {
+                const material = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.45 }); 
+                const points = [fromStar.position.clone(), toStar.position.clone()];
+                const geometry = new THREE.BufferGeometry().setFromPoints(points);
+                savedLinesGroup.add(new THREE.Line(geometry, material));
+            }
+        });
+
+        if (starCount > 0) {
+            centroid.divideScalar(starCount);
+            const label = document.createElement('div');
+            label.className = 'constellation-label-fixed';
+            label.innerText = constellation.name;
+            document.body.appendChild(label);
+            
+            constellationLabels.push({ element: label, position: centroid });
+        }
+    });
+    
+    savedLinesGroup.visible = showSavedConstellations;
+}
+
+window.toggleSavedConstellations = function() {
+    showSavedConstellations = !showSavedConstellations;
+    savedLinesGroup.visible = showSavedConstellations;
+    const btn = document.getElementById('toggle-saved-btn');
+    if (btn) btn.style.borderColor = showSavedConstellations ? "rgba(201, 168, 76, 0.5)" : "rgba(255, 255, 255, 0.1)";
+    if (typeof window.mostrarNotificacao === 'function') {
+        window.mostrarNotificacao(showSavedConstellations ? "Constelações visíveis." : "Constelações ocultas.");
+    }
+};
 
 function saveHistoryState() {
     drawingHistory.push({
@@ -176,11 +238,16 @@ async function loadStars() {
                 star.userData.label = label;
             }
 
+            if (starData.name && starData.name.includes("Polaris")) {
+                polarisStar = star;
+            }
+
             starsGroup.add(star);
         });
-    } catch (err) {
-        console.error("Erro ao carregar estrelas:", err);
-    }
+        
+        renderSavedConstellations();
+
+    } catch (err) { console.error(err); }
 }
 loadStars();
 
@@ -419,12 +486,10 @@ window.onUndo = function() {
     drawProximityGuides(activeStar);
     updateUndoButtonState();
     
-    document.getElementById('save-btn').disabled = true;
+    document.getElementById('save-btn-floating').style.display = 'none';
     document.getElementById('star-count').innerText = userSelectedStars.length;
     
-    if (typeof window.mostrarNotificacao === 'function') {
-        window.mostrarNotificacao("Última ação desfeita.");
-    }
+    if (typeof window.mostrarNotificacao === 'function') window.mostrarNotificacao("Última ação desfeita.");
 };
 
 function onStarClick(starData) {
@@ -457,9 +522,7 @@ function onStarClick(starData) {
                 userCreatedEdges.splice(edgeIdx, 1);
                 cleanOrphanStars();
                 redrawCurrentConstellation();
-                if (typeof window.mostrarNotificacao === 'function') {
-                    window.mostrarNotificacao("Ligação removida.");
-                }
+                if (typeof window.mostrarNotificacao === 'function') window.mostrarNotificacao("Ligação removida.");
             } else {
                 userCreatedEdges.push({ from: activeStar.id, to: starData.id });
                 drawVisualLineInstant(activeStar.coords, starData.coords, 0xc9a84c);
@@ -472,7 +535,6 @@ function onStarClick(starData) {
                 starObj.material.color.setHex(0x00ffff);
                 document.getElementById('star-count').innerText = userSelectedStars.length;
             }
-            
             drawProximityGuides(activeStar);
         }
     } else {
@@ -527,9 +589,7 @@ window.onForgeConstellation = async function() {
     
     const visibleStars = [];
     starsGroup.children.forEach(star => {
-        if (frustum.containsPoint(star.position)) {
-            visibleStars.push(star.userData.id);
-        }
+        if (frustum.containsPoint(star.position)) visibleStars.push(star.userData.id);
     });
 
     const forgeBtn = document.getElementById('forge-btn');
@@ -576,7 +636,8 @@ window.onForgeConstellation = async function() {
         currentMythData.properties = result.properties;
         await animacaoPromise;
         displayMythAndMetadata(myth.titulo, myth.texto, myth.is_real, myth.is_real ? `Constelação Real: ${myth.real_name}` : `Constelação Criada: ${myth.real_name}`, result.properties);
-        document.getElementById('save-btn').disabled = false;
+        
+        document.getElementById('save-btn-floating').style.display = 'block';
         
         if (userSelectedStars.length > 0) {
             const centroid = new THREE.Vector3();
@@ -627,7 +688,9 @@ window.onClearSky = function(bypassHistory = false) {
     clearProximityGuides();
     userSelectedStars.forEach(s => { const starObj = starsGroup.children.find(o => o.userData.id === s.id); if (starObj) starObj.material.color.set(starObj.userData.color || "#ffffff"); });
     userSelectedStars = []; userCreatedEdges = []; activeStar = null; isCentering = false; targetCameraPosition = null; currentMythData = null;
-    document.getElementById('star-count').innerText = '0'; document.getElementById('save-btn').disabled = true; window.closeMythSidebar();
+    document.getElementById('star-count').innerText = '0'; 
+    document.getElementById('save-btn-floating').style.display = 'none'; 
+    window.closeMythSidebar();
     updateUndoButtonState();
 };
 
@@ -640,7 +703,11 @@ window.onSaveConstellation = async function() {
     lib.push(saved);
     localStorage.setItem('saved_constellations', JSON.stringify(lib));
     if (typeof window.mostrarNotificacao === 'function') window.mostrarNotificacao(`Constelação "${constName}" guardada.`);
+    
+    document.getElementById('save-btn-floating').style.display = 'none';
     renderLibrary();
+    renderSavedConstellations();
+    window.onClearSky(true); 
 };
 
 window.onDeleteConstellation = async function(id) {
@@ -649,6 +716,7 @@ window.onDeleteConstellation = async function(id) {
     lib = lib.filter(i => i.id !== id);
     localStorage.setItem('saved_constellations', JSON.stringify(lib));
     renderLibrary();
+    renderSavedConstellations();
 };
 
 window.loadConstellation = function(id) {
@@ -674,7 +742,8 @@ window.loadConstellation = function(id) {
     document.getElementById('interface-myth').classList.add('visible');
     document.getElementById('star-count').innerText = userSelectedStars.length;
     currentMythData = { real_name: saved.name, titulo: saved.myth_title, texto: saved.myth_text, is_real: saved.myth_is_real, properties: saved.properties };
-    document.getElementById('save-btn').disabled = false;
+    document.getElementById('save-btn-floating').style.display = 'none';
+    
     if (userSelectedStars.length > 0) {
         const centroid = new THREE.Vector3();
         userSelectedStars.forEach(s => centroid.add(new THREE.Vector3(s.coords.x, s.coords.y, s.coords.z)));
@@ -737,10 +806,32 @@ function animate() {
         }
     });
 
+    constellationLabels.forEach(lbl => {
+        if (!showSavedConstellations) {
+            lbl.element.style.display = 'none';
+            return;
+        }
+        const v = lbl.position.clone().project(camera);
+        if (v.z < 1) {
+            const x = (v.x * 0.5 + 0.5) * window.innerWidth;
+            const y = (-v.y * 0.5 + 0.5) * window.innerHeight;
+            lbl.element.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+            lbl.element.style.display = 'block';
+        } else {
+            lbl.element.style.display = 'none';
+        }
+    });
+
     const compassNeedle = document.getElementById('compass-needle');
     if (compassNeedle) {
-        const azimuth = controls.getAzimuthalAngle();
-        compassNeedle.style.transform = `rotate(${-azimuth + Math.PI}rad)`;
+        if (polarisStar) {
+            const localPos = polarisStar.position.clone().applyMatrix4(camera.matrixWorldInverse);
+            const angle = Math.atan2(localPos.x, localPos.y);
+            compassNeedle.style.transform = `rotate(${angle}rad)`;
+        } else {
+            const azimuth = controls.getAzimuthalAngle();
+            compassNeedle.style.transform = `rotate(${-azimuth + Math.PI}rad)`;
+        }
     }
 
     renderer.render(scene, camera);
