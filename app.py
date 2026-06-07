@@ -77,6 +77,32 @@ def complete():
 
     silhueta_style = props.get('silhueta_ancestral', 'Criatura / Humanoide / Besta Alada')
     shapes_detected = props.get('shapes_detected', 'Estrutura Aberta (Árvore/Linha)')
+    compactness = props.get('compactness', 1.0)
+    barycenter_offset = props.get('barycenter_offset', 0.0)
+
+    # Identificar a estrela mais brilhante para a diretiva de balanço
+    brightest_star = min(enriched_skeleton, key=lambda s: s.get('mag', 3.0))
+    brightest_name = brightest_star.get('name', 'Estrela Principal')
+    
+    offset_instructions = ""
+    if barycenter_offset > 8.0:
+        offset_instructions = f"""
+    DIRETIVA DE EQUILÍBRIO ESTÉTICO (AGÊNCIA CRIATIVA):
+    - A constelação está desequilibrada (Barycenter Offset: {barycenter_offset} unidades). O peso e brilho concentram-se na estrela {brightest_name}.
+    - Proponha propositadamente ligações a estrelas candidatas que se projetem na direção oposta ao aglomerado mais pesado para criar caudas, asas ou membros de compensação, equilibrando esteticamente a constelação.
+    """
+    
+    compactness_instructions = ""
+    if compactness > 0.4:
+        compactness_instructions = f"""
+    DIRETIVA DE DENSIDADE (COMPACIDADE: {compactness}):
+    - A constelação atual é compacta e densa. Tente propor ligações lineares estendidas (cadeias de candidatos) para o exterior para dar dinamismo e asas/membros à silhueta.
+    """
+    else:
+        compactness_instructions = f"""
+    DIRETIVA DE DENSIDADE (COMPACIDADE: {compactness}):
+    - A constelação está muito dispersa. Tente propor ligações curtas e agrupadas para concentrar e dar coesão à forma global.
+    """
     
     style_instructions = ""
     if "Serpente" in silhueta_style or "Rio" in silhueta_style or "Caminho" in silhueta_style:
@@ -120,6 +146,8 @@ def complete():
     {chr(10).join(pairs_formatted)}
     
     {style_instructions}
+    {offset_instructions}
+    {compactness_instructions}
 
     TAREFA: Proponha exatamente {num_connections} novas linhas (new_edges) para estender a silhueta.
     

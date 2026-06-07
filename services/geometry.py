@@ -13,6 +13,20 @@ def calculate_graph_properties(skeleton_stars, edges):
     
     asymmetry = np.std(dist_to_centroid)
 
+    # Nova métrica: Diâmetro tridimensional e Densidade Espacial (Compactness)
+    if len(skeleton_stars) > 1:
+        diffs = coords[:, np.newaxis, :] - coords[np.newaxis, :, :]
+        dists = np.linalg.norm(diffs, axis=-1)
+        diameter = np.max(dists)
+    else:
+        diameter = 0.0
+    compactness = len(skeleton_stars) / diameter if diameter > 0 else 1.0
+
+    # Nova métrica: Desvio do Centro de Gravidade (Barycenter Offset)
+    brightest_star = min(skeleton_stars, key=lambda s: s.get('mag', 3.0))
+    bright_coords = np.array([brightest_star['coords']['x'], brightest_star['coords']['y'], brightest_star['coords']['z']])
+    barycenter_offset = np.linalg.norm(bright_coords - centroid)
+
     num_nodes = len(skeleton_stars)
     num_edges = len(edges)
     
@@ -108,6 +122,8 @@ def calculate_graph_properties(skeleton_stars, edges):
     return {
         "asymmetry": round(float(asymmetry), 3),
         "elongation": round(float(elongation), 3),
+        "compactness": round(float(compactness), 3),
+        "barycenter_offset": round(float(barycenter_offset), 3),
         "has_cycles": cycle_info["has_cycles"],
         "shapes_detected": cycle_info["shapes_detected"],
         "num_triangles": cycle_info["num_triangles"],
