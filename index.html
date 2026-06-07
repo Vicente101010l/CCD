@@ -23,9 +23,11 @@
         </div>
     </div>
 
-    <button id="toggle-saved-btn" onclick="toggleSavedConstellations()" title="Ocultar/Mostrar Histórico">
-        👁️
-    </button>
+    <!-- SWITCHER DE MODO -->
+    <div id="mode-switcher">
+        <button id="mode-create" class="active" onclick="setMode('create')">Criação</button>
+        <button id="mode-library" onclick="setMode('library')">Biblioteca</button>
+    </div>
 
     <div id="controls-panel">
         <div id="onboarding-msg">Clica nas estrelas para traçar o esqueleto</div>
@@ -43,10 +45,6 @@
                 <span id="zoom-val">100%</span>
             </div>
             <input type="range" id="zoom-slider" min="0.1" max="8.0" step="0.05" value="0.1">
-        </div>
-        <div class="library-container">
-            <div class="library-header">Biblioteca ▼</div>
-            <div id="library-list"></div>
         </div>
     </div>
     
@@ -87,9 +85,14 @@
         <div id="compass-needle"></div>
     </div>
 
-    <button id="save-btn-floating" onclick="onSaveConstellation()" style="display: none;">GUARDAR CONSTELAÇÃO</button>
+    <!-- BOTÕES FLUTUANTES BASE -->
+    <button id="save-btn-floating" class="floating-bottom-btn" onclick="onSaveConstellation()" style="display: none;">GUARDAR CONSTELAÇÃO</button>
+    <button id="delete-btn-floating" class="floating-bottom-btn" onclick="onDeleteCurrentConstellation()" style="display: none;">APAGAR CONSTELAÇÃO</button>
 
     <script>
+
+        window.addEventListener('libraryUpdated', () => { if(typeof renderLibrary === 'function') renderLibrary(); });
+
         window.sfx = {
             drone: new Audio('static/audio/drone.mp3'),
             chime: new Audio('static/audio/chime.mp3'),
@@ -112,7 +115,7 @@
         }, { once: true });
 
         document.addEventListener('click', (e) => {
-            if (e.target.tagName.toLowerCase() === 'button' || e.target.closest('button') || e.target.classList.contains('library-item-name')) {
+            if (e.target.tagName.toLowerCase() === 'button' || e.target.closest('button') || e.target.classList.contains('constellation-label-fixed')) {
                 if (audioUnlocked) {
                     window.sfx.ui.currentTime = 0;
                     window.sfx.ui.play().catch(() => {});
@@ -210,11 +213,16 @@
             mutations.forEach((mutation) => {
                 if (mutation.attributeName === 'class') {
                     const interfaceMyth = document.getElementById('interface-myth');
+                    const modeSwitcher = document.getElementById('mode-switcher');
+                    
                     if (interfaceMyth.classList.contains('visible')) {
                         barraControlos.classList.add('shifted');
+                        if (modeSwitcher) modeSwitcher.classList.add('hidden'); // Oculta o Switcher
                     } else {
                         barraControlos.classList.remove('shifted');
                         papiro.classList.remove('aberto');
+                        if (modeSwitcher) modeSwitcher.classList.remove('hidden'); // Revela o Switcher
+                        
                         if (aviso) {
                             aviso.style.opacity = '1';
                             aviso.style.visibility = 'visible';
