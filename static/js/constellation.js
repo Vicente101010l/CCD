@@ -1,6 +1,3 @@
-/**
- * Orquestrador Principal do StarForge
- */
 import * as THREE from 'three';
 import { 
     scene, 
@@ -50,7 +47,6 @@ const guidesGroup = new THREE.Group();
 const savedLinesGroup = new THREE.Group(); 
 scene.add(starsGroup, linesGroup, guidesGroup, savedLinesGroup);
 
-// Função Utilitária de Throttling
 function throttle(func, limit) {
     let inThrottle;
     return function() {
@@ -64,12 +60,10 @@ function throttle(func, limit) {
     }
 }
 
-// Inicializa as estrelas e redesenha a biblioteca
 loadStars(() => {
     renderSavedConstellations();
 });
 
-// Comutador de Modos
 export function setMode(mode) {
     currentMode = mode;
     
@@ -102,7 +96,6 @@ export function setMode(mode) {
 }
 window.setMode = setMode;
 
-// Renderização das constelações guardadas
 export function renderSavedConstellations() {
     for (let i = savedLinesGroup.children.length - 1; i >= 0; i--) {
         const child = savedLinesGroup.children[i];
@@ -173,7 +166,6 @@ export function renderSavedConstellations() {
     savedLinesGroup.visible = (currentMode === 'library');
 }
 
-// Histórico de Ações (Undo)
 function saveHistoryState() {
     drawingHistory.push({
         userSelectedStars: JSON.parse(JSON.stringify(userSelectedStars)),
@@ -191,7 +183,6 @@ function updateUndoButtonState() {
     }
 }
 
-// Raycasting e Eventos de Rato
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
@@ -238,7 +229,6 @@ window.addEventListener('click', (event) => {
 
 const tooltip = document.getElementById('tooltip');
 
-// Movimento do rato otimizado com Throttle (20ms) para alta performance do Raycast
 window.addEventListener('mousemove', throttle((event) => {
     if (currentMode === 'library') return; 
     
@@ -308,7 +298,6 @@ window.addEventListener('mousemove', throttle((event) => {
     scene.add(tempLine);
 }, 20));
 
-// Deseleciona a estrela ativa
 function deselectActiveStar() {
     if (activeStar) {
         saveHistoryState();
@@ -414,7 +403,6 @@ function clearProximityGuides() {
     }
 }
 
-// Botões expostos para interações
 export function onUndo() {
     if (drawingHistory.length === 0) {
         mostrarNotificacao("Nada para desfazer.");
@@ -502,7 +490,6 @@ export async function onForgeConstellation() {
     }
     clearAllLines();
     
-    // Filtro Frustum para detectar as estrelas visíveis no ecrã
     const frustum = new THREE.Frustum();
     const cameraViewProjectionMatrix = new THREE.Matrix4();
     camera.updateMatrixWorld();
@@ -690,7 +677,7 @@ export function renderLibrary() {
     if (!listEl) return;
     
     const lib = JSON.parse(localStorage.getItem('saved_constellations') || '[]');
-    listEl.innerHTML = ''; // Limpa a lista
+    listEl.innerHTML = '';
     
     if (lib.length === 0) {
         listEl.innerHTML = '<div class="library-empty">Sem constelações.</div>';
@@ -699,12 +686,10 @@ export function renderLibrary() {
             const div = document.createElement('div');
             div.className = 'library-item';
             
-            // Criamos o elemento span de forma segura
             const span = document.createElement('span');
             span.className = 'library-item-name';
             span.innerText = item.name;
             
-            // Usamos addEventListener em vez de onclick="string"
             span.addEventListener('click', () => {
                 loadConstellation(item.id);
             });
@@ -796,7 +781,6 @@ export async function onDeleteCurrentConstellation() {
 }
 window.onDeleteCurrentConstellation = onDeleteCurrentConstellation;
 
-// Ciclo de Animação Principal
 function animate() {
     requestAnimationFrame(animate);
     
@@ -804,7 +788,6 @@ function animate() {
     updateStarLabels();
     updateCompass();
 
-    // Atualização das etiquetas das constelações guardadas
     constellationLabels.forEach(lbl => {
         if (currentMode !== 'library') {
             lbl.element.style.display = 'none';
@@ -830,7 +813,6 @@ function animate() {
 }
 animate();
 
-// Eventos de Arrasto para Fecho Rápido da Sidebar
 let isMouseDown = false;
 let startX = 0;
 let startY = 0;

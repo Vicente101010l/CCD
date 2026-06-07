@@ -15,7 +15,6 @@ CORS(app)
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-# Carregar base de dados real a partir do arquivo stars.json do catálogo HYG
 stars_file_path = os.path.join(os.path.dirname(__file__), 'static', 'data', 'stars.json')
 with open(stars_file_path, 'r', encoding='utf-8') as f:
     ALL_STARS_DATABASE = json.load(f)
@@ -80,7 +79,6 @@ def complete():
     compactness = props.get('compactness', 1.0)
     barycenter_offset = props.get('barycenter_offset', 0.0)
 
-    # Identificar a estrela mais brilhante para a diretiva de balanço
     brightest_star = min(enriched_skeleton, key=lambda s: s.get('mag', 3.0))
     brightest_name = brightest_star.get('name', 'Estrela Principal')
     

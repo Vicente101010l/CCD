@@ -1,6 +1,3 @@
-/**
- * Módulo de Gestão das Estrelas (Sprites, Labels e Bússola)
- */
 import * as THREE from 'three';
 import { fetchStars } from './api.js';
 import { camera, controls } from './three-scene.js';
@@ -27,10 +24,6 @@ function createStarTexture() {
 
 const starTexture = createStarTexture();
 
-/**
- * Carrega a base de dados de estrelas e desenha-as na cena.
- * @param {Function} onDone Callback executado após a renderização das estrelas
- */
 export async function loadStars(onDone) {
     try {
         const starsData = await fetchStars();
@@ -58,7 +51,6 @@ export async function loadStars(onDone) {
                 originalScale: size
             };
 
-            // Estrelas muito brilhantes (mag < 1.8) ou Polaris ganham etiqueta no céu
             if (starData.mag < 1.8 || (starData.name && starData.name.includes("Polaris"))) {
                 const label = document.createElement('div');
                 label.className = (starData.name && starData.name.includes("Polaris")) ? 'star-label-fixed' : 'star-label';
@@ -83,9 +75,6 @@ export async function loadStars(onDone) {
     }
 }
 
-/**
- * Atualiza o posicionamento 2D das etiquetas de texto das estrelas com base na perspetiva 3D.
- */
 export function updateStarLabels() {
     starsGroup.children.forEach(star => {
         if (star.userData.label) {
@@ -102,9 +91,6 @@ export function updateStarLabels() {
     });
 }
 
-/**
- * Atualiza a rotação da bússola apontando para a Polaris ou usando ângulo azimutal.
- */
 export function updateCompass() {
     const compassNeedle = document.getElementById('compass-needle');
     if (!compassNeedle) return;

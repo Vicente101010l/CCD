@@ -1,6 +1,3 @@
-/**
- * Módulo de Gestão da Cena 3D (Three.js Setup, Câmara e Renderização)
- */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
@@ -28,14 +25,9 @@ controls.maxDistance = 8.0;
 
 export const starRadius = 50;
 
-// Estado da Animação de Centração
 let targetCameraPosition = null;
 let isCentering = false;
 
-/**
- * Inicia a transição da câmara para focar no centroide de uma constelação.
- * @param {THREE.Vector3} centroid 
- */
 export function centerCameraOn(centroid) {
     let dist = camera.position.length();
     if (dist < 0.1 || isNaN(dist)) dist = 2.0;
@@ -52,9 +44,6 @@ export function getIsCentering() {
     return isCentering;
 }
 
-/**
- * Executa a interpolação suave de centração da câmara, se ativa.
- */
 export function updateCameraCentering() {
     if (isCentering && targetCameraPosition) {
         controls.enabled = false;
@@ -71,7 +60,6 @@ export function updateCameraCentering() {
     }
 }
 
-// Criação do Pó Cósmico
 function createCosmicDust() {
     const dustGeometry = new THREE.BufferGeometry();
     const dustCount = 6000;
@@ -110,7 +98,6 @@ function createCosmicDust() {
 }
 createCosmicDust();
 
-// Elementos de Controlo do Zoom do Slider
 const zoomSlider = document.getElementById('zoom-slider');
 const zoomVal = document.getElementById('zoom-val');
 
@@ -134,7 +121,6 @@ controls.addEventListener('change', () => {
     }
 });
 
-// Listener de Redimensionamento do Ecrã
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();

@@ -13,7 +13,6 @@ def calculate_graph_properties(skeleton_stars, edges):
     
     asymmetry = np.std(dist_to_centroid)
 
-    # Nova métrica: Diâmetro tridimensional e Densidade Espacial (Compactness)
     if len(skeleton_stars) > 1:
         diffs = coords[:, np.newaxis, :] - coords[np.newaxis, :, :]
         dists = np.linalg.norm(diffs, axis=-1)
@@ -22,7 +21,6 @@ def calculate_graph_properties(skeleton_stars, edges):
         diameter = 0.0
     compactness = len(skeleton_stars) / diameter if diameter > 0 else 1.0
 
-    # Nova métrica: Desvio do Centro de Gravidade (Barycenter Offset)
     brightest_star = min(skeleton_stars, key=lambda s: s.get('mag', 3.0))
     bright_coords = np.array([brightest_star['coords']['x'], brightest_star['coords']['y'], brightest_star['coords']['z']])
     barycenter_offset = np.linalg.norm(bright_coords - centroid)
@@ -72,7 +70,7 @@ def calculate_graph_properties(skeleton_stars, edges):
         zona = "Polar (Eternidade, Guardiões Eternos, Navegação, Vigilância)"
     else:
         zona = "Equatorial (Ciclos das Estações, Tempo, Agricultura, Transição Terrena)"
-
+ 
     import math
     ra_angles = []
     for s in skeleton_stars:
@@ -93,7 +91,7 @@ def calculate_graph_properties(skeleton_stars, edges):
         avg_ra = (avg_angle / (2 * math.pi)) * 24
     else:
         avg_ra = 0.0
-
+ 
     if 2.0 <= avg_ra < 8.0:
         estacao = "Inverno (Céu gélido, recolhimento, noites longas de reflexão)"
     elif 8.0 <= avg_ra < 14.0:
@@ -102,7 +100,7 @@ def calculate_graph_properties(skeleton_stars, edges):
         estacao = "Verão (Calor, colheita, atividade intensa, noites quentes)"
     else:
         estacao = "Outono (Transição, queda das folhas, preparação, sobriedade)"
-
+ 
     sin_b_list = []
     for s in skeleton_stars:
         ux = s['coords']['x'] / 50.0
@@ -116,9 +114,9 @@ def calculate_graph_properties(skeleton_stars, edges):
         via_lactea = "Cruzadora do Rio Celeste (Atravessa a Via Láctea, ligada a caminhos de almas, pontes divinas e poeira estelar)"
     else:
         via_lactea = "Céu Profundo (Afastada da Via Láctea, localizada no vazio do cosmos, ligada a mistérios solitários e abismos celestes)"
-
+ 
     cycle_info = detect_cycles_and_shapes(skeleton_stars, edges)
-
+ 
     return {
         "asymmetry": round(float(asymmetry), 3),
         "elongation": round(float(elongation), 3),

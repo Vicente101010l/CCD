@@ -1,9 +1,5 @@
-/**
- * Módulo de Interface do Utilizador (Modais, Notificações e Pergaminho)
- */
 import { playPaper } from './audio.js';
 
-// Elementos da DOM recolhidos uma única vez
 const toast = document.getElementById('notificacao-sistema');
 const overlay = document.getElementById('sistema-modal-overlay');
 const titulo = document.getElementById('modal-titulo');
@@ -19,39 +15,25 @@ const rBase = document.getElementById('mesh-rolo-base');
 const aviso = document.getElementById('puxador-aviso');
 const barraControlos = document.getElementById('controls-panel');
 
-/**
- * Exibe uma notificação toast temporária.
- * @param {string} mensagem 
- */
 export function mostrarNotificacao(mensagem) {
     if (!toast) return;
     toast.innerText = mensagem;
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 3000);
 }
-
-// Vincula a nível do window para ser usado pelo HTML embutido se necessário
 window.mostrarNotificacao = mostrarNotificacao;
 
-/**
- * Mostra um modal personalizado (substituto de alert/confirm/prompt).
- * @param {string} tipo 'prompt' ou 'confirm'
- * @param {string} mensagem 
- * @param {string} valorDefeito 
- * @returns {Promise<any>}
- */
-export function mostrarModalCustom(tipo, mensagem, valorDefeito = "") {
+export function mostrarModalCustom(tipo, message, valorDefeito = "") {
     return new Promise((resolve) => {
         if (!overlay) {
             resolve(null);
             return;
         }
 
-        // 1. Vai buscar os elementos SEMPRE aqui dentro
         const btnCancel = document.getElementById('modal-btn-cancelar');
         const btnConfirm = document.getElementById('modal-btn-confirmar');
 
-        msg.innerText = mensagem;
+        msg.innerText = message;
         if (tipo === 'prompt') {
             titulo.innerText = 'REGISTAR CONSTELAÇÃO';
             input.style.display = 'block';
@@ -65,8 +47,6 @@ export function mostrarModalCustom(tipo, mensagem, valorDefeito = "") {
         overlay.classList.add('show');
         if (tipo === 'prompt') input.focus();
 
-        // 2. Em vez de cloneNode/replaceChild, apenas limpamos os handlers anteriores
-        // (Ao atribuir null, garantimos que não ficam listeners antigos acumulados)
         btnCancel.onclick = null;
         btnConfirm.onclick = null;
 
@@ -81,13 +61,8 @@ export function mostrarModalCustom(tipo, mensagem, valorDefeito = "") {
         });
     });
 }
-
-// Vincula a nível do window para cliques embutidos no HTML
 window.mostrarModalCustom = mostrarModalCustom;
 
-/**
- * Desenrola visualmente a folha de pergaminho da lenda.
- */
 export function desenrolarPergaminho() {
     if (!papiro || papiro.classList.contains('aberto')) return;
     
@@ -105,13 +80,8 @@ export function desenrolarPergaminho() {
         setTimeout(() => { sincronizarRotacaoMecanica(); }, 800);
     }
 }
-
-// Vincula no window para cliques do HTML
 window.desenrolarPergaminho = desenrolarPergaminho;
 
-/**
- * Sincroniza a rotação dos cilindros com o scroll da lenda.
- */
 export function sincronizarRotacaoMecanica() {
     if (!scrollZone || !rTopo || !rBase || !papiro || !papiro.classList.contains('aberto')) return;
     const st = scrollZone.scrollTop;
@@ -124,11 +94,6 @@ if (scrollZone) {
     scrollZone.addEventListener('scroll', sincronizarRotacaoMecanica);
 }
 
-/**
- * Executa animação cíclica das frases de carregamento da IA.
- * @param {HTMLElement} textEl Elemento de texto
- * @param {HTMLElement} loadingScreen Tela de carregamento
- */
 export async function animarFasesCarregamento(textEl, loadingScreen) {
     const fases = [
         "A calcular o baricentro estelar...",
@@ -152,7 +117,6 @@ export async function animarFasesCarregamento(textEl, loadingScreen) {
     }
 }
 
-// Observer para animar e mover painéis de controlo quando a lenda é exibida
 const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
         if (mutation.attributeName === 'class') {
