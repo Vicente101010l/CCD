@@ -83,75 +83,51 @@ def generate_myth(constellation_name, stars, properties):
     
     silhueta = properties.get('silhueta_ancestral', '')
     
-    style_guidelines = ""
+    # Determinação do Estilo Literário
     if "Serpente" in silhueta or "Rio" in silhueta or "Caminho" in silhueta:
-        style_guidelines = """
-    DIRETIVA DE ESTILO LITERÁRIO: ESTILO DE JORNADA/METAMORFOSE (Inspirado em Ovídio)
-    - O mito deve descrever uma jornada linear, uma busca espiritual ou uma fuga dramática.
-    - Foca na passagem do tempo, no movimento e na metamorfose do ser (ex: uma divindade que se transformou em rio para escapar, ou uma serpente condenada a rastejar para sempre entre as estrelas).
-    """
+        style_guidelines = "DIRETIVA DE ESTILO: JORNADA/METAMORFOSE (Inspirado em Ovídio). O mito deve descrever uma jornada linear, metamorfose e passagem do tempo."
     elif "Coroa" in silhueta or "Escudo" in silhueta or "Cálice" in silhueta:
-        style_guidelines = """
-    DIRETIVA DE ESTILO LITERÁRIO: ESTILO SOLENE/RELÍQUIA DE PODER (Inspirado em Épicos de Artefactos)
-    - O mito deve centrar-se na criação de um objeto sagrado de proteção, um pacto inviolável ou uma prisão cósmica.
-    - Descreve a constelação como um selo indestrutível que mantém o equilíbrio do universo ou que guarda a alma de um herói sacrificado.
-    """
+        style_guidelines = "DIRETIVA DE ESTILO: SOLENE/RELÍQUIA (Inspirado em Épicos). Foca na criação de um objeto sagrado, pacto ou selo indestrutível."
     elif "Criatura" in silhueta or "Humanoide" in silhueta or "Besta" in silhueta:
-        style_guidelines = """
-    DIRETIVA DE ESTILO LITERÁRIO: ESTILO DE CAÇADA/TRAGÉDIA DE MONSTROS (Inspirado na Tragédia Clássica)
-    - A lenda deve narrar a história de uma criatura monstruosa de grande poder, uma caçada colossal ou um castigo trágico imposto pelos deuses.
-    - Destaca o orgulho (húbris), a batalha épica e a subsequente imortalização da besta no céu como lembrete aos mortais.
-    """
+        style_guidelines = "DIRETIVA DE ESTILO: CAÇADA/TRAGÉDIA (Inspirado na Tragédia Clássica). Foca na batalha épica, orgulho (húbris) e imortalização do herói ou monstro."
     else:
-        style_guidelines = """
-    DIRETIVA DE ESTILO LITERÁRIO: ESTILO DE PROVAÇÃO E JUSTIÇA (Inspirado em Parábolas de Julgamento)
-    - O mito deve relatar uma provação de justiça, um sacrifício ou o estabelecimento de uma lei divina (como o peso do julgamento ou a seta do destino).
-    - Descreve a ferramenta ou objeto celeste como um símbolo cósmico de ordem, verdade ou fado inalterável.
-    """
+        style_guidelines = "DIRETIVA DE ESTILO: PROVAÇÃO/JUSTIÇA (Inspirado em Parábolas). Foca em julgamentos, sacrifícios e leis divinas."
 
     prompt = f"""
-    CONTEXTO: Sistema de co-criação e simulação de constelações celestes.
-    O utilizador desenhou uma nova constelação unindo as seguintes estrelas reais:
-    {star_list_str}
+    CONTEXTO: Sistema de co-criação astronómica. O utilizador desenhou uma constelação.
+    ESTRELAS: {star_list_str}
     
-    MÉTRICAS CIENTÍFICAS E ARQUÉTIPOS ANCESTRAIS CALCULADOS:
-    1. Silhueta Ancestral (Forma física): '{properties.get('silhueta_ancestral', 'Indefinida')}'
-    2. Temperamento Elemental (Cor/Espectro): '{properties.get('temperamento_elemental', 'Indefinido')}'
-    3. Estatuto Divino (Brilho/Magnitude): '{properties.get('estatuto_divino', 'Indefinido')}'
-    4. Zona Cósmica/Eternidade (Latitude Celestial Z): '{properties.get('zona_cosmica', 'Indefinida')}'
-    5. Época de Visibilidade no Céu: '{properties.get('epoca_visibilidade', 'Indefinida')}'
-    6. Relação Cósmica com a Via Láctea: '{properties.get('via_lactea_proximidade', 'Indefinida')}'
-    
-    INFORMAÇÕES DE SUPORTE:
-    - Assimetria espacial: {properties['asymmetry']}
-    - Alongamento geométrico: {properties['elongation']}
-    - Densidade da rede (Compactness): {properties['compactness']}
-    - Desvio de centro de gravidade (Barycenter Offset): {properties['barycenter_offset']}
-    - Ciclos fechados detetados: {properties['has_cycles']}
+    METRICAS GEOMÉTRICAS (TENS DE USAR ESTAS PARA A NARRATIVA):
+    - Silhueta: {silhueta}
+    - Ciclos Fechados (has_cycles): {properties['has_cycles']}
+    - Assimetria: {properties['asymmetry']} (0 = simétrico, >1 = assimétrico)
+    - Alongamento: {properties['elongation']} (Alto = linha/trajeto, Baixo = compacto/objeto)
+    - Temperamento: {properties.get('temperamento_elemental', 'Indefinido')}
     
     {style_guidelines}
 
+    REGRA DE VÍNCULO GEOMÉTRICO (OBRIGATÓRIO):
+    1. Se 'has_cycles' for True: O mito deve falar de recorrência, eternidade, ciclos de vida/morte ou algo que nunca termina.
+    2. Se 'elongation' > 2.0: O mito deve focar numa "Jornada", num "Caminho" ou numa perseguição entre dois pontos distantes.
+    3. Se 'elongation' < 1.5: O mito deve focar num objeto de poder, um trono, uma coroa, ou um ponto de reunião estático.
+    4. Se 'asymmetry' > 1.0: O mito deve incluir um conflito, um desequilíbrio, uma tragédia ou uma anomalia que quebra a harmonia.
+    5. Usa o 'Temperamento Elemental' para escolher os adjetivos e metáforas (ex: se Espiritual, usa termos etéreos; se Terrestre, usa termos densos e físicos).
+
     TAREFA:
-    1. Inventa um nome poético, clássico e evocativo em português para esta nova constelação (ex: "Serpente das Águas Prateadas", "O Escudo do Rei Caído", "A Besta de Gelo Celeste"). O nome deve estar diretamente alinhado com a 'Silhueta Ancestral' e o 'Temperamento Elemental' obtidos.
-    2. Cria um mito grego/clássico original que narre a história desta constelação. O mito deve justificar a sua colocação no céu (catasterismo) de acordo com:
-       - As estrelas utilizadas: Deves atribuir um papel narrativo dramático a cada uma das estrelas listadas acima na história de acordo com o seu brilho (magnitude) e cor. A estrela mais brilhante (menor magnitude) deve ser o herói principal, o artefato supremo, ou o coração da besta. Estrelas vermelhas/laranjas devem estar ligadas a fogo, sangue, guerra ou terra; azuis a gelo, divindade, oráculo ou magia; brancas a éter e justiça.
-       - A 'Época de Visibilidade': Deves referir no início do mito em que estação do ano esta constelação surge de forma dominante no céu noturno.
-       - A 'Relação com a Via Láctea': Se for 'Cruzadora do Rio Celeste', integra na lenda o papel do "Rio de Estrelas" ou "Caminho das Almas" (Via Láctea). Se for 'Céu Profundo', foca na solidão, nos vazios cósmicos e nos segredos guardados longe da poeira estelar.
-       - O 'Temperamento Elemental': Se Espiritual (magia, raios, gelo, deuses), se Terrestre (fogo, sacrifício, terra, antepassados), se Equilibrado (luz solar, éter, harmonia, justiça).
-       - O 'Estatuto Divino': Se Divino (deuses supremos), se Heroico (semideuses, monstros protetores), se Mortal (morte de mortais, ferramentas, animais vulgares).
-       - A 'Zona Cósmica': Se Polar (imortalidade, sentinelas eternas), se Equatorial (ciclos das estações, colheitas e renovação).
+    1. Inventa um nome poético e evocativo em português para esta constelação.
+    2. Cria um mito clássico original, integrando as estrelas listadas (a mais brilhante é a protagonista/artefato).
     
     REGRAS DE ESCRITA:
     - 3 a 5 parágrafos narrativos.
     - Escreve em Português Europeu corrido e natural.
-    - Mantém o tom literário elevado de mitologia clássica.
-    - Responde EXCLUSIVAMENTE em formato JSON com as chaves indicadas.
+    - Mantém um tom literário elevado de mitologia clássica.
+    - Responde EXCLUSIVAMENTE em formato JSON.
     
     JSON FORMAT:
     {{
-      "nome_constelacao": "NOME INVENTADO DA CONSTELAÇÃO",
-      "titulo": "TÍTULO DA LENDA / MITO",
-      "texto": "TEXTO DA LENDA MITOLÓGICA COMPLETO"
+      "nome_constelacao": "...",
+      "titulo": "...",
+      "texto": "..."
     }}
     """
     

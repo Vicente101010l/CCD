@@ -47,6 +47,10 @@ export function mostrarModalCustom(tipo, mensagem, valorDefeito = "") {
             return;
         }
 
+        // 1. Vai buscar os elementos SEMPRE aqui dentro
+        const btnCancel = document.getElementById('modal-btn-cancelar');
+        const btnConfirm = document.getElementById('modal-btn-confirmar');
+
         msg.innerText = mensagem;
         if (tipo === 'prompt') {
             titulo.innerText = 'REGISTAR CONSTELAÇÃO';
@@ -61,18 +65,17 @@ export function mostrarModalCustom(tipo, mensagem, valorDefeito = "") {
         overlay.classList.add('show');
         if (tipo === 'prompt') input.focus();
 
-        const newBtnCancelar = btnCancelar.cloneNode(true);
-        btnCancelar.parentNode.replaceChild(newBtnCancelar, btnCancelar);
-        
-        const newBtnConfirmar = btnConfirmar.cloneNode(true);
-        btnConfirmar.parentNode.replaceChild(newBtnConfirmar, btnConfirmar);
+        // 2. Em vez de cloneNode/replaceChild, apenas limpamos os handlers anteriores
+        // (Ao atribuir null, garantimos que não ficam listeners antigos acumulados)
+        btnCancel.onclick = null;
+        btnConfirm.onclick = null;
 
-        newBtnCancelar.addEventListener('click', () => {
+        btnCancel.addEventListener('click', () => {
             overlay.classList.remove('show');
             resolve(null);
         });
 
-        newBtnConfirmar.addEventListener('click', () => {
+        btnConfirm.addEventListener('click', () => {
             overlay.classList.remove('show');
             resolve(tipo === 'prompt' ? input.value : true);
         });

@@ -690,7 +690,7 @@ export function renderLibrary() {
     if (!listEl) return;
     
     const lib = JSON.parse(localStorage.getItem('saved_constellations') || '[]');
-    listEl.innerHTML = '';
+    listEl.innerHTML = ''; // Limpa a lista
     
     if (lib.length === 0) {
         listEl.innerHTML = '<div class="library-empty">Sem constelações.</div>';
@@ -698,7 +698,18 @@ export function renderLibrary() {
         lib.forEach(item => {
             const div = document.createElement('div');
             div.className = 'library-item';
-            div.innerHTML = `<span class="library-item-name" onclick="loadConstellation('${item.id}')">${item.name}</span>`;
+            
+            // Criamos o elemento span de forma segura
+            const span = document.createElement('span');
+            span.className = 'library-item-name';
+            span.innerText = item.name;
+            
+            // Usamos addEventListener em vez de onclick="string"
+            span.addEventListener('click', () => {
+                loadConstellation(item.id);
+            });
+            
+            div.appendChild(span);
             listEl.appendChild(div);
         });
     }
