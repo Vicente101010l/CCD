@@ -35,3 +35,17 @@ export async function generateMyth(payload) {
     }
     return response.json();
 }
+
+export async function dreamConstellation(payload) {
+    const response = await fetch(`${BASE_URL}/api/dream`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload || {})
+    });
+    if (!response.ok) {
+        throw new Error(`Erro ao sonhar: ${response.statusText}`);
+    }
+    return response.json();
+}

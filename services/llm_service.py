@@ -1,10 +1,81 @@
 import os
+import json
 from dotenv import load_dotenv
 from groq import Groq
 
 load_dotenv()
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+PT_PT = (
+    "REGRA DE LÍNGUA OBRIGATÓRIA: escreve exclusivamente em português europeu (de Portugal). "
+    "NUNCA uses português do Brasil. NUNCA uses 'você' — trata por 'tu' ou usa forma impessoal. "
+    "Usa construções de Portugal: 'estás a fazer' (não 'está fazendo'), "
+    "'a forma que apresenta' (não 'que ela apresenta me fez'), 'a tua alma' (não 'sua alma'). "
+    "Evita qualquer brasileirismo de vocabulário ou de sintaxe."
+)
+
+
+def generate_intention_phrase(targets):
+    prompt = f"""És a voz dos céus. Com base nestes alvos criativos:
+    Silhueta: {targets['silhueta_alvo']}; Temperamento: {targets['temperamento_alvo']};
+    Estatuto: {targets['estatuto_alvo']}; Época: {targets['epoca_alvo']}.
+    Escreve UMA frase poética em Português de Portugal, na primeira pessoa, que declare
+    a tua intenção de criar uma constelação (ex: "Esta noite quero desenhar...").
+    Responde em JSON: {{"frase": "..."}}"""
+    completion = client.chat.completions.create(
+        model="llama-3.1-8b-instant",
+        messages=[{"role": "system", "content": PT_PT}, {"role": "user", "content": prompt}],
+        response_format={"type": "json_object"},
+        temperature=0.9,
+    )
+    return json.loads(completion.choices[0].message.content).get(
+        "frase", "Esta noite, quero criar algo novo no céu."
+    )
+
+
+def generate_justification(intention, winner, rejected):
+    """Justificação fundamentada nos scores reais da vencedora e no que foi preterido."""
+    w = winner["scores"]
+    w_sil = winner["properties"].get("silhueta_ancestral", "")
+    pedido = intention.get("silhueta_alvo", "")
+
+    rej_txt = "; ".join(
+        f"forma '{r['properties'].get('silhueta_ancestral', '')[:26]}' "
+        f"(score {r['scores']['score']}, novidade {r['scores']['novidade']}, "
+        f"fidelidade {r['scores']['fidelidade']})"
+        for r in rejected
+    ) or "nenhuma"
+
+    prompt = f"""És a voz dos céus. Geraste várias constelações e avaliaste cada uma em
+    quatro critérios (0 a 1): Novidade (quão original face às constelações reais),
+    Coerência, Surpresa e Fidelidade ao pedido.
+
+    Pedido do consulente: {intention.get('frase', '')} (forma desejada: {pedido}).
+
+    CONSTELAÇÃO ESCOLHIDA — forma '{w_sil}'.
+    Scores: novidade {w['novidade']}, coerência {w['coerencia']}, surpresa {w['surpresa']}, fidelidade {w['fidelidade']}.
+
+    PRETERIDAS: {rej_txt}.
+
+    Escreve 2 a 3 frases, em Português de Portugal, na primeira pessoa (a voz dos céus),
+    a justificar CONCRETAMENTE a escolha com base nestes números:
+    - se a novidade foi decisiva, explica que recombina estrelas de forma original;
+    - se a fidelidade ao pedido foi alta, refere que encarna a forma pedida;
+    - se escolheste uma forma DIFERENTE da pedida (fidelidade baixa), assume-o com orgulho:
+      preferiste-a por ser mais original/surpreendente, mesmo contrariando o pedido;
+    - menciona porque preteriste pelo menos uma das outras.
+    Evita clichés e frases ocas. Não inventes números.
+    Responde em JSON: {{"justificacao": "..."}}"""
+    completion = client.chat.completions.create(
+        model="llama-3.1-8b-instant",
+        messages=[{"role": "system", "content": PT_PT}, {"role": "user", "content": prompt}],
+        response_format={"type": "json_object"},
+        temperature=0.7,
+    )
+    return json.loads(completion.choices[0].message.content).get(
+        "justificacao", "Escolhi esta por ser a mais original entre as que vislumbrei."
+    )
 
 def get_ai_completion(properties, skeleton_stars, candidate_stars, recommended_pairs, num_connections):
     skeleton_formatted = [f"ID: {s['id']} ({s['name']}) [Coords: {s['coords']}]" for s in skeleton_stars]
@@ -157,7 +228,7 @@ def generate_myth(constellation_name, stars, properties):
     completion = client.chat.completions.create(
         model="llama-3.1-8b-instant",
         messages=[
-            {"role": "system", "content": "És um mitógrafo clássico que escreve em Português Europeu corrido."},
+            {"role": "system", "content": f"És um mitógrafo clássico de Portugal. {PT_PT}"},
             {"role": "user", "content": prompt}
         ],
         response_format={"type": "json_object"}

@@ -38,6 +38,7 @@
                 <button id="undo-btn" onclick="onUndo()" disabled>Desfazer</button>
                 <button id="clear-btn" onclick="onClearSky()">Limpar</button>
             </div>
+            <button id="dream-btn" onclick="onDream()">Consultar os Céus</button>
         </div>
         <div class="zoom-container">
             <div class="zoom-label">
@@ -88,6 +89,9 @@
     <!-- BOTÕES FLUTUANTES BASE -->
     <button id="save-btn-floating" class="floating-bottom-btn" onclick="onSaveConstellation()" style="display: none;">GUARDAR CONSTELAÇÃO</button>
     <button id="delete-btn-floating" class="floating-bottom-btn" onclick="onDeleteCurrentConstellation()" style="display: none;">APAGAR CONSTELAÇÃO</button>
+
+    <!-- PAINEL DO MODO ORÁCULO (preenchido dinamicamente) -->
+    <div id="oracle-panel" style="display:none;"></div>
 
     <script>
         window.addEventListener('libraryUpdated', () => { 

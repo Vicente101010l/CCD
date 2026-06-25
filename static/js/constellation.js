@@ -15,9 +15,10 @@ import {
     updateStarLabels, 
     updateCompass 
 } from './modules/stars.js';
-import { 
-    completeConstellation, 
-    generateMyth 
+import {
+    completeConstellation,
+    generateMyth,
+    dreamConstellation
 } from './modules/api.js';
 import { 
     playChime, 
@@ -66,7 +67,11 @@ loadStars(() => {
 
 export function setMode(mode) {
     currentMode = mode;
-    
+
+    // Fechar o painel do Oráculo ao mudar de modo (evita gerar fora do modo Criação)
+    const oraclePanel = document.getElementById('oracle-panel');
+    if (oraclePanel) oraclePanel.style.display = 'none';
+
     document.getElementById('mode-create').classList.toggle('active', mode === 'create');
     document.getElementById('mode-library').classList.toggle('active', mode === 'library');
 
@@ -321,11 +326,11 @@ function cleanOrphanStars() {
     document.getElementById('star-count').innerText = userSelectedStars.length;
 }
 
-function drawVisualLineInstant(start, end, colorHex) {
-    const material = new THREE.LineBasicMaterial({ 
-        color: colorHex, 
-        transparent: true, 
-        opacity: 0.8 
+function drawVisualLineInstant(start, end, colorHex, opacity = 0.8) {
+    const material = new THREE.LineBasicMaterial({
+        color: colorHex,
+        transparent: true,
+        opacity: opacity
     });
     const points = [new THREE.Vector3(start.x, start.y, start.z), new THREE.Vector3(end.x, end.y, end.z)];
     const geometry = new THREE.BufferGeometry().setFromPoints(points);
@@ -590,6 +595,169 @@ export async function onForgeConstellation() {
     }
 }
 window.onForgeConstellation = onForgeConstellation;
+
+const ORACLE_QUESTIONS = [
+    { key: 'silhueta_alvo', label: 'Que forma terá a constelação?', options: [
+        ['Serpente', 'Serpente'], ['Coroa', 'Coroa'], ['Criatura', 'Criatura'],
+        ['Ferramenta', 'Ferramenta'], ['Indiferente', 'auto'] ] },
+    { key: 'temperamento_alvo', label: 'Que cor dominante nas estrelas?', options: [
+        ['Azuis', 'Espiritual'], ['Vermelhas', 'Terrestre'],
+        ['Mistas', 'Equilibrado'], ['Indiferente', 'auto'] ] },
+    { key: 'epoca_alvo', label: 'Em que zona do céu (estação)?', options: [
+        ['Inverno', 'Inverno'], ['Primavera', 'Primavera'], ['Verão', 'Verão'],
+        ['Outono', 'Outono'], ['Indiferente', 'auto'] ] },
+];
+
+let oracleChoices = {};
+let oracleResult = null;
+
+function defaultOracleChoices() {
+    return { silhueta_alvo: 'auto', temperamento_alvo: 'auto', epoca_alvo: 'auto', estatuto_alvo: 'auto' };
+}
+
+function renderQuestion(q) {
+    const opts = q.options.map(([txt, val]) =>
+        `<button class="oracle-opt${val === 'auto' ? ' is-auto' : ''}${oracleChoices[q.key] === val ? ' selected' : ''}"
+            data-key="${q.key}" data-val="${val}" onclick="oraclePick(this)">${txt}</button>`).join('');
+    return `<div class="oracle-q"><div class="oracle-q-label">${q.label}</div>
+        <div class="oracle-opts">${opts}</div></div>`;
+}
+
+// Passo 1: abre o painel e mostra as perguntas (Q&A).
+export function onDream() {
+    oracleChoices = defaultOracleChoices();
+    const panel = document.getElementById('oracle-panel');
+    panel.classList.remove('oracle-results');
+    panel.style.display = 'block';
+    panel.innerHTML = `
+        <button id="oracle-close" onclick="closeOraclePanel()">&times;</button>
+        <h3 class="oracle-h">Os Céus</h3>
+        <p class="oracle-sub">Define a forma, a cor das estrelas e a zona do céu (ou deixa indiferente). O sistema desenha 4 constelações, avalia cada uma e escolhe a de maior pontuação.</p>
+        <div id="oracle-questions">${ORACLE_QUESTIONS.map(renderQuestion).join('')}</div>
+        <button id="oracle-invoke" onclick="runDream()">Invocar constelação</button>`;
+}
+window.onDream = onDream;
+
+export function oraclePick(btn) {
+    oracleChoices[btn.dataset.key] = btn.dataset.val;
+    btn.parentElement.querySelectorAll('.oracle-opt').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    playUi();
+}
+window.oraclePick = oraclePick;
+
+function drawCandidateEdges(edges, colorHex, opacity) {
+    edges.forEach(edge => {
+        const f = starsGroup.children.find(o => String(o.userData.id) === String(edge.from));
+        const t = starsGroup.children.find(o => String(o.userData.id) === String(edge.to));
+        if (f && t) drawVisualLineInstant(f.position, t.position, colorHex, opacity);
+    });
+}
+
+const SHAPE_LABELS = { caminho: 'Caminho', arvore: 'Árvore', anel: 'Anel', estrela: 'Estrela' };
+
+function renderCandidateCard(c, isWinner) {
+    const s = c.scores;
+    const shape = SHAPE_LABELS[c.strategy] || 'Forma';
+    const bar = (label, v) => `<div class="score-row"><span>${label}</span>
+        <span class="score-bar"><span style="width:${Math.round(v*100)}%"></span></span></div>`;
+    return `<div class="oracle-card ${isWinner ? 'winner' : 'rejected'}" data-id="${c.id}"
+        onclick="oracleFocus(${c.id})" title="Clica para a veres no céu">
+        <div class="oracle-card-title">${isWinner ? '★ Escolhida' : 'Preterida'} · ${shape} · ${s.score}</div>
+        ${bar('Novidade', s.novidade)}${bar('Coerência', s.coerencia)}
+        ${bar('Surpresa', s.surpresa)}${bar('Fidelidade', s.fidelidade)}
+    </div>`;
+}
+
+export function oracleFocus(id) {
+    if (!oracleResult) return;
+    const c = oracleResult.candidates.find(x => x.id === id);
+    if (!c || !c.stars.length) return;
+    document.querySelectorAll('.oracle-card').forEach(el => el.classList.remove('focused'));
+    const card = document.querySelector(`.oracle-card[data-id="${id}"]`);
+    if (card) card.classList.add('focused');
+    const centroid = new THREE.Vector3();
+    c.stars.forEach(s => centroid.add(new THREE.Vector3(s.coords.x, s.coords.y, s.coords.z)));
+    centroid.divideScalar(c.stars.length);
+    centerCameraOn(centroid);
+    playUi();
+}
+window.oracleFocus = oracleFocus;
+
+// Passo 2: gera a partir das escolhas (ou autónomo) e mostra o resultado.
+export async function runDream() {
+    const panel = document.getElementById('oracle-panel');
+    panel.classList.add('oracle-results');
+    panel.innerHTML = `
+        <button id="oracle-close" onclick="closeOraclePanel()">&times;</button>
+        <p id="oracle-intention">A desenhar 4 constelações, a avaliá-las (novidade, coerência, surpresa, fidelidade) e a escrever o mito…</p>
+        <div id="oracle-candidates"><div class="oracle-spinner"></div></div>
+        <p id="oracle-justification"></p>
+        <div id="oracle-myth"></div>`;
+    onClearSky(true);
+    panel.style.display = 'block';
+    const dreamBtn = document.getElementById('dream-btn');
+    if (dreamBtn) { dreamBtn.disabled = true; dreamBtn.style.opacity = '0.6'; }
+
+    try {
+        const lib = JSON.parse(localStorage.getItem('saved_constellations') || '[]');
+        const library_vectors = lib.map(c => c.feature_vector).filter(Boolean);
+        const res = await dreamConstellation({ library_vectors, intention: oracleChoices });
+
+        document.getElementById('oracle-intention').innerText = res.intention.frase;
+        document.getElementById('oracle-candidates').innerHTML = res.candidates
+            .map(c => renderCandidateCard(c, c.id === res.winner_id)).join('');
+        document.getElementById('oracle-justification').innerText = res.justification;
+        document.getElementById('oracle-myth').innerHTML =
+            `<h4 class="oracle-myth-title">${res.myth.titulo || ''}</h4>` +
+            (res.myth.texto || '').split(/\n+/).filter(t => t.trim())
+                .map(t => `<p>${t.trim()}</p>`).join('');
+
+        // desenhar TODAS as candidatas no céu: rejeitadas ténues, vencedora forte
+        const winner = res.candidates.find(c => c.id === res.winner_id);
+        oracleResult = res;
+        clearAllLines();
+        res.candidates.forEach(c => {
+            if (c.id !== res.winner_id) drawCandidateEdges(c.edges, 0x8a93a3, 0.16);
+        });
+        drawCandidateEdges(winner.edges, 0xa8c4e0, 0.9);
+
+        userSelectedStars = winner.stars.map(s => ({
+            id: s.id, name: s.name, coords: s.coords, con: s.con, mag: s.mag, color: s.color
+        }));
+        userCreatedEdges = [];
+        aiCreatedEdges = winner.edges;
+        userSelectedStars.forEach(s => {
+            const o = starsGroup.children.find(x => String(x.userData.id) === String(s.id));
+            if (o) o.material.color.setHex(0xc9a84c);
+        });
+
+        // preparar guardar (reutiliza o fluxo colaborativo)
+        currentMythData = { titulo: res.myth.titulo, texto: res.myth.texto,
+            is_real: false, real_name: res.myth.nome_constelacao || 'Constelação dos Céus',
+            properties: winner.properties };
+        document.getElementById('save-btn-floating').style.display = 'block';
+
+        const centroid = new THREE.Vector3();
+        userSelectedStars.forEach(s => centroid.add(new THREE.Vector3(s.coords.x, s.coords.y, s.coords.z)));
+        centroid.divideScalar(userSelectedStars.length || 1);
+        centerCameraOn(centroid);
+    } catch (err) {
+        console.error('Erro ao consultar os céus:', err);
+        const intentionEl = document.getElementById('oracle-intention');
+        if (intentionEl) intentionEl.innerText = 'Os céus permaneceram em silêncio. Tenta de novo.';
+        const candEl = document.getElementById('oracle-candidates');
+        if (candEl) candEl.innerHTML = '';
+    } finally {
+        if (dreamBtn) { dreamBtn.disabled = false; dreamBtn.style.opacity = '1'; }
+    }
+}
+window.runDream = runDream;
+
+export function closeOraclePanel() {
+    document.getElementById('oracle-panel').style.display = 'none';
+}
+window.closeOraclePanel = closeOraclePanel;
 
 export function closeMythSidebar() { 
     document.getElementById('interface-myth').classList.remove('visible'); 

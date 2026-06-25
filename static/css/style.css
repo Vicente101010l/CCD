@@ -390,13 +390,13 @@ input[type=range]::-webkit-slider-thumb {
 }
 
 /* --- INTERFACE DO MITO (PERGAMINHO) --- */
-#interface-myth { 
-    position: absolute; 
-    top: 40px; 
-    right: 40px; 
-    width: 480px; 
-    height: calc(100vh - 80px); 
-    z-index: 10; 
+#interface-myth {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    width: 480px;
+    height: calc(100vh - 80px);
+    z-index: 80;
     display: flex; 
     flex-direction: column; 
     transform: translateX(calc(100% + 50px)); 
@@ -842,3 +842,108 @@ input[type=range]::-webkit-slider-thumb {
     border-color: rgba(204, 51, 51, 0.8);
     color: #ffffff;
 }
+
+/* ===== MODO ORÁCULO ===== */
+#dream-btn {
+    padding: 9px 18px;
+    background: transparent;
+    border: 1px solid #c9a84c;
+    color: #c9a84c;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    border-radius: 20px;
+    font-size: 10.5px;
+    transition: all 0.3s;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+}
+#dream-btn:hover { background: #c9a84c; color: #05070f; box-shadow: 0 0 14px rgba(201,168,76,0.4); }
+#dream-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+#oracle-panel {
+    position: absolute; top: 110px; right: 24px; width: 320px; max-height: 78vh;
+    overflow-y: auto; z-index: 6;
+    background: rgba(10, 12, 18, 0.78); backdrop-filter: blur(14px);
+    border: 1px solid rgba(168, 196, 224, 0.2); border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+    color: #fff; padding: 22px; box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+#oracle-panel::-webkit-scrollbar { width: 6px; }
+#oracle-panel::-webkit-scrollbar-track { background: transparent; }
+#oracle-panel::-webkit-scrollbar-thumb {
+    background: rgba(201, 168, 76, 0.35); border-radius: 3px;
+}
+#oracle-panel::-webkit-scrollbar-thumb:hover { background: rgba(201, 168, 76, 0.6); }
+#oracle-close {
+    position: absolute; top: 14px; right: 18px; background: none; border: none;
+    color: rgba(255,255,255,0.5); font-size: 22px; line-height: 1; cursor: pointer;
+}
+#oracle-close:hover { color: #c9a84c; }
+.oracle-h {
+    margin: 0 0 2px; font-size: 13px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: #c9a84c;
+}
+.oracle-sub { margin: 0 0 16px; font-size: 11px; color: rgba(255,255,255,0.45); }
+
+.oracle-q { margin-bottom: 14px; }
+.oracle-q-label {
+    font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.85); margin-bottom: 7px;
+}
+.oracle-opts { display: flex; flex-wrap: wrap; gap: 6px; }
+.oracle-opt {
+    padding: 5px 11px; font-size: 10.5px; border-radius: 16px; cursor: pointer;
+    background: transparent; color: rgba(255,255,255,0.75);
+    border: 1px solid rgba(255,255,255,0.2); transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+}
+.oracle-opt:hover { border-color: #c9a84c; color: #fff; }
+.oracle-opt.selected { background: #c9a84c; color: #05070f; border-color: #c9a84c; font-weight: 700; }
+.oracle-opt.is-auto { font-style: italic; opacity: 0.85; }
+
+#oracle-invoke {
+    width: 100%; margin-top: 6px; padding: 11px; border: none; border-radius: 20px;
+    background: #c9a84c; color: #05070f; font-weight: 700; text-transform: uppercase;
+    font-size: 11px; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif;
+    box-shadow: 0 0 12px rgba(201,168,76,0.25);
+}
+#oracle-invoke:hover { background: #fff; box-shadow: 0 0 18px rgba(255,255,255,0.4); }
+
+#oracle-intention {
+    font-style: normal; line-height: 1.5; margin: 6px 24px 16px 0; font-size: 12px;
+    color: rgba(255, 255, 255, 0.9);
+}
+.oracle-card {
+    border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 10px 12px;
+    margin-bottom: 9px; background: rgba(0,0,0,0.25);
+    cursor: pointer; transition: opacity 0.2s, border-color 0.2s, transform 0.2s;
+}
+.oracle-card:hover { transform: translateX(-2px); }
+.oracle-card.winner { border-color: #c9a84c; background: rgba(201,168,76,0.1); }
+.oracle-card.rejected { opacity: 0.55; }
+.oracle-card.rejected:hover { opacity: 0.85; }
+.oracle-card.focused { border-color: #a8c4e0; box-shadow: 0 0 12px rgba(168,196,224,0.35); }
+.oracle-card-title { font-size: 11px; font-weight: 700; margin-bottom: 8px; color: #fff; }
+.oracle-card.winner .oracle-card-title { color: #c9a84c; }
+.score-row {
+    display: flex; align-items: center; gap: 8px; font-size: 10px; margin: 3px 0;
+    color: rgba(255,255,255,0.7);
+}
+.score-row > span:first-child { width: 64px; }
+.score-bar {
+    flex: 1; height: 5px; background: rgba(255,255,255,0.12); border-radius: 3px; overflow: hidden;
+}
+.score-bar > span { display: block; height: 100%; background: #a8c4e0; }
+.oracle-card.winner .score-bar > span { background: #c9a84c; }
+#oracle-justification {
+    margin: 14px 0 0; font-size: 11.5px; line-height: 1.5; color: rgba(255,255,255,0.85);
+}
+#oracle-myth { margin-top: 14px; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 12px; }
+.oracle-myth-title { margin: 0 0 8px; font-size: 13px; color: #c9a84c; font-weight: 700; }
+#oracle-myth p { font-size: 11.5px; line-height: 1.55; color: rgba(255,255,255,0.8); margin: 0 0 8px; }
+.oracle-spinner {
+    width: 28px; height: 28px; margin: 18px auto; border: 3px solid rgba(255,255,255,0.15);
+    border-top-color: #c9a84c; border-radius: 50%; animation: oracle-spin 0.9s linear infinite;
+}
+@keyframes oracle-spin { to { transform: rotate(360deg); } }

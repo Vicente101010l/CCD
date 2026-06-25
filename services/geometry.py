@@ -331,7 +331,8 @@ def detect_cycles_and_shapes(skeleton_stars, edges):
                             quads.append(p)
                             break
                             
-    has_cycles = len(triangles) > 0 or len(quads) > 0
+    has_general_cycle = len(edges) >= len(skeleton_stars) and len(skeleton_stars) > 2
+    has_cycles = len(triangles) > 0 or len(quads) > 0 or has_general_cycle
     shapes = []
     if triangles:
         shapes.append(f"{len(triangles)} Triângulo(s)")
